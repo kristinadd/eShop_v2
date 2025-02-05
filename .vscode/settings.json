@@ -1,0 +1,12 @@
+{
+  "java.project.sourcePaths": [
+    "src/main/java"
+  ],
+  "java.project.referencedLibraries": [
+    "lip/mysql-connector-j-9.0.0.jar",
+    "lip/slf4j-api-2.0.16.jar",
+    "lip/bson-5.3.1.jar",
+    "lip/mongodb-driver-core-5.3.1.jar",
+    "lip/mongodb-driver-sync-5.3.1.jar"
+  ]
+}
