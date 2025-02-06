@@ -101,8 +101,6 @@ public class Mongo {
       System.out.println("Failed to insert");
     }
 
-
-
     // CRUD read One
     System.out.println("-------------------------------READ--ONE--------------------------------------");
     Bson fields = Projections.fields(
@@ -151,6 +149,4 @@ public class Mongo {
   }
 }
 
-
 // next time insert nested 
-
