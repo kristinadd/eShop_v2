@@ -9,7 +9,8 @@ import java.util.function.Consumer;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.lt;
-// import static com.mongodb.client.model.Filters.gte;
+import static com.mongodb.client.model.Filters.gte;
+import com.mongodb.client.model.ReplaceOptions;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -73,7 +74,6 @@ public class Mongo {
 
     // create a product
     database = mongo.getDatabase("ecom"); // create a new db ecom 
-    System.out.println("-----------------------------------------------------------------------");
     Product product = new Product(5, "Component", "product4", 2.99, 7, "img");
     Document document = createDoc(product);
     document.append("reviwers", Arrays.asList("Bob", "Marry", "James")); // create list 
@@ -111,8 +111,6 @@ public class Mongo {
     //   new Product(2, "Component", "product2", 2.99, 7, "img"),
     //   new Product(3, "Component", "product3", 22.99, 7, "img")
     // );
-    // now need a list of documents
-    // take the products and add them to the documents
     collection = database.getCollection("products");
     List<Document> productDocuments = new ArrayList<>();
     for (Product p : products) {
@@ -154,12 +152,14 @@ public class Mongo {
       System.out.println(doc2.toJson());
     }
 
-    System.out.println("-------------------------------UPDATE--PRODUCT--------------------------------------");
+    System.out.println("-------------------------------UPDATE--(1)--PRODUCT--------------------------------------");
     Bson updates = Updates.combine(
-      Updates.set("quantity", 9)
+      Updates.set("quantity", 9),
+      Updates.addToSet("reviwers", "Kate"),
+      Updates.currentTimestamp("lastUpdated")
     );
     UpdateOptions options = new UpdateOptions().upsert(true);
-    Document document3 = new Document().append("_id", 3);
+    Document document3 = new Document().append("_id", 5);
 
     collection = database.getCollection("products");
     try {
@@ -170,6 +170,42 @@ public class Mongo {
       e.printStackTrace();
     }
 
+    System.out.println("-------------------------------UPDATE--(2)--PRODUCTS--------------------------------------");
+    Bson updates2 = Updates.combine(
+      Updates.set("quantity", 8),
+      Updates.currentTimestamp("lastUpdated")
+    );
+    // UpdateOptions options2 = new UpdateOptions().upsert(true);
+    Bson query1 = gte("price", 21);
+
+    collection = database.getCollection("products");
+    try {
+      UpdateResult result = collection.updateMany(query1, updates2);
+      System.out.println("Modified document counts: " + result.getModifiedCount());
+    } catch (MongoException e) {
+      e.printStackTrace();
+    }
+
+
+    System.out.println("-------------------------------REPLACE--(1)--PRODUCT--------------------------------------");
+    Bson query2 = eq("_id", 6);
+    Document document4 = new Document()
+                                      .append("age", 23)
+                                      .append("color", "red");
+
+    ReplaceOptions replaceOptions = new ReplaceOptions().upsert(true);
+    try {
+      UpdateResult result = collection.replaceOne(query2, document4, replaceOptions);
+      System.out.println("Replaced document counts: " + result.getModifiedCount());
+      System.out.println("Updated id: " + result.getUpsertedId());
+    } catch (MongoException e) {
+      e.printStackTrace();
+    }
+
+    System.out.println("-------------------------------REPLACE--(1)--PRODUCT--------------------------------------");
+    // update order
+    // delete 
+    // shopping card, we keep the shopping card
 
     // CRUD read many
     System.out.println("---------------------------------MANY--------------------------------------");
