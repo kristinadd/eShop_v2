@@ -37,54 +37,54 @@ import com.mongodb.client.result.UpdateResult;
 
 public class Mongo {
   public static void main(String[] args) {
-    MongoClient mongo = MongoClients.create("mongodb://127.0.1:27017");
+    // MongoClient mongo = MongoClients.create("mongodb://127.0.1:27017");
 
-    // list of the databases
-    List<Document> databases = mongo.listDatabases().into(new ArrayList<>());
-    databases.forEach(System.out::println);
-    System.out.println("---------------------------------------------DATABASES");
-    MongoDatabase database = mongo.getDatabase("test");
-    System.out.println(database.getName());
-    database.listCollectionNames().forEach(System.out::println);
+    // // list of the databases
+    // List<Document> databases = mongo.listDatabases().into(new ArrayList<>());
+    // databases.forEach(System.out::println);
+    // System.out.println("---------------------------------------------DATABASES");
+    // MongoDatabase database = mongo.getDatabase("test");
+    // System.out.println(database.getName());
+    // database.listCollectionNames().forEach(System.out::println);
 
-    // databse stats
-    var stats = database.runCommand(new Document("dbstats", 1));
-    for (Map.Entry<String, Object> set : stats.entrySet()) {
-      System.out.printf("%s: %s\n", set.getKey(), set.getValue());
-    }
+    // // databse stats
+    // var stats = database.runCommand(new Document("dbstats", 1));
+    // for (Map.Entry<String, Object> set : stats.entrySet()) {
+    //   System.out.printf("%s: %s\n", set.getKey(), set.getValue());
+    // }
 
-    // get a collection
-    MongoCollection<Document> collection = database.getCollection("users");
-    MongoCursor<Document> cursor = collection.find().iterator();
-    while (cursor.hasNext()) {
-      Document doc = cursor.next();
-      System.out.println(doc);
+    // // get a collection
+    // MongoCollection<Document> collection = database.getCollection("users");
+    // MongoCursor<Document> cursor = collection.find().iterator();
+    // while (cursor.hasNext()) {
+    //   Document doc = cursor.next();
+    //   System.out.println(doc);
 
-      var users = new ArrayList<>(doc.values());
-      System.out.printf("THIS IS USERS: %s, %s\n", users.get(0), users.get(1));
-    }
+    //   var users = new ArrayList<>(doc.values());
+    //   System.out.printf("THIS IS USERS: %s, %s\n", users.get(0), users.get(1));
+    // }
 
     // query MongoDB using BasicDBObject
-    System.out.println("-----------------------------------------------------------------------");
-    var query = new BasicDBObject("birthday", new BasicDBObject("$eq", "11/11/2003"));
+    // System.out.println("-----------------------------------------------------------------------");
+    // var query = new BasicDBObject("birthday", new BasicDBObject("$eq", "11/11/2003"));
 
-    collection.find(query).forEach((Consumer<Document>) doc -> {
-      System.out.println(doc.toJson());
-    });
+    // collection.find(query).forEach((Consumer<Document>) doc -> {
+    //   System.out.println(doc.toJson());
+    // });
 
     // create a product
-    database = mongo.getDatabase("ecom"); // create a new db ecom 
-    Product product = new Product(5, "Component", "product4", 2.99, 7, "img");
-    Document document = createDoc(product);
-    document.append("reviwers", Arrays.asList("Bob", "Marry", "James")); // create list 
-    collection = database.getCollection("products");
-    System.out.println("---------------------------------CREATE--ONE--------------------------------------");
-    try {
-      InsertOneResult result = collection.insertOne(document);
-      System.out.println("Successfully inserted: " + result.getInsertedId());
-    } catch (MongoException e) {
-      System.out.println("Failed to insert");
-    }
+    // database = mongo.getDatabase("ecom"); // create a new db ecom 
+    // Product product = new Product(5, "Component", "product4", 2.99, 7, "img");
+    // Document document = createDoc(product);
+    // document.append("reviwers", Arrays.asList("Bob", "Marry", "James")); // create list 
+    // collection = database.getCollection("products");
+    // System.out.println("---------------------------------CREATE--ONE--------------------------------------");
+    // try {
+    //   InsertOneResult result = collection.insertOne(document);
+    //   System.out.println("Successfully inserted: " + result.getInsertedId());
+    // } catch (MongoException e) {
+    //   System.out.println("Failed to insert");
+    // }
 
     // CREATE ORDER
     System.out.println("---------------------------------CREATE--ORDER--------------------------------------");
@@ -105,24 +105,25 @@ public class Mongo {
 
 
     // CRUD create Many
-    System.out.println("---------------------------------CREATE--MANY--------------------------------------");
+    // System.out.println("---------------------------------CREATE--MANY--------------------------------------");
     // List<Product> products = Arrays.asList(
     //   new Product(1, "Component", "product1", 6.99, 7, "img"),
     //   new Product(2, "Component", "product2", 2.99, 7, "img"),
     //   new Product(3, "Component", "product3", 22.99, 7, "img")
     // );
-    collection = database.getCollection("products");
-    List<Document> productDocuments = new ArrayList<>();
-    for (Product p : products) {
-      productDocuments.add(createDoc(p));
-    }
+    // take the products and add them to the documents
+    // collection = database.getCollection("products");
+    // List<Document> productDocuments = new ArrayList<>();
+    // for (Product p : products) {
+    //   productDocuments.add(createDoc(p));
+    // }
 
-    try {
-      InsertManyResult result = collection.insertMany(productDocuments);
-      System.out.println("Inserted successfully: " + result.getInsertedIds());
-    } catch (MongoException e ) {
-      System.out.println("Failed to insert");
-    }
+    // try {
+    //   InsertManyResult result = collection.insertMany(productDocuments);
+    //   System.out.println("Inserted successfully: " + result.getInsertedIds());
+    // } catch (MongoException e ) {
+    //   System.out.println("Failed to insert");
+    // }
 
     System.out.println("-------------------------------READ--ORDER--------------------------------------");
     Bson order_fields = Projections.fields(
@@ -137,125 +138,125 @@ public class Mongo {
 
 
     // CRUD read One
-    System.out.println("-------------------------------READ--ONE--------------------------------------");
-    Bson fields = Projections.fields(
-      Projections.include("type", "name", "price"),
-      Projections.excludeId()
-      );
+    // System.out.println("-------------------------------READ--ONE--------------------------------------");
+    // Bson fields = Projections.fields(
+    //   Projections.include("type", "name", "price"),
+    //   Projections.excludeId()
+    //   );
 
-    // Document doc2 = collection.find(eq("name", "product1")).projection(fields).first();
-    Document doc2 = collection.find(eq("type", "Component"))
-      .projection(fields)
-      .sort(Sorts.descending("price"))
-      .first();
-    if (doc2 != null) {
-      System.out.println(doc2.toJson());
-    }
+    // // Document doc2 = collection.find(eq("name", "product1")).projection(fields).first();
+    // Document doc2 = collection.find(eq("type", "Component"))
+    //   .projection(fields)
+    //   .sort(Sorts.descending("price"))
+    //   .first();
+    // if (doc2 != null) {
+    //   System.out.println(doc2.toJson());
+    // }
 
-    System.out.println("-------------------------------UPDATE--(1)--PRODUCT--------------------------------------");
-    Bson updates = Updates.combine(
-      Updates.set("quantity", 9),
-      Updates.addToSet("reviwers", "Kate"),
-      Updates.currentTimestamp("lastUpdated")
-    );
-    UpdateOptions options = new UpdateOptions().upsert(true);
-    Document document3 = new Document().append("_id", 5);
+    // System.out.println("-------------------------------UPDATE--(1)--PRODUCT--------------------------------------");
+    // Bson updates = Updates.combine(
+    //   Updates.set("quantity", 9),
+    //   Updates.addToSet("reviwers", "Kate"),
+    //   Updates.currentTimestamp("lastUpdated")
+    // );
+    // UpdateOptions options = new UpdateOptions().upsert(true);
+    // Document document3 = new Document().append("_id", 5);
 
-    collection = database.getCollection("products");
-    try {
-      UpdateResult result = collection.updateOne(document3, updates, options);
-      System.out.println("Modified document counts: " + result.getModifiedCount());
-      System.out.println("Updated id: " + result.getUpsertedId());
-    } catch (MongoException e) {
-      e.printStackTrace();
-    }
+    // collection = database.getCollection("products");
+    // try {
+    //   UpdateResult result = collection.updateOne(document3, updates, options);
+    //   System.out.println("Modified document counts: " + result.getModifiedCount());
+    //   System.out.println("Updated id: " + result.getUpsertedId());
+    // } catch (MongoException e) {
+    //   e.printStackTrace();
+    // }
 
-    System.out.println("-------------------------------UPDATE--(2)--PRODUCTS--------------------------------------");
-    Bson updates2 = Updates.combine(
-      Updates.set("quantity", 8),
-      Updates.currentTimestamp("lastUpdated")
-    );
-    // UpdateOptions options2 = new UpdateOptions().upsert(true);
-    Bson query1 = gte("price", 21);
+    // System.out.println("-------------------------------UPDATE--(2)--PRODUCTS--------------------------------------");
+    // Bson updates2 = Updates.combine(
+    //   Updates.set("quantity", 8),
+    //   Updates.currentTimestamp("lastUpdated")
+    // );
+    // // UpdateOptions options2 = new UpdateOptions().upsert(true);
+    // Bson query1 = gte("price", 21);
 
-    collection = database.getCollection("products");
-    try {
-      UpdateResult result = collection.updateMany(query1, updates2);
-      System.out.println("Modified document counts: " + result.getModifiedCount());
-    } catch (MongoException e) {
-      e.printStackTrace();
-    }
+    // collection = database.getCollection("products");
+    // try {
+    //   UpdateResult result = collection.updateMany(query1, updates2);
+    //   System.out.println("Modified document counts: " + result.getModifiedCount());
+    // } catch (MongoException e) {
+    //   e.printStackTrace();
+    // }
 
 
-    System.out.println("-------------------------------REPLACE--(1)--PRODUCT--------------------------------------");
-    Bson query2 = eq("_id", 6);
-    Document document4 = new Document()
-                                      .append("age", 23)
-                                      .append("color", "red");
+    // System.out.println("-------------------------------REPLACE--(1)--PRODUCT--------------------------------------");
+    // Bson query2 = eq("_id", 6);
+    // Document document4 = new Document()
+    //                                   .append("age", 23)
+    //                                   .append("color", "red");
 
-    ReplaceOptions replaceOptions = new ReplaceOptions().upsert(true);
-    try {
-      UpdateResult result = collection.replaceOne(query2, document4, replaceOptions);
-      System.out.println("Replaced document counts: " + result.getModifiedCount());
-      System.out.println("Updated id: " + result.getUpsertedId());
-    } catch (MongoException e) {
-      e.printStackTrace();
-    }
+    // ReplaceOptions replaceOptions = new ReplaceOptions().upsert(true);
+    // try {
+    //   UpdateResult result = collection.replaceOne(query2, document4, replaceOptions);
+    //   System.out.println("Replaced document counts: " + result.getModifiedCount());
+    //   System.out.println("Updated id: " + result.getUpsertedId());
+    // } catch (MongoException e) {
+    //   e.printStackTrace();
+    // }
 
-    System.out.println("-------------------------------REPLACE--(1)--PRODUCT--------------------------------------");
+    // System.out.println("-------------------------------REPLACE--(1)--PRODUCT--------------------------------------");
     // update order
     // delete 
     // shopping card, we keep the shopping card
 
     // CRUD read many
-    System.out.println("---------------------------------MANY--------------------------------------");
-    MongoCursor<Document> cursor2 = collection.find(lt("price", 10.0))
-      .projection(fields)
-      .sort(Sorts.ascending("price"))
-      .iterator();
+    // System.out.println("---------------------------------MANY--------------------------------------");
+    // MongoCursor<Document> cursor2 = collection.find(lt("price", 10.0))
+    //   .projection(fields)
+    //   .sort(Sorts.ascending("price"))
+    //   .iterator();
 
-    try {
-      while (cursor2.hasNext()) {
-        System.out.println(cursor2.next().toJson());
-      }
-    } finally {
-      cursor.close(); // close the connection to the database, connection pool
-    }
+    // try {
+    //   while (cursor2.hasNext()) {
+    //     System.out.println(cursor2.next().toJson());
+    //   }
+    // } finally {
+    //   cursor.close(); // close the connection to the database, connection pool
+    // }
   }
 
 // convert object to document 
-  private static Document createDoc(Product product) {
-    Document document = new Document();
+  // private static Document createDoc(Product product) {
+  //   Document document = new Document();
 
-    document.append("_id", product.getId());
-    document.append("type", product.getType());
-    document.append("name", product.getName());
-    document.append("price", product.getPrice());
-    document.append("quantity", product.getQuantity());
-    document.append("image", product.getImg());
+  //   document.append("_id", product.getId());
+  //   document.append("type", product.getType());
+  //   document.append("name", product.getName());
+  //   document.append("price", product.getPrice());
+  //   document.append("quantity", product.getQuantity());
+  //   document.append("image", product.getImg());
 
-    return document;
+  //   return document;
 
-  }
+  // }
 
-  private static Document createDoc(Order order) {
-    Document document = new Document();
+  // private static Document createDoc(Order order) {
+  //   Document document = new Document();
 
-    document.append("_id", order.getId());
-    document.append("description", order.getDescription());
-    document.append("price", order.getTotal());
-    document.append("date", order.getDate());
+  //   document.append("_id", order.getId());
+  //   document.append("description", order.getDescription());
+  //   document.append("price", order.getTotal());
+  //   document.append("date", order.getDate());
 
-    // needs to be a list of documents
-    List<Document> productDocs = new ArrayList<>();
-    for (Product product : order.getProducts())
-      productDocs.add(createDoc(product));
-    //
+  //   // needs to be a list of documents
+  //   List<Document> productDocs = new ArrayList<>();
+  //   for (Product product : order.getProducts())
+  //     productDocs.add(createDoc(product));
+  //   //
 
-    document.append("products", productDocs);
+  //   document.append("products", productDocs);
 
-    return document;
-  }
+  //   return document;
+  // }
 
 
 }

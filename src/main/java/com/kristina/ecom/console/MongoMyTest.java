@@ -1,5 +1,9 @@
 package com.kristina.ecom.console;
 
+import static com.mongodb.client.model.Filters.eq;
+import static com.mongodb.client.model.Filters.gte;
+import static com.mongodb.client.model.Filters.lt;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -7,7 +11,9 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import org.bson.Document; // This class is part of the MongoDB BSON (Binary JSON) library and is used to represent MongoDB documents in Java.
+import org.bson.conversions.Bson;
 
+import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.Product;
 import com.mongodb.BasicDBObject; // It’s used to create a query object.
 import com.mongodb.MongoException;
@@ -16,8 +22,14 @@ import com.mongodb.client.MongoClients; // MongoDB JAVA Driver --> A factory cla
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase; // Represents MongoDB database
+import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.ReplaceOptions;
+import com.mongodb.client.model.Sorts;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.client.result.UpdateResult;
 
 public class MongoMyTest {
   public static void main(String[] args) {
@@ -76,7 +88,7 @@ public class MongoMyTest {
       System.out.println("Successfully inserted: " + result.getInsertedId() + " class: " + result.getClass());
     } catch (MongoException e) {
       // e.printStackTrace();
-      System.out.println("🔴 ERROR 🔴");
+      System.out.println("🔴");
     }
 
     System.out.println("🟡------------------------------------CREATE--(1+)--PRODUCT-------------------------------------🟡");
@@ -98,10 +110,87 @@ public class MongoMyTest {
       System.out.println("Inserted successfully: " + result.getInsertedIds());
     } catch (MongoException e) {
       // e.printStackTrace();
-      System.out.println("🔴 ERROR 🔴");
+      System.out.println("🔴");
+    }
+    System.out.println("🟡-------------------------------------READ--ONLY--1--PRODUCT-----------------------------------🟡");
+    Bson fields = Projections.fields(
+      Projections.include("type", "name", "price"),
+      Projections.excludeId()
+    );
+    Document document2 = collection.find(eq("type", "Component"))
+    .projection(fields)
+    .sort(Sorts.descending("price"))
+    .first();
+    if (document2 != null) {
+      System.out.println(document2.toJson());
     }
 
-    
+    System.out.println("🟡-------------------------------------READ--(1+)--PRODUCT-----------------------------------🟡");
+    Bson fields2 = Projections.fields(
+      Projections.include("type", "name", "price"),
+      Projections.excludeId()
+    );
+    MongoCursor<Document> cursor2 = collection.find(lt("price", 1500))
+    .projection(fields2)
+    .sort(Sorts.ascending("price"))
+    .iterator();
+
+    try {
+      while (cursor2.hasNext()) {
+        System.out.println(cursor2.next().toJson());
+      }
+    } catch (MongoException e ) {
+      System.out.println("🔴");
+    }
+
+
+    System.out.println("🟡-------------------------------------UPDATE--ONLY--1--PRODUCT-----------------------------------🟡");
+    Bson updates = Updates.combine(
+      Updates.set("quantity", 35),
+      Updates.currentTimestamp("lastUpdated")
+    );
+    UpdateOptions options = new UpdateOptions().upsert(true);
+    Document document3 = new Document().append("_id", 3);
+    try {
+      UpdateResult result = collection.updateOne(document3, updates, options);
+      System.out.println("Modified document count: " + result.getModifiedCount());
+      System.out.println("Updated id: " + result.getUpsertedId());
+    } catch (MongoException e) {
+    System.out.println("🔴");
+    }
+
+    System.out.println("🟡-------------------------------------UPDATE--(1+)--PRODUCTS-----------------------------------🟡");
+    Bson updates2 = Updates.combine(
+      Updates.set("quantity", 88),
+      Updates.currentTimestamp("lastUpdated")
+    );
+
+    Bson query1 = gte("price", 2500);
+    try {
+      UpdateResult result = collection.updateMany(query1, updates2);
+      System.out.println("Modified count: " + result.getModifiedCount());
+    } catch (MongoException e ) {
+      System.out.println("🔴");
+    }
+
+    System.out.println("🟡-------------------------------------REPLACE--(1)--PRODUCTS-----------------------------------🟡");
+    Bson query2 = eq("_id", 6);
+    Document document4 = new Document()
+    .append("age", 100)
+    .append("color", "white");
+
+    ReplaceOptions replaceOptions = new ReplaceOptions().upsert(true);
+
+    try {
+      UpdateResult result = collection.replaceOne(query2, document4, replaceOptions);
+      System.out.println("Replaced document counts: " + result.getModifiedCount());
+      System.out.println("Updated id: " + result.getUpsertedId());
+    } catch (MongoException e) {
+      System.out.println("🔴");
+    } finally {
+      cursor2.close();
+    }
+
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -112,7 +201,27 @@ public class MongoMyTest {
     document.append("type", product.getType());
     document.append("name", product.getName());
     document.append("price", product.getPrice());
+    document.append("quantity", product.getQuantity());
     document.append("image", product.getImg());
+
+    return document;
+  }
+
+    private static Document createDoc(Order order) {
+    Document document = new Document();
+
+    document.append("_id", order.getId());
+    document.append("description", order.getDescription());
+    document.append("price", order.getTotal());
+    document.append("date", order.getDate());
+
+    // needs to be a list of documents
+    List<Document> productDocs = new ArrayList<>();
+    for (Product product : order.getProducts())
+      productDocs.add(createProductDocument(product));
+    //
+
+    document.append("products", productDocs);
 
     return document;
   }
