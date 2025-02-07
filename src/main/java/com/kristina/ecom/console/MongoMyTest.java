@@ -1,9 +1,12 @@
 package com.kristina.ecom.console;
 
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import org.bson.Document; // This class is part of the MongoDB BSON (Binary JSON) library and is used to represent MongoDB documents in Java.
 
+import com.mongodb.BasicDBObject; // It’s used to create a query object.
 import com.mongodb.client.MongoClient; // MongoDB JAVA Driver --> The main interface for connecting to MongoDB.
 import com.mongodb.client.MongoClients; // MongoDB JAVA Driver --> A factory class to create MongoClient instances.
 import com.mongodb.client.MongoCollection;
@@ -36,8 +39,21 @@ public class MongoMyTest {
       Document document = cursor.next();
       System.out.println(document);
 
-      var 
+      // PRODUCT VALUES
+      System.out.println("--------------PRODUCT VALUES--------------");
+      // Convert Collection to ArrayList for easy index access
+      ArrayList<Object> product_values = new ArrayList<>(document.values()); // values returns a Collection<Object>
+      System.out.println(product_values);
+      System.out.printf("Product values: %s, %s\n", product_values.get(0), product_values.get(1));
     }
+
+      // CONSTRUCT A QUERY using BasicDBObject
+      System.out.println("-----------------------------------------------------------------------");
+      BasicDBObject query = new BasicDBObject("type", new BasicDBObject("$eq", "Component"))
+                              .append("price", new BasicDBObject("$eq", 2.99));
+
+      collection.find(query).forEach((Consumer<Document>) document -> {System.out.println(document.toJson());});
+
 
 
   }

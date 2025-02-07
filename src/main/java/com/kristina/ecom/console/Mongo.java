@@ -1,5 +1,6 @@
 package com.kristina.ecom.console;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -13,6 +14,7 @@ import static com.mongodb.client.model.Filters.lt;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
+import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.Product;
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoException;
@@ -25,7 +27,10 @@ import com.mongodb.client.model.Projections; // instructions to see what i want 
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.InsertManyResult;
-
+// Update 
+import com.mongodb.client.model.Updates;
+import com.mongodb.client.model.UpdateOptions;
+import com.mongodb.client.result.UpdateResult;
 // Cursor is a pointer, leackage of resources, so i need to close it
 
 
@@ -33,6 +38,10 @@ public class Mongo {
   public static void main(String[] args) {
     MongoClient mongo = MongoClients.create("mongodb://127.0.1:27017");
 
+    // list of the databases
+    List<Document> databases = mongo.listDatabases().into(new ArrayList<>());
+    databases.forEach(System.out::println);
+    System.out.println("---------------------------------------------DATABASES");
     MongoDatabase database = mongo.getDatabase("test");
     System.out.println(database.getName());
     database.listCollectionNames().forEach(System.out::println);
@@ -51,7 +60,7 @@ public class Mongo {
       System.out.println(doc);
 
       var users = new ArrayList<>(doc.values());
-      System.out.printf("%s, %s\n", users.get(0), users.get(1));
+      System.out.printf("THIS IS USERS: %s, %s\n", users.get(0), users.get(1));
     }
 
     // query MongoDB using BasicDBObject
@@ -65,13 +74,10 @@ public class Mongo {
     // create a product
     database = mongo.getDatabase("ecom"); // create a new db ecom 
     System.out.println("-----------------------------------------------------------------------");
-    Product product = new Product(4, "Component", "product4", 2.99, 7, "img");
-
-    // everything is document, so i need to create a document
+    Product product = new Product(5, "Component", "product4", 2.99, 7, "img");
     Document document = createDoc(product);
+    document.append("reviwers", Arrays.asList("Bob", "Marry", "James")); // create list 
     collection = database.getCollection("products");
-
-    // CRUD create One
     System.out.println("---------------------------------CREATE--ONE--------------------------------------");
     try {
       InsertOneResult result = collection.insertOne(document);
@@ -80,15 +86,34 @@ public class Mongo {
       System.out.println("Failed to insert");
     }
 
-    // CRUD create Many
-    System.out.println("---------------------------------CREATE--MANY--------------------------------------");
+    // CREATE ORDER
+    System.out.println("---------------------------------CREATE--ORDER--------------------------------------");
+    collection = database.getCollection("orders");
     List<Product> products = Arrays.asList(
       new Product(1, "Component", "product1", 6.99, 7, "img"),
       new Product(2, "Component", "product2", 2.99, 7, "img"),
       new Product(3, "Component", "product3", 22.99, 7, "img")
     );
+    Order order = new Order("1", "this is the first order", 999.00f, LocalDateTime.now(), products); // need a float 
+    document = createDoc(order);
+    try {
+      InsertOneResult result = collection.insertOne(document);
+      System.out.println("Successfully inserted: " + result.getInsertedId());
+    } catch (MongoException e) {
+      System.out.println("Failed to insert");
+    }
+
+
+    // CRUD create Many
+    System.out.println("---------------------------------CREATE--MANY--------------------------------------");
+    // List<Product> products = Arrays.asList(
+    //   new Product(1, "Component", "product1", 6.99, 7, "img"),
+    //   new Product(2, "Component", "product2", 2.99, 7, "img"),
+    //   new Product(3, "Component", "product3", 22.99, 7, "img")
+    // );
     // now need a list of documents
     // take the products and add them to the documents
+    collection = database.getCollection("products");
     List<Document> productDocuments = new ArrayList<>();
     for (Product p : products) {
       productDocuments.add(createDoc(p));
@@ -100,6 +125,18 @@ public class Mongo {
     } catch (MongoException e ) {
       System.out.println("Failed to insert");
     }
+
+    System.out.println("-------------------------------READ--ORDER--------------------------------------");
+    Bson order_fields = Projections.fields(
+      Projections.include("_id", "description", "price", "date", "products")
+    );
+    collection = database.getCollection("orders");
+    Document orderDoc = collection.find(eq("_id", "1")) 
+                        .projection(order_fields)
+                        .first();
+                        System.out.println(orderDoc.toJson());
+  
+
 
     // CRUD read One
     System.out.println("-------------------------------READ--ONE--------------------------------------");
@@ -116,6 +153,23 @@ public class Mongo {
     if (doc2 != null) {
       System.out.println(doc2.toJson());
     }
+
+    System.out.println("-------------------------------UPDATE--PRODUCT--------------------------------------");
+    Bson updates = Updates.combine(
+      Updates.set("quantity", 9)
+    );
+    UpdateOptions options = new UpdateOptions().upsert(true);
+    Document document3 = new Document().append("_id", 3);
+
+    collection = database.getCollection("products");
+    try {
+      UpdateResult result = collection.updateOne(document3, updates, options);
+      System.out.println("Modified document counts: " + result.getModifiedCount());
+      System.out.println("Updated id: " + result.getUpsertedId());
+    } catch (MongoException e) {
+      e.printStackTrace();
+    }
+
 
     // CRUD read many
     System.out.println("---------------------------------MANY--------------------------------------");
@@ -147,6 +201,27 @@ public class Mongo {
     return document;
 
   }
+
+  private static Document createDoc(Order order) {
+    Document document = new Document();
+
+    document.append("_id", order.getId());
+    document.append("description", order.getDescription());
+    document.append("price", order.getTotal());
+    document.append("date", order.getDate());
+
+    // needs to be a list of documents
+    List<Document> productDocs = new ArrayList<>();
+    for (Product product : order.getProducts())
+      productDocs.add(createDoc(product));
+    //
+
+    document.append("products", productDocs);
+
+    return document;
+  }
+
+
 }
 
-// next time insert nested 
+
