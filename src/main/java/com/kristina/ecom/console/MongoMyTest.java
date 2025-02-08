@@ -4,6 +4,7 @@ import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.gte;
 import static com.mongodb.client.model.Filters.lt;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -191,6 +192,38 @@ public class MongoMyTest {
       cursor2.close();
     }
 
+    System.out.println("🟡-------------------------------------CREATE--(1)--ORDER-----------------------------------🟡");
+    collection = database.getCollection( "orders");
+
+    List<Product> productsList = Arrays.asList(
+      new Product(1, "Component", "product1", 6.99, 7, "img"),
+      new Product(2, "Component", "product2", 2.99, 7, "img"),
+      new Product(3, "Component", "product3", 22.99, 7, "img")
+    );
+
+    Order order = new Order("1", "First order", 39.99f, LocalDateTime.now(), productsList); // need to specify float
+
+    Document orderDocument = new Document();
+    orderDocument = createOrderDocument(order);
+    
+    try {
+      InsertOneResult result = collection.insertOne(orderDocument);
+      System.out.println("Inserted order document with id: " + result.getInsertedId());
+    } catch (MongoException e ) {
+      e.printStackTrace();
+      System.out.println("🔴");
+    }
+
+
+    System.out.println("🟡-------------------------------------READ--(1)--ORDER-----------------------------------🟡");
+    Bson orderFields = Projections.fields(
+      Projections.include("description", "price", "date", "products")
+    );
+    
+    Document orderDocument2 = collection.find(eq("_id", "1"))
+    .projection(orderFields)
+    .first();
+    System.out.println(orderDocument2.toJson());
   }
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -207,7 +240,7 @@ public class MongoMyTest {
     return document;
   }
 
-    private static Document createDoc(Order order) {
+    private static Document createOrderDocument(Order order) {
     Document document = new Document();
 
     document.append("_id", order.getId());

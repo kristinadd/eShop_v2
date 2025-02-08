@@ -1,42 +1,42 @@
-package com.kristina.ecom.console;
+// package com.kristina.ecom.console;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
+// import java.time.LocalDateTime;
+// import java.util.ArrayList;
+// import java.util.Arrays;
+// import java.util.List;
+// import java.util.Map;
+// import java.util.function.Consumer;
 
-import static com.mongodb.client.model.Filters.eq;
-import static com.mongodb.client.model.Filters.lt;
-import static com.mongodb.client.model.Filters.gte;
-import com.mongodb.client.model.ReplaceOptions;
+// import static com.mongodb.client.model.Filters.eq;
+// import static com.mongodb.client.model.Filters.lt;
+// import static com.mongodb.client.model.Filters.gte;
+// import com.mongodb.client.model.ReplaceOptions;
 
-import org.bson.Document;
-import org.bson.conversions.Bson;
+// import org.bson.Document;
+// import org.bson.conversions.Bson;
 
-import com.kristina.ecom.domain.Order;
-import com.kristina.ecom.domain.Product;
-import com.mongodb.BasicDBObject;
-import com.mongodb.MongoException;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoDatabase;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor; // iterate over the results
-import com.mongodb.client.model.Projections; // instructions to see what i want to get back
-import com.mongodb.client.model.Sorts;
-import com.mongodb.client.result.InsertOneResult;
-import com.mongodb.client.result.InsertManyResult;
-// Update 
-import com.mongodb.client.model.Updates;
-import com.mongodb.client.model.UpdateOptions;
-import com.mongodb.client.result.UpdateResult;
-// Cursor is a pointer, leackage of resources, so i need to close it
+// import com.kristina.ecom.domain.Order;
+// import com.kristina.ecom.domain.Product;
+// import com.mongodb.BasicDBObject;
+// import com.mongodb.MongoException;
+// import com.mongodb.client.MongoClient;
+// import com.mongodb.client.MongoClients;
+// import com.mongodb.client.MongoDatabase;
+// import com.mongodb.client.MongoCollection;
+// import com.mongodb.client.MongoCursor; // iterate over the results
+// import com.mongodb.client.model.Projections; // instructions to see what i want to get back
+// import com.mongodb.client.model.Sorts;
+// import com.mongodb.client.result.InsertOneResult;
+// import com.mongodb.client.result.InsertManyResult;
+// // Update 
+// import com.mongodb.client.model.Updates;
+// import com.mongodb.client.model.UpdateOptions;
+// import com.mongodb.client.result.UpdateResult;
+// // Cursor is a pointer, leackage of resources, so i need to close it
 
 
-public class Mongo {
-  public static void main(String[] args) {
+// public class Mongo {
+//   public static void main(String[] args) {
     // MongoClient mongo = MongoClients.create("mongodb://127.0.1:27017");
 
     // // list of the databases
@@ -87,21 +87,21 @@ public class Mongo {
     // }
 
     // CREATE ORDER
-    System.out.println("---------------------------------CREATE--ORDER--------------------------------------");
-    collection = database.getCollection("orders");
-    List<Product> products = Arrays.asList(
-      new Product(1, "Component", "product1", 6.99, 7, "img"),
-      new Product(2, "Component", "product2", 2.99, 7, "img"),
-      new Product(3, "Component", "product3", 22.99, 7, "img")
-    );
-    Order order = new Order("1", "this is the first order", 999.00f, LocalDateTime.now(), products); // need a float 
-    document = createDoc(order);
-    try {
-      InsertOneResult result = collection.insertOne(document);
-      System.out.println("Successfully inserted: " + result.getInsertedId());
-    } catch (MongoException e) {
-      System.out.println("Failed to insert");
-    }
+    // System.out.println("---------------------------------CREATE--ORDER--------------------------------------");
+    // collection = database.getCollection("orders");
+    // List<Product> products = Arrays.asList(
+    //   new Product(1, "Component", "product1", 6.99, 7, "img"),
+    //   new Product(2, "Component", "product2", 2.99, 7, "img"),
+    //   new Product(3, "Component", "product3", 22.99, 7, "img")
+    // );
+    // Order order = new Order("1", "this is the first order", 999.00f, LocalDateTime.now(), products); // need a float 
+    // document = createDoc(order);
+    // try {
+    //   InsertOneResult result = collection.insertOne(document);
+    //   System.out.println("Successfully inserted: " + result.getInsertedId());
+    // } catch (MongoException e) {
+    //   System.out.println("Failed to insert");
+    // }
 
 
     // CRUD create Many
@@ -125,15 +125,15 @@ public class Mongo {
     //   System.out.println("Failed to insert");
     // }
 
-    System.out.println("-------------------------------READ--ORDER--------------------------------------");
-    Bson order_fields = Projections.fields(
-      Projections.include("_id", "description", "price", "date", "products")
-    );
-    collection = database.getCollection("orders");
-    Document orderDoc = collection.find(eq("_id", "1")) 
-                        .projection(order_fields)
-                        .first();
-                        System.out.println(orderDoc.toJson());
+    // System.out.println("-------------------------------READ--ORDER--------------------------------------");
+    // Bson order_fields = Projections.fields(
+    //   Projections.include("_id", "description", "price", "date", "products")
+    // );
+    // collection = database.getCollection("orders");
+    // Document orderDoc = collection.find(eq("_id", "1")) 
+    //                     .projection(order_fields)
+    //                     .first();
+    //                     System.out.println(orderDoc.toJson());
   
 
 
