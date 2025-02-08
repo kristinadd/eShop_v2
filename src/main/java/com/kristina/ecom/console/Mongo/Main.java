@@ -4,6 +4,7 @@ public class Main {
   public static void main(String[] args) {
     ProductDAOMongo productDao = new ProductDAOMongo();
 
-    productDao.read(1);
+    int result = productDao.read(1);
+    System.out.println(result);
   }
 }

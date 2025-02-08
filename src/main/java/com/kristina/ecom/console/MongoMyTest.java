@@ -53,6 +53,7 @@ public class MongoMyTest {
 
     System.out.println("---------------------------------------RETRIEVE--COLLECTIONS--FROM--DATABSE----------------------");
     MongoCollection<Document> collection = database.getCollection("products");
+    // retrieve collection of records
     MongoCursor<Document> cursor = collection.find().iterator();
     while (cursor.hasNext()) {
       Document document = cursor.next();
@@ -118,6 +119,7 @@ public class MongoMyTest {
       Projections.include("type", "name", "price"),
       Projections.excludeId()
     );
+    
     Document document2 = collection.find(eq("type", "Component"))
     .projection(fields)
     .sort(Sorts.descending("price"))
