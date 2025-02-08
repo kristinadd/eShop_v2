@@ -210,10 +210,9 @@ public class MongoMyTest {
       InsertOneResult result = collection.insertOne(orderDocument);
       System.out.println("Inserted order document with id: " + result.getInsertedId());
     } catch (MongoException e ) {
-      e.printStackTrace();
+      // e.printStackTrace();
       System.out.println("🔴");
     }
-
 
     System.out.println("🟡-------------------------------------READ--(1)--ORDER-----------------------------------🟡");
     Bson orderFields = Projections.fields(
@@ -226,7 +225,7 @@ public class MongoMyTest {
     System.out.println(orderDocument2.toJson());
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  ////////////////////////////////////////////////////////////METHODS////////////////////////////////////////////////////////////////////////
   private static Document createProductDocument(Product product) {
     Document document = new Document();
 
