@@ -2,11 +2,12 @@ package com.kristina.ecom.console.Mongo;
 
 import static com.mongodb.client.model.Filters.eq;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import com.kristina.ecom.domain.Product;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.client.model.Filters;
 
 public class ProductDAOMongo implements MongoDAO{
   private MongoDataSource dataSourceFactory;
@@ -16,6 +17,8 @@ public class ProductDAOMongo implements MongoDAO{
     this.dataSourceFactory = MongoDataSource.getInstance();
     this.collection = dataSourceFactory.getDatabase().getCollection("products");
   }
+
+
   
   @Override
   public  Product read(int id) {
@@ -51,6 +54,12 @@ public class ProductDAOMongo implements MongoDAO{
       return true;
     }
     return false;
+  }
+
+  @Override
+  public boolean delete(int id) {
+    collection.deleteOne(Filters.eq(id));
+    return true;
   }
 
   private Document toDocument(Product product) {

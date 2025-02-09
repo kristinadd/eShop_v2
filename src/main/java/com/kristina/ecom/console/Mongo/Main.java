@@ -13,7 +13,14 @@ public class Main {
 
     System.out.println(product2);
 
-    boolean result =  productDao.create(product2);
+    boolean result = productDao.create(product2);
     System.out.println(result);
+
+    Product product3 = productDao.read(0);
+    System.out.println(product3);
+    boolean result3 = productDao.delete(product3.getId());
+    System.out.println(result3);
+
+    
   }
 }
