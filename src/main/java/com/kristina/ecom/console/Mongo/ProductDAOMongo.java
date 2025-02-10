@@ -8,6 +8,7 @@ import com.kristina.ecom.domain.Product;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 
 public class ProductDAOMongo implements MongoDAO{
   private MongoDataSource dataSourceFactory;
@@ -54,6 +55,17 @@ public class ProductDAOMongo implements MongoDAO{
       return true;
     }
     return false;
+  }
+
+  @Override
+  public Product update(Product product) {
+
+    try {
+      collection.updateOne();
+    } catch (MongoException ex) {
+      ex.printStackTrace();
+    }
+    return product;
   }
 
   @Override
