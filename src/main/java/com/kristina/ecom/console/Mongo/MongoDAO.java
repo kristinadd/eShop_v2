@@ -1,9 +1,8 @@
 package com.kristina.ecom.console.Mongo;
-import com.kristina.ecom.domain.Product;
 
-public interface MongoDAO {
-  public Product read(int id);
-  public boolean create(Product product);
-  public Product update(Product product);
+public interface MongoDAO<T> {
+  public T get(int id);
+  public boolean create(T t);
+  public T update(T t);
   public boolean delete(int id);
 }

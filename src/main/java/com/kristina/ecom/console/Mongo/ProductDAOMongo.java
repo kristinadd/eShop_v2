@@ -8,9 +8,8 @@ import com.kristina.ecom.domain.Product;
 import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Updates;
 
-public class ProductDAOMongo implements MongoDAO{
+public class ProductDAOMongo implements MongoDAO<Product>{
   private MongoDataSource dataSourceFactory;
   private MongoCollection<Document> collection;
 
@@ -18,11 +17,9 @@ public class ProductDAOMongo implements MongoDAO{
     this.dataSourceFactory = MongoDataSource.getInstance();
     this.collection = dataSourceFactory.getDatabase().getCollection("products");
   }
-
-
   
   @Override
-  public  Product read(int id) {
+  public  Product get(int id) {
     Document document = collection.find(eq("_id", id)).first();
 
     if (document != null) {
@@ -36,7 +33,7 @@ public class ProductDAOMongo implements MongoDAO{
       );
       return product;
     } else {
-      System.out.println("Coudn't find the product with id: " + id);
+      System.out.println("Coudn't find product with id: " + id);
     }
 
     return null;
@@ -59,9 +56,11 @@ public class ProductDAOMongo implements MongoDAO{
 
   @Override
   public Product update(Product product) {
+    Bson query = eq("_id", product.getId());
+    // Document document = toDocument(product);
 
     try {
-      collection.updateOne();
+      collection.replaceOne(query, toDocument(product));
     } catch (MongoException ex) {
       ex.printStackTrace();
     }
@@ -86,7 +85,7 @@ public class ProductDAOMongo implements MongoDAO{
 
     return document;
     } else {
-      System.out.println("Product is either null or invalid. Can't convert to documen");
+      System.out.println("Can't convert to document. Product is either null or invalid.");
     }
     return null;
   }

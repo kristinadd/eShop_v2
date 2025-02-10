@@ -19,6 +19,7 @@ public class MongoDataSource {
     return instance;
   }
 
+  // database is private, need a getter to use it outside of the class
   public  MongoDatabase getDatabase() {
     return database;
   }

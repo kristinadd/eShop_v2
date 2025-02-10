@@ -1,4 +1,4 @@
-package com.kristina.ecom.console;
+package com.kristina.ecom.console.Mongo;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.gte;

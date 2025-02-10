@@ -3,7 +3,6 @@ package com.kristina.ecom.domain;
 import java.time.LocalDateTime;
 import java.util.List;
 public class Order {
-
   private String id;
   private String description;
   private float total;
