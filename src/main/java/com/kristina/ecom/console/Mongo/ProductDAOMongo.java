@@ -1,4 +1,4 @@
-package com.kristina.ecom.console.Mongo;
+package com.kristina.ecom.console.mongo;
 
 import static com.mongodb.client.model.Filters.eq;
 import org.bson.Document;
@@ -9,12 +9,12 @@ import com.mongodb.MongoException;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 
-public class ProductDAOMongo implements MongoDAO<Product>{
-  private MongoDataSource dataSourceFactory;
+public class ProductDAOMongo implements MongoDAO<Integer, Product>{
+  private MongoDataSourceFactory dataSourceFactory;
   private MongoCollection<Document> collection;
 
   public ProductDAOMongo() {
-    this.dataSourceFactory = MongoDataSource.getInstance();
+    this.dataSourceFactory = MongoDataSourceFactory.getInstance();
     this.collection = dataSourceFactory.getDatabase().getCollection("products");
   }
   
@@ -40,18 +40,13 @@ public class ProductDAOMongo implements MongoDAO<Product>{
   }
   
   @Override
-  public boolean create(Product product) {
-    if (product != null) {
+  public int create(Product product) throws MongoException {
+    if (product == null)
+      return 0;
+      
       Document document = toDocument(product);
-      try {
-        collection.insertOne(document);
-      } catch (MongoException ex) {
-        ex.printStackTrace();
-        return false;
-      }
-      return true;
-    }
-    return false;
+      collection.insertOne(document);
+      return 1;
   }
 
   @Override

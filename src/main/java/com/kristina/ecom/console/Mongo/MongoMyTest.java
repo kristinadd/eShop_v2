@@ -1,4 +1,4 @@
-package com.kristina.ecom.console.Mongo;
+package com.kristina.ecom.console.mongo;
 
 import static com.mongodb.client.model.Filters.eq;
 import static com.mongodb.client.model.Filters.gte;
@@ -18,6 +18,7 @@ import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.Product;
 import com.mongodb.BasicDBObject; // It’s used to create a query object.
 import com.mongodb.MongoException;
+import com.mongodb.bulk.BulkWriteResult;
 import com.mongodb.client.MongoClient; // MongoDB JAVA Driver --> The main interface for connecting to MongoDB.
 import com.mongodb.client.MongoClients; // MongoDB JAVA Driver --> A factory class to create MongoClient instances.
 import com.mongodb.client.MongoCollection;
@@ -28,9 +29,14 @@ import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.model.Sorts;
 import com.mongodb.client.model.UpdateOptions;
 import com.mongodb.client.model.Updates;
+
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertManyResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
+import com.mongodb.client.model.InsertOneModel;
+import com.mongodb.client.model.UpdateOneModel;
+import com.mongodb.client.model.DeleteOneModel;
 
 public class MongoMyTest {
   public static void main(String[] args) {
@@ -193,6 +199,45 @@ public class MongoMyTest {
     } finally {
       cursor2.close();
     }
+
+    System.out.println("🟡-------------------------------------DELETE--(1)--PRODUCT-----------------------------------🟡");
+    Bson query3 = eq("_id", 0);
+    try {
+      DeleteResult result = collection.deleteOne(query3);
+      System.out.println("Deleted count: " + result.getDeletedCount());
+    } catch (MongoException ex) {
+      ex.printStackTrace();
+    }
+
+    System.out.println("🟡-------------------------------------DELETE--(1+)--PRODUCTS-----------------------------------🟡");
+    Bson query4 = lt("price", 1500);
+    try {
+      DeleteResult result = collection.deleteMany(query4);
+      System.out.println("Deleted count: " + result.getDeletedCount());
+    } catch (MongoException ex) {
+      ex.printStackTrace();
+    }
+
+    System.out.println("🟡-------------------------------------BULK--WRITE--PRODUCTS-----------------------------------🟡");
+    // create, update, delete , use Model
+    // no transaction for the bulk
+    try {
+      BulkWriteResult result = collection.bulkWrite(
+        Arrays.asList(
+      new InsertOneModel<>(createProductDocument(products.get(0))),
+      new InsertOneModel<>(createProductDocument(products.get(1))),
+
+      new UpdateOneModel<>(createProductDocument(products.get(2)), new Document("$set", new Document("price", 100.99)),new UpdateOptions().upsert(true)),
+
+      new DeleteOneModel<>(createProductDocument(products.get(0)))
+      ));
+      System.out.println("Inserted count: " + result.getInsertedCount()
+      + " Updated Count: " + result.getModifiedCount()
+      + " Delete count: " + result.getDeletedCount());
+    } catch (MongoException ex) {
+      ex.printStackTrace();
+    }
+
 
     System.out.println("🟡-------------------------------------CREATE--(1)--ORDER-----------------------------------🟡");
     collection = database.getCollection( "orders");

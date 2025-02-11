@@ -1,8 +1,11 @@
-package com.kristina.ecom.console.Mongo;
+package com.kristina.ecom.console.mongo;
 
-public interface MongoDAO<T> {
-  public T get(int id);
-  public boolean create(T t);
-  public T update(T t);
+import com.mongodb.MongoException;
+import java.util.List;
+
+public interface MongoDAO<K, V> {
+  public int create(V v) throws MongoException;
+  public V get(int id);
+  public V update(V t);
   public boolean delete(int id);
 }

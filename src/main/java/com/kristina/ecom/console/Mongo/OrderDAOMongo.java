@@ -1,4 +1,4 @@
-package com.kristina.ecom.console.Mongo;
+package com.kristina.ecom.console.mongo;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -32,6 +32,8 @@ public class OrderDAOMongo implements MongoDAO<Order> {
         document.getList("products", Product.class)
       );
       return order;
+    } else {
+      System.out.println("Coudn't find order with id: " + );
     }
     return null;
   }

@@ -1,4 +1,4 @@
-package com.kristina.ecom.console.Mongo;
+package com.kristina.ecom.console.mongo;
 // // package com.kristina.ecom.console;
 
 // // import java.time.LocalDateTime;
