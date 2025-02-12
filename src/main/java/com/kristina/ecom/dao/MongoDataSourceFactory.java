@@ -1,4 +1,4 @@
-package com.kristina.ecom.console.mongo;
+package com.kristina.ecom.dao;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -14,11 +14,10 @@ public class MongoDataSourceFactory {
   private  MongoDataSourceFactory(String fileName) {
     props = new Properties();
     try {
-      props.load(getClass().getClassLoader().getResourceAsStream("finaName"));
+      props.load(getClass().getClassLoader().getResourceAsStream(fileName));
     } catch (IOException ex) {
       ex.printStackTrace();
     }
-
   }
 
   public static MongoDataSourceFactory getInstance() {
@@ -26,7 +25,7 @@ public class MongoDataSourceFactory {
   }
 
   public  MongoDatabase getDatabase() {
-    return MongoClients.create(props.getProperty("MONGO_URL"))
+    return MongoClients.create(props.getProperty("MONGODB_URL"))
       .getDatabase(props.getProperty("MONGO_DB"));
   }
 }

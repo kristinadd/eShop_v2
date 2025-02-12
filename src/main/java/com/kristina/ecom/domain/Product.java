@@ -1,7 +1,7 @@
 package com.kristina.ecom.domain;
 
 public class Product implements Cloneable {
-  private int id;
+  private String id;
   private String type;
   private String name;
   private double price;
@@ -13,22 +13,22 @@ public class Product implements Cloneable {
   }
 
   public Product(String type, String name, double price, String img) {
-    this(0, type, name, price, 0, img);
+    this("", type, name, price, 0, img);
   }
 
-  public Product(String type, String name, double price, int quantity) {
-    this(0,  type, name, price, quantity, " "); 
-  }
+  // public Product(String type, String name, double price, int quantity) {
+  //   this("",  type, name, price, quantity, " "); 
+  // }
 
   public Product(String type, String name, double price, int quantity, String img) {
-    this(0, type, name, price, quantity, img);
+    this("", type, name, price, quantity, img);
   }
 
-  public Product( int id, String name, double price, int quantity) {
+  public Product( String id, String name, double price, int quantity) {
     this(id,  "Component", name, price, quantity, " ");
   }
 
-  public Product(int id, String type, String name, double price, int quantity, String img) {
+  public Product(String id, String type, String name, double price, int quantity, String img) {
     this.id = id;
     this.type = type;
     this.name = name;
@@ -37,8 +37,12 @@ public class Product implements Cloneable {
     this.img = img;
   }
 
-  public int getId() {
+  public String getId() {
     return this.id;
+  }
+
+  public void setId(String id) {
+    this.id = id;
   }
 
   public String getType() {
