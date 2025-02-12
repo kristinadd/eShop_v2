@@ -17,7 +17,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 
-public class ProductDAOMongo implements MongoDAO<Integer, Product>{
+public class ProductDAOMongo implements MongoDAO<String, Product> {
   private MongoDataSourceFactory dataSourceFactory;
   private MongoCollection<Document> collection;
 
@@ -42,7 +42,7 @@ public class ProductDAOMongo implements MongoDAO<Integer, Product>{
    }
   
   @Override
-  public  Product read(Integer id) throws DAOException {
+  public  Product read(String id) throws DAOException {
     Document document = collection.find(eq("_id", id)).first();
 
     if (document != null) {
@@ -83,7 +83,7 @@ public class ProductDAOMongo implements MongoDAO<Integer, Product>{
   }
 
   @Override
-  public int delete(Integer id) throws DAOException {
+  public int delete(String id) throws DAOException {
     try {
     DeleteResult result = collection.deleteOne(Filters.eq(id));
     return (int) result.getDeletedCount();
