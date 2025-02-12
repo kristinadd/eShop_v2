@@ -2,22 +2,22 @@ package com.kristina.ecom.dao;
 
 import static com.mongodb.client.model.Filters.eq;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.Product;
-
 
 public class OrderDAOMongo  implements MongoDAO<String, Order> {
   private MongoDataSourceFactory dataSourceFactory;
@@ -35,7 +35,8 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
 
     try {
       Document document = toDocument(order);
-      collection.insertOne(document); // fix the database id
+      InsertOneResult result = collection.insertOne(document);
+      order.setId(result.getInsertedId().toString());
       return order;
     } catch (MongoException ex) {
       throw new DAOException("Order creation error", ex);
@@ -45,7 +46,6 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
   @Override
   public List<Order> readAll() throws DAOException {
     FindIterable<Document> documents = collection.find();
-
     List<Order> orders = new ArrayList<>();
 
     for (Document document : documents) {
@@ -61,8 +61,7 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
     if (id == null) {
       return null;
     }
-
-    Bson query =  eq("_id",id);
+    Bson query =  eq("_id", new ObjectId(id));
     Document document = collection.find(query).first();
 
     if (document != null) {
@@ -99,9 +98,9 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
       return null;
 
     Order order = new Order(
-      document.getString("_id"),
+      document.getObjectId("_id").toString(), // query ObjectId not string
       document.getString("description"),
-      document.getDouble("total").floatValue(), // if I get it as an Integer and then convert to float; it fails
+      document.getDouble("total").floatValue(),
       document.getDate("date").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
       document.getList("products", Product.class)
     );
@@ -114,8 +113,8 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
       return null;
     
     Document document = new Document();
-
-    document.append("_id", order.getId());
+    if (!order.getId().isEmpty())
+    document.append("_id", order.getId()); // Do I need to append as ObjectId --> new ObjectId(order.getId() ??
     document.append("description", order.getDescription());
     document.append("total", order.getTotal());
     document.append("date", order.getDate());

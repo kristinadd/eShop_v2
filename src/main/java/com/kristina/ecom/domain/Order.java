@@ -27,6 +27,14 @@ public class Order {
     this.products = products;
   }
 
+  public Order(String description, float total, LocalDateTime date, List<Product> products) {
+    this.id = "";
+    this.description = description;
+    this.total = total;
+    this.date = date;
+    this.products = products;
+  }
+
   public String getId() {
     return id;
   }

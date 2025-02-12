@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import com.kristina.ecom.domain.Product;
 import com.mongodb.MongoException;
@@ -43,7 +44,7 @@ public class ProductDAOMongo implements MongoDAO<String, Product> {
   
   @Override
   public  Product read(String id) throws DAOException {
-    Document document = collection.find(eq("_id", id)).first();
+    Document document = collection.find(eq("_id", new ObjectId(id))).first();
 
     if (document != null) {
       Product product = toProduct(document);
@@ -97,7 +98,7 @@ public class ProductDAOMongo implements MongoDAO<String, Product> {
       return null;
 
     Product product = new Product(
-      document.getString("_id"),
+      document.getObjectId("_id").toString(),
       document.getString("type"),
       document.getString("name"),
       document.getDouble("price"),
@@ -112,7 +113,7 @@ public class ProductDAOMongo implements MongoDAO<String, Product> {
     if (product != null) {
     Document document = new Document();
       if (!product.getId().isEmpty())
-        document.append("_id", product.getId());
+        document.append("_id", product.getId());  // maybe need to append as new ObjectId(product.getId()) 
         document.append("type", product.getType());
         document.append("name", product.getName());
         document.append("price", product.getPrice());

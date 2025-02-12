@@ -29,6 +29,13 @@ public class Main {
     //   ex.printStackTrace();
     //   // System.out.println(ex.getCause());
     // }
+                                                                  // READ A PRODUCT 
+    try {
+      Product product = productDao.read("67ac63ac2a325047a6d12097");
+      System.out.println("🦁 " + product);
+    } catch (DAOException ex) {
+      ex.printStackTrace();
+    }
                                                              // ORDER TESTS
     OrderDAOMongo orderDao = new OrderDAOMongo();
 
@@ -36,9 +43,8 @@ public class Main {
     // List<Product> products = new ArrayList<>();
 
     // Order order = new Order(
-    //   "2",
-    //   "my order",
-    //   10.43f,
+    //   "Order with generated id",
+    //   50.99f,
     //   LocalDateTime.now(),
     //   products
     // );
@@ -59,27 +65,27 @@ public class Main {
       ex.printStackTrace();
     }
                                                     // READ ONE ORDER
-    try {
-      Order order = orderDao.read("234");
-      System.out.println("🟡 "+ order);
-    } catch (DAOException ex) {
-      ex.printStackTrace();
-    }
+    // try {
+    //   Order order = orderDao.read("67acbba2c6e95a55d2762bb3");
+    //   System.out.println("🟡 " + order);
+    // } catch (DAOException ex) {
+    //   ex.printStackTrace();
+    // }
                                                       // UPDATE AN ORDER
-      try {
-        Order order = orderDao.read("234");
-        order.setDescription("UPDATED description");
-        int result = orderDao.update(order);
-        System.out.println("👻 Made " + result + " updates.");
-      } catch (DAOException ex) {
-        ex.printStackTrace();
-      }
+      // try {
+      //   Order order = orderDao.read("234");
+      //   order.setDescription("UPDATED description");
+      //   int result = orderDao.update(order);
+      //   System.out.println("👻 Made " + result + " updates.");
+      // } catch (DAOException ex) {
+      //   ex.printStackTrace();
+      // }
                                                         // DELETE ORDER
-      try {
-        int result = orderDao.delete("123");
-        System.out.println("❌ Deleted " + result + " orders.");
-      } catch (DAOException ex) {
-        ex.printStackTrace();
-      }
+      // try {
+      //   int result = orderDao.delete("123");
+      //   System.out.println("❌ Deleted " + result + " orders.");
+      // } catch (DAOException ex) {
+      //   ex.printStackTrace();
+      // }
   }
 }
