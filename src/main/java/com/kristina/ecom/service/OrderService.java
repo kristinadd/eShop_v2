@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 public class OrderService {
   private DAO<String, Order> dao; // interface
-  private DAO<Integer, Product> daoP;
+  private DAO<String, Product> daoP;
 
   public OrderService() {
     dao = new OrderDAOMySql();
@@ -121,7 +121,7 @@ public class OrderService {
   }
 
   // get the product quantity by its id in the oder 
-  private int getProductQuantityById(List<Product> products, int id){
+  private int getProductQuantityById(List<Product> products, String id){
     for (Product p : products) 
       if (p.getId() == id)
         return p.getQuantity();

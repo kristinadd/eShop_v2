@@ -1,7 +1,5 @@
 package com.kristina.ecom.dao;
 
-import com.mongodb.MongoException;
-
 import java.util.List;
 
 public interface MongoDAO<K, V> {

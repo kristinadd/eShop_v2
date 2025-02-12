@@ -87,7 +87,7 @@ public class MongoMyTest {
 
     System.out.println("🟡------------------------------------CREATE--ONLY--1--PRODUCT----------------------------------🟡");
     // create Java object and convert it to document
-    Product product = new Product(1, "Component", "Keyboard", 65.99, 15, "img");
+    Product product = new Product("1", "Component", "Keyboard", 65.99, 15, "img");
     Document document = createProductDocument(product);
 
     // write to the database
@@ -101,11 +101,11 @@ public class MongoMyTest {
 
     System.out.println("🟡------------------------------------CREATE--(1+)--PRODUCT-------------------------------------🟡");
     List<Product> products = Arrays.asList(
-      new Product(2, "Component", "Headset", 300.99, 10, "img"),
-      new Product(3, "Component", "Mouse", 35.99, 5, "img"),
-      new Product(4, "Component", "Iphone", 1065.99, 3, "img"),
-      new Product(5, "Component", "Monitor", 1500.00, 5, "img"),
-      new Product(6, "Component", "MacBook", 2500.00, 7, "img")
+      new Product("2", "Component", "Headset", 300.99, 10, "img"),
+      new Product("3", "Component", "Mouse", 35.99, 5, "img"),
+      new Product("4", "Component", "Iphone", 1065.99, 3, "img"),
+      new Product("5", "Component", "Monitor", 1500.00, 5, "img"),
+      new Product("6", "Component", "MacBook", 2500.00, 7, "img")
     );
     List<Document> documentList = new ArrayList<>();
 
@@ -243,9 +243,9 @@ public class MongoMyTest {
     collection = database.getCollection( "orders");
 
     List<Product> productsList = Arrays.asList(
-      new Product(1, "Component", "product1", 6.99, 7, "img"),
-      new Product(2, "Component", "product2", 2.99, 7, "img"),
-      new Product(3, "Component", "product3", 22.99, 7, "img")
+      new Product("1", "Component", "product1", 6.99, 7, "img"),
+      new Product("2", "Component", "product2", 2.99, 7, "img"),
+      new Product("3", "Component", "product3", 22.99, 7, "img")
     );
 
     Order order = new Order("1", "First order", 39.99f, LocalDateTime.now(), productsList); // need to specify float

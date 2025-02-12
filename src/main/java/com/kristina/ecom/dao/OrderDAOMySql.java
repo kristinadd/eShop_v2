@@ -31,7 +31,7 @@ public class OrderDAOMySql implements DAO<String, Order> {
     PreparedStatement stat = conn.prepareStatement(query);
     stat = conn.prepareStatement(query);
       stat.setString(1, order.getId());
-      stat.setInt(2, product.getId());
+      stat.setString(2, product.getId());
       stat.setInt(3, product.getQuantity());
       rows = stat.executeUpdate();
 
@@ -55,7 +55,7 @@ public class OrderDAOMySql implements DAO<String, Order> {
       stat = conn.prepareStatement(query2);
       for (Product product : order.getProducts()) {
         stat.setString(1, order.getId());
-        stat.setInt(2, product.getId());
+        stat.setString(2, product.getId());
         stat.setInt(3, product.getQuantity());
         stat.executeUpdate();
       }
@@ -120,7 +120,7 @@ public class OrderDAOMySql implements DAO<String, Order> {
                 List<Product> products = new ArrayList<>();
                 while (productsRs.next()) {
                     Product product = new Product(
-                        productsRs.getInt("id"), 
+                        productsRs.getString("id"), 
                         productsRs.getString("name"), 
                         productsRs.getFloat("price"), 
                         productsRs.getInt("quantity")
@@ -202,7 +202,7 @@ public class OrderDAOMySql implements DAO<String, Order> {
     stat = conn.prepareStatement(insertProductsQuery);
     for (Product product : order.getProducts()) {
       stat.setString(1, order.getId());
-      stat.setInt(2, product.getId());
+      stat.setString(2, product.getId());
       stat.setInt(3, product.getQuantity());
       stat.executeUpdate();
     }

@@ -12,7 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.sql.PreparedStatement;
 
-public class ProductDAOMySql implements DAO<Integer, Product> {
+public class ProductDAOMySql implements DAO<String, Product> {
 
   private DataSource datasource;
 
@@ -46,7 +46,7 @@ public class ProductDAOMySql implements DAO<Integer, Product> {
     Statement stat = conn.createStatement();
     ResultSet rs = stat.executeQuery(query);
       while (rs.next()) {
-        Product product = new Product(rs.getInt(1), 
+        Product product = new Product(rs.getString(1), 
                                       rs.getString(2), 
                                       rs.getString(3), 
                                       rs.getDouble(4), 
@@ -61,7 +61,7 @@ public class ProductDAOMySql implements DAO<Integer, Product> {
   }
 
   @Override
-  public Product read(Integer id) throws SQLException{
+  public Product read(String id) throws SQLException{
     Product product = null;
 
     String query = "SELECT * FROM product WHERE id=" + id;
@@ -69,7 +69,7 @@ public class ProductDAOMySql implements DAO<Integer, Product> {
     Statement stat = conn.createStatement();
     ResultSet rs = stat.executeQuery(query);
     if (rs.next())
-      product = new Product(rs.getInt(1), 
+      product = new Product(rs.getString(1), 
                             rs.getString(2), 
                             rs.getString(3), 
                             rs.getDouble(4), 
@@ -91,7 +91,7 @@ public class ProductDAOMySql implements DAO<Integer, Product> {
     stat.setDouble(3, product.getPrice());
     stat.setInt(4, product.getQuantity());
     stat.setString(5, product.getImg());
-    stat.setInt(6, product.getId());
+    stat.setString(6, product.getId());
     stat.executeUpdate();
     rows = stat.executeUpdate();
 
@@ -100,7 +100,7 @@ public class ProductDAOMySql implements DAO<Integer, Product> {
   }
 
   @Override
-  public int delete(Integer id) throws SQLException {
+  public int delete(String id) throws SQLException {
     String query = "DELETE FROM product WHERE id=" + id;
     int rows = 0;
 

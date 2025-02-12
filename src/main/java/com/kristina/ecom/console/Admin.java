@@ -68,13 +68,13 @@ public class Admin {
 
   public void read() {
     System.out.print("Which product would you like to  to read: ");
-    int id = sc.nextInt();
+    String id = sc.nextLine();
     System.out.println(service.get(id));
   }
 
   public void delete() {
     System.out.print("Which product would you like to  to delete: ");
-    int id = sc.nextInt();
+    String id = sc.nextLine();
     if (service.delete(id) == 1)
       System.out.println("Product deleted");
     else
@@ -102,7 +102,7 @@ public class Admin {
   public void update() {
     System.out.println("Select product: ");
     all();
-    int id = sc.nextInt();
+    String id = sc.nextLine();
     Product product = service.get(id);
     sc.nextLine();
 

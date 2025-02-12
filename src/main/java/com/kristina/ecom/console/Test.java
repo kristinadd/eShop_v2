@@ -13,15 +13,15 @@ public class Test {
   public static void main(String[] args) {
 
     // Can do the same thing with Set
-    Product p1 =  new Product(1, "Printer", 10, 10);
+    // Product p1 =  new Product("1", "Printer", 10, 10);
     //
-    Product p2 =  new Product(2, "GPUs", 20, 10);
-    Product p3 =  new Product(3, "USB", 30, 10);
+    Product p2 =  new Product("2", "GPUs", 20, 10);
+    Product p3 =  new Product("3", "USB", 30, 10);
     //
-    Product p4 =  new Product(2, "GPUs", 20, 10);
-    Product p5 =  new Product(3, "USB", 30, 10);
+    Product p4 =  new Product("2", "GPUs", 20, 10);
+    Product p5 =  new Product("3", "USB", 30, 10);
     //
-    Product p6 =  new Product(4, "Microphone", 40, 10);
+    Product p6 =  new Product("4", "Microphone", 40, 10);
 
 
     List<Product> l1 = Arrays.asList(p2, p3);

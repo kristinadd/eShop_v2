@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class MarketSpace {
   private static  MarketSpace instance = new MarketSpace();
-  private Map<Integer, Product> products;
+  private Map<String, Product> products;
   private List<Computer> cart;
 
 

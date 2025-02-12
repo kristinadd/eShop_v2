@@ -11,7 +11,7 @@ import com.kristina.ecom.domain.Product;
 import java.sql.SQLException;
 
 public class ProductService {
-  private DAO<Integer, Product> dao;
+  private DAO<String, Product> dao;
 
   public ProductService() {
     dao = new ProductDAOMySql();
@@ -48,7 +48,7 @@ public class ProductService {
     return product;
   }
 
-  public Product get(int id) {
+  public Product get(String id) {
     Product product = null;
     try {
       product = dao.read(id);
@@ -59,7 +59,7 @@ public class ProductService {
     return product;
   }
 
-  public int delete(int id) {
+  public int delete(String id) {
     int rows = 0;
     try {
       rows = dao.delete(id);
