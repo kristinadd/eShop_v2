@@ -19,7 +19,7 @@ public class Order {
       );
   }
   
-  public Order(String id, String description, float total, LocalDateTime date, List < Product > products) {
+  public Order(String id, String description, float total, LocalDateTime date, List<Product> products) {
     this.id = id;
     this.description = description;
     this.total = total;

@@ -3,13 +3,18 @@ package com.kristina.ecom.dao;
 import static com.mongodb.client.model.Filters.eq;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import com.mongodb.MongoException;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.Product;
 
@@ -20,7 +25,7 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
 
   public OrderDAOMongo() {
     this.dataSourceFactory = MongoDataSourceFactory.getInstance();
-    this.collection = dataSourceFactory.getDatabase().getCollection("order");
+    this.collection = dataSourceFactory.getDatabase().getCollection("orders");
   }
 
   @Override
@@ -29,7 +34,8 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
       return null;
 
     try {
-      // create order
+      Document document = toDocument(order);
+      collection.insertOne(document); // fix the database id
       return order;
     } catch (MongoException ex) {
       throw new DAOException("Order creation error", ex);
@@ -38,30 +44,83 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
 
   @Override
   public List<Order> readAll() throws DAOException {
+    FindIterable<Document> documents = collection.find();
+
     List<Order> orders = new ArrayList<>();
+
+    for (Document document : documents) {
+      Order order = toOrder(document);
+      orders.add(order);
+    }
+
     return orders;
   }
 
   @Override
   public Order read(String id) throws DAOException {
-    Product product1 = new Product();
-    Product product2 = new Product();
-    List<Product> products = new ArrayList<>();
-    products.add(product1);
-    products.add(product2);
+    if (id == null) {
+      return null;
+    }
 
-    Order order = new Order("1", "dummy order object", 123.12f, LocalDateTime.now(), products); // floating-point literals with a decimal point are considered double by default
+    Bson query =  eq("_id",id);
+    Document document = collection.find(query).first();
 
-    return order;
+    if (document != null) {
+      Order order = toOrder(document);
+
+      return order;
+    }
+
+    return null;
   }
 
   @Override
   public int update(Order order) throws DAOException {
-    return 1;
+    if (order == null)
+      return 0;
+
+    Document document = toDocument(order);
+    Bson query = eq("_id", order.getId());
+    UpdateResult result = collection.replaceOne(query, document);
+
+    return (int) result.getModifiedCount();
   }
 
   @Override
   public int delete(String id) throws DAOException {
-    return 1;
+    Bson query = eq("_id", id);
+    DeleteResult result = collection.deleteOne(query);
+
+    return (int) result.getDeletedCount();
+  }
+
+  private Order toOrder(Document document) {
+    if (document == null)
+      return null;
+
+    Order order = new Order(
+      document.getString("_id"),
+      document.getString("description"),
+      document.getDouble("total").floatValue(), // if I get it as an Integer and then convert to float; it fails
+      document.getDate("date").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
+      document.getList("products", Product.class)
+    );
+
+    return order;
+  }
+
+  private Document toDocument(Order order) {
+    if (order == null)
+      return null;
+    
+    Document document = new Document();
+
+    document.append("_id", order.getId());
+    document.append("description", order.getDescription());
+    document.append("total", order.getTotal());
+    document.append("date", order.getDate());
+    document.append("products", order.getProducts());
+
+    return document;
   }
 }

@@ -111,15 +111,15 @@ public class ProductDAOMongo implements MongoDAO<String, Product> {
   private Document toDocument(Product product) {
     if (product != null) {
     Document document = new Document();
-    if (!product.getId().isEmpty())
-      document.append("_id", product.getId());
-      document.append("type", product.getType());
-      document.append("name", product.getName());
-      document.append("price", product.getPrice());
-      document.append("quantity", product.getQuantity());
-      document.append("image", product.getImg());
+      if (!product.getId().isEmpty())
+        document.append("_id", product.getId());
+        document.append("type", product.getType());
+        document.append("name", product.getName());
+        document.append("price", product.getPrice());
+        document.append("quantity", product.getQuantity());
+        document.append("image", product.getImg());
 
-    return document;
+      return document;
     } else {
       System.out.println("Can't convert to document. Product is either null or invalid.");
     }
