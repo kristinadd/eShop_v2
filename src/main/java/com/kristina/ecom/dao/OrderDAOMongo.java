@@ -79,8 +79,6 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
     if (order == null)
       return 0;
 
-    // the new document needs to have the same id as the old document
-    
     Document document = toDocument(order);
     Bson query = eq("_id", new ObjectId(order.getId()));
     UpdateResult result = collection.replaceOne(query, document);
@@ -118,7 +116,7 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
     
     Document document = new Document();
     if (!order.getId().isEmpty())
-    document.append("_id", order.getId()); // Do I need to append as ObjectId --> new ObjectId(order.getId() ??
+    document.append("_id", new ObjectId(order.getId())); 
     document.append("description", order.getDescription());
     document.append("total", order.getTotal());
     document.append("date", order.getDate());

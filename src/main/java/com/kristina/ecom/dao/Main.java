@@ -59,7 +59,7 @@ public class Main {
     try {
       List<Order> orders = orderDao.readAll();
       for (Order order3 : orders) {
-        System.out.println("⭐️ " +  order3);
+        System.out.println("⭐️ Real all orders: " +  order3);
       }
     } catch (DAOException ex) {
       ex.printStackTrace();
@@ -67,14 +67,14 @@ public class Main {
                                                     // READ ONE ORDER
     try {
       Order order4 = orderDao.read("67acbba2c6e95a55d2762bb3");
-      System.out.println("🍊 " + order4);
+      System.out.println("🍊 Order details " + order4);
     } catch (DAOException ex) {
       ex.printStackTrace();
     }
                                                       // UPDATE AN ORDER 
       try {
-        Order order5 = orderDao.read("67ae0630e96b206cc9a9e695");
-        order5.setDescription("UPDATED description");
+        Order order5 = orderDao.read("67ae11fdbda9e3474bfa5603");
+        order5.setDescription("NEW UPDATED order");
         int result = orderDao.update(order5);
         System.out.println("👻 Made " + result + " updates.");
       } catch (DAOException ex) {
