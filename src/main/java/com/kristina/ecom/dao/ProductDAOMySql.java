@@ -12,7 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.sql.PreparedStatement;
 
-public class ProductDAOMySql implements DAO<String, Product> {
+public class ProductDAOMySql implements DAO<Integer, Product<Integer>> {
 
   private DataSource datasource;
 
@@ -21,7 +21,7 @@ public class ProductDAOMySql implements DAO<String, Product> {
   }
 
   @Override
-  public int create(Product product) throws SQLException {
+  public int create(Product<Integer> product) throws SQLException {
     Connection conn = datasource.getConnection();
     String query = "INSERT INTO product (type, name, price, quantity, image) VALUES(? ,?, ?, ?, ?)";
 
@@ -38,15 +38,15 @@ public class ProductDAOMySql implements DAO<String, Product> {
   }
 
   @Override
-  public List<Product> readAll() throws SQLException{
-    List<Product> products = new ArrayList<>();
+  public List<Product<Integer>> readAll() throws SQLException{
+    List<Product<Integer>> products = new ArrayList<>();
     Connection conn = datasource.getConnection();
 
     String query = "SELECT * FROM product";
     Statement stat = conn.createStatement();
     ResultSet rs = stat.executeQuery(query);
       while (rs.next()) {
-        Product product = new Product(rs.getString(1), 
+        Product<Integer> product = new Product<Integer>(rs.getInt(1), 
                                       rs.getString(2), 
                                       rs.getString(3), 
                                       rs.getDouble(4), 
@@ -61,15 +61,15 @@ public class ProductDAOMySql implements DAO<String, Product> {
   }
 
   @Override
-  public Product read(String id) throws SQLException{
-    Product product = null;
+  public Product<Integer> read(Integer id) throws SQLException{
+    Product<Integer> product = null;
 
     String query = "SELECT * FROM product WHERE id=" + id;
     Connection conn = datasource.getConnection();
     Statement stat = conn.createStatement();
     ResultSet rs = stat.executeQuery(query);
     if (rs.next())
-      product = new Product(rs.getString(1), 
+      product = new Product<Integer>(rs.getInt(1), 
                             rs.getString(2), 
                             rs.getString(3), 
                             rs.getDouble(4), 
@@ -80,7 +80,7 @@ public class ProductDAOMySql implements DAO<String, Product> {
   }
 
   @Override
-  public int update(Product product) throws SQLException {
+  public int update(Product<Integer> product) throws SQLException {
     String query = "UPDATE product SET type=?, name=?, price=?, quantity=?, image=? WHERE id=?";
     int rows = 0;
 
@@ -91,7 +91,7 @@ public class ProductDAOMySql implements DAO<String, Product> {
     stat.setDouble(3, product.getPrice());
     stat.setInt(4, product.getQuantity());
     stat.setString(5, product.getImg());
-    stat.setString(6, product.getId());
+    stat.setInt(6, product.getId());
     stat.executeUpdate();
     rows = stat.executeUpdate();
 
@@ -100,7 +100,7 @@ public class ProductDAOMySql implements DAO<String, Product> {
   }
 
   @Override
-  public int delete(String id) throws SQLException {
+  public int delete(Integer id) throws SQLException {
     String query = "DELETE FROM product WHERE id=" + id;
     int rows = 0;
 

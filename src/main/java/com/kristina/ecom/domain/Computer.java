@@ -5,5 +5,5 @@ public interface Computer {
   String getDescription();
   double getPrice();
   String getOrderID();
-  List<Product> getComponents();
+  List<Product<Integer>> getComponents();
 }

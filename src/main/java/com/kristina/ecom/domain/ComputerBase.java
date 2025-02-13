@@ -15,14 +15,14 @@ public class ComputerBase implements Computer {
   private String orderID;
   private String description;
   private double price;
-  private List<Product> components;
+  private List<Product<Integer>> components;
 
   public ComputerBase() {
-      this(getID(), new ArrayList<Product>());
+      this(getID(), new ArrayList<Product<Integer>>());
   }
 
-  public ComputerBase(String orderID, List<Product> components) {
-    Product computer = new ProductService().getComputer();
+  public ComputerBase(String orderID, List<Product<Integer>> components) {
+    Product<Integer> computer = new ProductService().getComputer();
     this.orderID = orderID;
     this.description = computer.getName();
     this.price = computer.getPrice();
@@ -45,7 +45,7 @@ public class ComputerBase implements Computer {
   }
 
   @Override
-  public List<Product> getComponents() {
+  public List<Product<Integer>> getComponents() {
     return components;
   }
 

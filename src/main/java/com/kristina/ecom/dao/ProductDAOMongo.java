@@ -18,7 +18,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 
-public class ProductDAOMongo implements MongoDAO<String, Product> {
+public class ProductDAOMongo implements MongoDAO<String, Product<String>> {
   private MongoDataSourceFactory dataSourceFactory;
   private MongoCollection<Document> collection;
 
@@ -28,7 +28,7 @@ public class ProductDAOMongo implements MongoDAO<String, Product> {
   }
 
   @Override
-  public Product create(Product product) throws DAOException {
+  public Product<String> create(Product<String> product) throws DAOException {
     if (product == null)
       return null;
       
@@ -43,11 +43,11 @@ public class ProductDAOMongo implements MongoDAO<String, Product> {
    }
   
   @Override
-  public  Product read(String id) throws DAOException {
+  public  Product<String> read(String id) throws DAOException {
     Document document = collection.find(eq("_id", new ObjectId(id))).first();
 
     if (document != null) {
-      Product product = toProduct(document);
+      Product<String> product = toProduct(document);
       return product;
     } else {
       System.out.println("Coudn't find product with id: " + id);
@@ -57,12 +57,12 @@ public class ProductDAOMongo implements MongoDAO<String, Product> {
   }
 
   @Override
-  public List<Product> readAll() throws DAOException {
-    List<Product> products = new ArrayList<>();
+  public List<Product<String>> readAll() throws DAOException {
+    List<Product<String>> products = new ArrayList<>();
     FindIterable<Document> documents = collection.find();
     for (Document document : documents) {
       if (document != null) {
-        Product product = toProduct(document);
+        Product<String> product = toProduct(document);
       products.add(product);
       }
     }
@@ -70,7 +70,7 @@ public class ProductDAOMongo implements MongoDAO<String, Product> {
   }
 
   @Override
-  public int update(Product product) throws DAOException {
+  public int update(Product<String> product) throws DAOException {
     if (product == null)
       return 0;
 
@@ -93,11 +93,11 @@ public class ProductDAOMongo implements MongoDAO<String, Product> {
     }
   }
 
-  private Product toProduct(Document document) {
+  private Product<String> toProduct(Document document) {
     if (document == null)
       return null;
 
-    Product product = new Product(
+    Product<String> product = new Product<String>(
       document.getObjectId("_id").toString(),
       document.getString("type"),
       document.getString("name"),
@@ -109,7 +109,7 @@ public class ProductDAOMongo implements MongoDAO<String, Product> {
 
   }
 
-  private Document toDocument(Product product) {
+  private Document toDocument(Product<String> product) {
     if (product != null) {
     Document document = new Document();
       if (!product.getId().isEmpty())

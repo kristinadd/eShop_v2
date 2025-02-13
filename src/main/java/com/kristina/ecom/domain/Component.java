@@ -7,12 +7,12 @@ public class Component extends ComputerDecorator {
     super(computer);
   }
 
-  public Component(Computer computer, Product product) {
+  public Component(Computer computer, Product<Integer> product) {
     super(computer);
     this.description = product.getName();
     this.price = product.getPrice();
     if (super.getComponents().contains(product)) {
-      Product p = super.getComponents().get(super.getComponents().indexOf(product));
+      Product<Integer> p = super.getComponents().get(super.getComponents().indexOf(product));
        p.setQuantity(p.getQuantity() + product.getQuantity());
     } else
       super.getComponents().add(product);

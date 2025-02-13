@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 public class OrderService {
   private DAO<String, Order> dao; // interface
-  private DAO<String, Product> daoP;
+  private DAO<String, Product<Integer>> daoP;
 
   public OrderService() {
     dao = new OrderDAOMySql();
@@ -25,8 +25,8 @@ public class OrderService {
     int rows  = 0;
     try {
       rows = dao.create(order);
-      Product stock;
-      for (Product p : order.getProducts()) {
+      Product<Integer> stock;
+      for (Product<Integer> p : order.getProducts()) {
         stock = daoP.read(p.getId());
         stock.setQuantity(stock.getQuantity() - p.getQuantity());
         daoP.update(stock);
@@ -75,7 +75,7 @@ public class OrderService {
     try {
       ProductService pService  = new ProductService();
       dao.read(id).getProducts().forEach(p -> {
-        Product product = pService.get(p.getId());
+        Product<Integer> product = pService.get(p.getId());
         product.setQuantity(product.getQuantity() + p.getQuantity());
         pService.update(product);
       });
@@ -90,23 +90,23 @@ public class OrderService {
   public boolean update(Order order) {
     try {
         Order oldOrder = dao.read(order.getId());
-        Product  productFromStock;
+        Product<Integer>  productFromStock;
         int difference;
-        List<Product> oldProducts = oldOrder.getProducts();
-        List<Product> newOrderProducts = order.getProducts();
-        List<Product> commonProducts = newOrderProducts.stream().filter(p -> oldProducts.contains(p)).collect(Collectors.toList());
-        List<Product> onlyOldOrder = oldProducts.stream().filter(p -> !newOrderProducts.contains(p)).collect(Collectors.toList());
-        List<Product> onlyNewOrder = newOrderProducts.stream().filter(p -> !oldProducts.contains(p)).collect(Collectors.toList());
+        List<Product<Integer>> oldProducts = oldOrder.getProducts();
+        List<Product<Integer>> newOrderProducts = order.getProducts();
+        List<Product<Integer>> commonProducts = newOrderProducts.stream().filter(p -> oldProducts.contains(p)).collect(Collectors.toList());
+        List<Product<Integer>> onlyOldOrder = oldProducts.stream().filter(p -> !newOrderProducts.contains(p)).collect(Collectors.toList());
+        List<Product<Integer>> onlyNewOrder = newOrderProducts.stream().filter(p -> !oldProducts.contains(p)).collect(Collectors.toList());
         // update existing product or add new product 
         commonProducts.addAll(onlyNewOrder);
-        for (Product product : commonProducts) {
+        for (Product<Integer> product : commonProducts) {
           difference = product.getQuantity() - getProductQuantityById(oldProducts, product.getId());
           productFromStock = daoP.read(product.getId());
           productFromStock.setQuantity(productFromStock.getQuantity() - difference);
           daoP.update(productFromStock);
         }
         // delete product from order, increase the stock
-        for (Product product : onlyOldOrder) {
+        for (Product<Integer> product : onlyOldOrder) {
           productFromStock = daoP.read(product.getId());
           productFromStock.setQuantity(productFromStock.getQuantity() + product.getQuantity());
           daoP.update(productFromStock);
@@ -121,8 +121,8 @@ public class OrderService {
   }
 
   // get the product quantity by its id in the oder 
-  private int getProductQuantityById(List<Product> products, String id){
-    for (Product p : products) 
+  private int getProductQuantityById(List<Product<Integer>> products, String id){
+    for (Product<Integer> p : products) 
       if (p.getId() == id)
         return p.getQuantity();
 

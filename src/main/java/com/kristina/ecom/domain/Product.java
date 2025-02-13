@@ -1,7 +1,7 @@
 package com.kristina.ecom.domain;
 
-public class Product implements Cloneable {
-  private String id;
+public class Product<K> implements Cloneable {
+  private K id;
   private String type;
   private String name;
   private double price;
@@ -13,22 +13,18 @@ public class Product implements Cloneable {
   }
 
   public Product(String type, String name, double price, String img) {
-    this("", type, name, price, 0, img);
+    this(null, type, name, price, 0, img);
   }
-
-  // public Product(String type, String name, double price, int quantity) {
-  //   this("",  type, name, price, quantity, " "); 
-  // }
 
   public Product(String type, String name, double price, int quantity, String img) {
-    this("", type, name, price, quantity, img);
+    this(null, type, name, price, quantity, img);
   }
 
-  public Product( String id, String name, double price, int quantity) {
+  public Product( K id, String name, double price, int quantity) {
     this(id,  "Component", name, price, quantity, " ");
   }
 
-  public Product(String id, String type, String name, double price, int quantity, String img) {
+  public Product(K id, String type, String name, double price, int quantity, String img) {
     this.id = id;
     this.type = type;
     this.name = name;
@@ -37,11 +33,11 @@ public class Product implements Cloneable {
     this.img = img;
   }
 
-  public String getId() {
+  public K getId() {
     return this.id;
   }
 
-  public void setId(String id) {
+  public void setId(K id) {
     this.id = id;
   }
 
@@ -91,7 +87,7 @@ public class Product implements Cloneable {
   //   return new Product(this.id, this.name, this.price, this.quantity, this.img);
   // }
 
-  @Override // shallow copy or deep copy ??
+  @Override
   public Object clone() throws CloneNotSupportedException {
     return super.clone();
   }
@@ -101,9 +97,8 @@ public class Product implements Cloneable {
     if (!(obj instanceof Product))
       return false;
 
-    return ((Product) obj).getId() ==  this.getId();
+    return ((Product<Integer>) obj).getId() ==  this.getId();
   };
 }
 // == compares if two objects have the same reference in memory
-
 // the deffault equals uses == if not iverriden

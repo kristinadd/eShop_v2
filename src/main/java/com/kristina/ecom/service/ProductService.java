@@ -11,14 +11,14 @@ import com.kristina.ecom.domain.Product;
 import java.sql.SQLException;
 
 public class ProductService {
-  private DAO<String, Product> dao;
+  private DAO<String, Product<Integer>> dao;
 
   public ProductService() {
     dao = new ProductDAOMySql();
   }
 
-  public List<Product> getAll() {
-    List<Product> products = new ArrayList<>();
+  public List<Product<Integer>> getAll() {
+    List<Product<Integer>> products = new ArrayList<>();
     try {
       products = dao.readAll()
       .stream()
@@ -34,8 +34,8 @@ public class ProductService {
     return products;
   }
 
-  public Product getComputer() {
-    Product product = null;
+  public Product<Integer> getComputer() {
+    Product<Integer> product = null;
     try {
       product = dao.readAll().stream()
             .filter(p -> p.getType()
@@ -48,8 +48,8 @@ public class ProductService {
     return product;
   }
 
-  public Product get(String id) {
-    Product product = null;
+  public Product<Integer> get(Integer id) {
+    Product<Integer> product = null;
     try {
       product = dao.read(id);
     } catch (SQLException ex) {
@@ -69,7 +69,7 @@ public class ProductService {
     return rows;
   }
 
-  public int create(Product product) {
+  public int create(Product<Integer> product) {
     int rows  = 0;
     try {
       rows = dao.create(product);
@@ -79,7 +79,7 @@ public class ProductService {
     return rows;
   }
 
-  public int update (Product product) {
+  public int update (Product<Integer> product) {
     int rows = 0;
     try {
       rows = dao.update(product);

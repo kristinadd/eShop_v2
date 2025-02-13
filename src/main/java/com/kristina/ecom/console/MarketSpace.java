@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class MarketSpace {
   private static  MarketSpace instance = new MarketSpace();
-  private Map<String, Product> products;
+  private Map<String, Product<Integer>> products;
   private List<Computer> cart;
 
 
@@ -50,15 +50,15 @@ public class MarketSpace {
         break;
 
       if  (products.keySet().contains(c)) {
-        Product product = products.get(c);
+        Product<Integer> product = products.get(c);
 
         if (product.getQuantity() == 0) {
           System.out.println("Out of stock. Select another product.");
 
         } else {
-          Product p = new Product();
+          Product<Integer> p = new Product<Integer>();
           try {
-            p = (Product) product.clone();
+            p = (Product<Integer>) product.clone();
             p.setQuantity(1);
           } catch (CloneNotSupportedException ex) {
             ex.printStackTrace();

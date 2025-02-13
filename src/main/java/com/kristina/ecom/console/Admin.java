@@ -91,7 +91,7 @@ public class Admin {
     Double price = sc.nextDouble();
     System.out.print("Product quantity:");
     int quantity = sc.nextInt();
-    Product product = new Product(type, name, price, quantity);
+    Product<Integer> product = new Product(type, name, price, quantity);
     
     if (service.create(product) == 1)
       System.out.println("Product created");
@@ -103,7 +103,7 @@ public class Admin {
     System.out.println("Select product: ");
     all();
     String id = sc.nextLine();
-    Product product = service.get(id);
+    Product<Integer> product = service.get(id);
     sc.nextLine();
 
     System.out.print("Product name:");

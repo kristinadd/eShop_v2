@@ -13,10 +13,10 @@ public class Main {
     ProductDAOMongo productDao = new ProductDAOMongo();
 
     // Product product2 = new Product("21", "Component", "Monitor", 30.50, 10, "monitor.img");
-    Product product3 = new Product("Component", "Monitor", 30.50, 10, "monitor.img");
+    Product<String> product3 = new Product("Component", "Monitor", 30.50, 10, "monitor.img");
 
     // try {
-    //   Product product = productDao.create(product3);
+    //   Product<String> product = productDao.create(product3);
     //   System.out.println(product);
     // } catch (DAOException ex ) {
     //   ex.printStackTrace();
@@ -31,7 +31,7 @@ public class Main {
     // }
                                                                   // READ A PRODUCT 
     try {
-      Product product = productDao.read("67ac63ac2a325047a6d12097");
+      Product<String> product = productDao.read("67ac63ac2a325047a6d12097");
       System.out.println("🦁 " + product);
     } catch (DAOException ex) {
       ex.printStackTrace();

@@ -25,7 +25,7 @@ public class ComputerDecorator implements Computer{
   }
 
   @Override
-  public List<Product> getComponents() {
+  public List<Product<Integer>> getComponents() {
     return this.computer.getComponents();
   }
 

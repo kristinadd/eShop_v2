@@ -7,7 +7,7 @@ public class Order {
   private String description;
   private float total;
   private LocalDateTime date;
-  private List<Product> products;
+  private List<Product<Integer>> products;
 
   public Order(Computer computer) {
       this(
@@ -19,7 +19,7 @@ public class Order {
       );
   }
   
-  public Order(String id, String description, float total, LocalDateTime date, List<Product> products) {
+  public Order(String id, String description, float total, LocalDateTime date, List<Product<Integer>> products) {
     this.id = id;
     this.description = description;
     this.total = total;
@@ -27,7 +27,7 @@ public class Order {
     this.products = products;
   }
 
-  public Order(String description, float total, LocalDateTime date, List<Product> products) {
+  public Order(String description, float total, LocalDateTime date, List<Product<Integer>> products) {
     this.id = "";
     this.description = description;
     this.total = total;
@@ -56,7 +56,7 @@ public class Order {
     description = base.getDescription();
     total = (float)base.getPrice();
     
-    for (Product product : products) {
+    for (Product<Integer> product : products) {
       description += (" + " + product.getName()).repeat(product.getQuantity());
       total += product.getPrice() * product.getQuantity();
     }
@@ -79,11 +79,11 @@ public class Order {
     this.date = date;
   }
 
-  public List<Product> getProducts() {
+  public List<Product<Integer>> getProducts() {
     return products;
   }
 
-  public void setProducts(List<Product> products) {
+  public void setProducts(List<Product<Integer>> products) {
     this.products = products;
   }
 

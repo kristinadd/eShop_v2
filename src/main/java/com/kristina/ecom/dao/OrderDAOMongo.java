@@ -98,11 +98,12 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
       return null;
 
     Order order = new Order(
-      document.getObjectId("_id").toString(), // query ObjectId not string
+      document.getObjectId("_id").toString(),
       document.getString("description"),
       document.getDouble("total").floatValue(),
       document.getDate("date").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
-      document.getList("products", Product.class)
+      new ArrayList<Product<Integer>>()
+      // document.getList("products", Product.class)
     );
 
     return order;

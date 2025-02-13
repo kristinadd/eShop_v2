@@ -108,14 +108,14 @@ public class Oms {
 
   public void addProductToOrder(Order order) {
     ProductService pService = new ProductService();
-    List<Product> productsInStock = pService.getAll();
+    List<Product<Integer>> productsInStock = pService.getAll();
     int productIndex = selectProduct(productsInStock);
 
 
-    Product selectedProduct = productsInStock.get(productIndex);
-    Product productInOrder = null;
+    Product<Integer> selectedProduct = productsInStock.get(productIndex);
+    Product<Integer> productInOrder = null;
     try { 
-      productInOrder = (Product) selectedProduct.clone(); 
+      productInOrder = (Product<Integer>) selectedProduct.clone(); 
     } catch (CloneNotSupportedException ex) {
       ex.printStackTrace();
     }
@@ -124,11 +124,11 @@ public class Oms {
     int quantity = sc.nextInt();
     productInOrder.setQuantity(quantity);
     
-    List<Product> orderProducts = order.getProducts();
+    List<Product<Integer>> orderProducts = order.getProducts();
     orderProducts.add(productInOrder);
   }
 
-  private int selectProduct(List < Product > products) {
+  private int selectProduct(List <Product<Integer>> products) {
     int productIndex;
     boolean invalid;
     // needs to check if the order has products
