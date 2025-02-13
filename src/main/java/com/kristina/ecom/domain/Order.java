@@ -26,13 +26,13 @@ public class Order {
     this.date = date;
     this.products = products;
   }
-
+  // Interesting issue
   public Order(String description, float total, LocalDateTime date, List<Product<Integer>> products) {
     this.id = "";
     this.description = description;
     this.total = total;
     this.date = date;
-    this.products = products;
+    this.products = products; //this.products is Integer ::: products is String
   }
 
   public String getId() {

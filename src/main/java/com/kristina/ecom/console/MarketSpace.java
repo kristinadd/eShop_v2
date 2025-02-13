@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class MarketSpace {
   private static  MarketSpace instance = new MarketSpace();
-  private Map<String, Product<Integer>> products;
+  private Map<Integer, Product<Integer>> products;
   private List<Computer> cart;
 
 
@@ -58,7 +58,7 @@ public class MarketSpace {
         } else {
           Product<Integer> p = new Product<Integer>();
           try {
-            p = (Product<Integer>) product.clone();
+            p = (Product) product.clone();
             p.setQuantity(1);
           } catch (CloneNotSupportedException ex) {
             ex.printStackTrace();

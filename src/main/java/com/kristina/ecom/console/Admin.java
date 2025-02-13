@@ -63,18 +63,24 @@ public class Admin {
 
   public void all() {
       Arrays.stream(service.getAll().toArray()).forEach(
-        product -> System.out.println(((Product)product).getId() + ":" + product));
+        product -> System.out.println(((Product<?>)product).getId() + ":" + product));
+    // When dealing with generic (parameterized) classes in Java, 
+    // the generic type parameters are erased at runtime (a process 
+    // called type erasure). This means that you cannot directly 
+    // check for a specific generic type (like Product<Integer>) 
+    // at runtime. Instead, you can check against the raw type 
+    // or use a wildcard.
   }
 
   public void read() {
     System.out.print("Which product would you like to  to read: ");
-    String id = sc.nextLine();
+    Integer id = sc.nextInt();
     System.out.println(service.get(id));
   }
 
   public void delete() {
     System.out.print("Which product would you like to  to delete: ");
-    String id = sc.nextLine();
+    Integer id = sc.nextInt();
     if (service.delete(id) == 1)
       System.out.println("Product deleted");
     else
@@ -91,7 +97,7 @@ public class Admin {
     Double price = sc.nextDouble();
     System.out.print("Product quantity:");
     int quantity = sc.nextInt();
-    Product<Integer> product = new Product(type, name, price, quantity);
+    Product<Integer> product = new Product<Integer>(type, name, price, quantity);
     
     if (service.create(product) == 1)
       System.out.println("Product created");
@@ -102,7 +108,7 @@ public class Admin {
   public void update() {
     System.out.println("Select product: ");
     all();
-    String id = sc.nextLine();
+    Integer id = sc.nextInt();
     Product<Integer> product = service.get(id);
     sc.nextLine();
 

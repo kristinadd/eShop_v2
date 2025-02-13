@@ -12,6 +12,10 @@ public class Product<K> implements Cloneable {
     // default constructor
   }
 
+  public Product(String type, String name, double price, int quantity) {
+    this(null, type, name, price, quantity, "img");
+  }
+
   public Product(String type, String name, double price, String img) {
     this(null, type, name, price, 0, img);
   }
@@ -97,7 +101,13 @@ public class Product<K> implements Cloneable {
     if (!(obj instanceof Product))
       return false;
 
-    return ((Product<Integer>) obj).getId() ==  this.getId();
+    return ((Product<?>) obj).getId() ==  this.getId();
+    // When dealing with generic (parameterized) classes in Java, 
+    // the generic type parameters are erased at runtime (a process 
+    // called type erasure). This means that you cannot directly 
+    // check for a specific generic type (like Product<Integer>) 
+    // at runtime. Instead, you can check against the raw type 
+    // or use a wildcard.
   };
 }
 // == compares if two objects have the same reference in memory

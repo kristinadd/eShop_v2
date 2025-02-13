@@ -13,6 +13,7 @@ import org.bson.types.ObjectId;
 import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
@@ -78,8 +79,10 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
     if (order == null)
       return 0;
 
+    // the new document needs to have the same id as the old document
+    
     Document document = toDocument(order);
-    Bson query = eq("_id", order.getId());
+    Bson query = eq("_id", new ObjectId(order.getId()));
     UpdateResult result = collection.replaceOne(query, document);
 
     return (int) result.getModifiedCount();
@@ -87,7 +90,7 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
 
   @Override
   public int delete(String id) throws DAOException {
-    Bson query = eq("_id", id);
+    Bson query = Filters.eq("_id", new ObjectId(id));
     DeleteResult result = collection.deleteOne(query);
 
     return (int) result.getDeletedCount();

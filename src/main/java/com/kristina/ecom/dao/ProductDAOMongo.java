@@ -75,7 +75,7 @@ public class ProductDAOMongo implements MongoDAO<String, Product<String>> {
       return 0;
 
     try {
-    Bson query = eq("_id", product.getId());
+    Bson query = eq("_id", new ObjectId(product.getId()));
     UpdateResult result = collection.replaceOne(query, toDocument(product));
     return (int) result.getModifiedCount();
     } catch (MongoException ex) {
@@ -86,7 +86,7 @@ public class ProductDAOMongo implements MongoDAO<String, Product<String>> {
   @Override
   public int delete(String id) throws DAOException {
     try {
-    DeleteResult result = collection.deleteOne(Filters.eq(id));
+    DeleteResult result = collection.deleteOne(Filters.eq("_id", new ObjectId(id)));
     return (int) result.getDeletedCount();
     } catch (MongoException ex) {
       throw new DAOException("Product delete error", ex);
@@ -112,8 +112,9 @@ public class ProductDAOMongo implements MongoDAO<String, Product<String>> {
   private Document toDocument(Product<String> product) {
     if (product != null) {
     Document document = new Document();
+    // isEmpty throws NullPointerException if product.getId() is null
       if (!product.getId().isEmpty())
-        document.append("_id", product.getId());  // maybe need to append as new ObjectId(product.getId()) 
+        document.append("_id", product.getId());
         document.append("type", product.getType());
         document.append("name", product.getName());
         document.append("price", product.getPrice());
