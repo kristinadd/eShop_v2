@@ -105,6 +105,7 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
       document.getDate("date").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
       new ArrayList<Product<Integer>>()
       // document.getList("products", Product.class)
+      // need to loop
     );
 
     return order;
