@@ -1,9 +1,9 @@
 package com.kristina.ecom.domain;
 
 import java.util.List;
-public interface Computer {
+public interface Computer<K> {
   String getDescription();
   double getPrice();
   String getOrderID();
-  List<Product<Integer>> getComponents();
+  List<Product<K>> getComponents();
 }

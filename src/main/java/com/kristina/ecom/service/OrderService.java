@@ -12,21 +12,21 @@ import com.kristina.ecom.domain.Product;
 
 import java.sql.SQLException;
 
-public class OrderService {
-  private DAO<String, Order> dao; // interface
-  private DAO<Integer, Product<Integer>> daoP;
+public class OrderService<K> {
+  private DAO<String, Order<K>> dao; // interface
+  private DAO<Integer, Product<K>> daoP;
 
   public OrderService() {
-    dao = new OrderDAOMySql();
-    daoP = new ProductDAOMySql();
+    dao = new OrderDAOMySql<K>();
+    daoP = new ProductDAOMySql<K>();
   }
 
-  public int create(Order order) {
+  public int create(Order<K> order) {
     int rows  = 0;
     try {
       rows = dao.create(order);
-      Product<Integer> stock;
-      for (Product<Integer> p : order.getProducts()) {
+      Product<K> stock;
+      for (Product<K> p : order.getProducts()) {
         stock = daoP.read(p.getId());
         stock.setQuantity(stock.getQuantity() - p.getQuantity());
         daoP.update(stock);
@@ -38,8 +38,8 @@ public class OrderService {
     return rows;
   }
 
-  public List<Order> getAll() {
-    List<Order> orders = new ArrayList<>();
+  public List<Order<K>> getAll() {
+    List<Order<K>> orders = new ArrayList<>();
     try {
       orders = dao.readAll();
     } catch (SQLException ex) {
@@ -49,8 +49,8 @@ public class OrderService {
     return orders;
   }
 
-  public Order get(String id) {
-    Order order = null;
+  public Order<K> get(String id) {
+    Order<K> order = null;
     try {
       order = dao.read(id);
     } catch (SQLException ex) {
@@ -75,7 +75,7 @@ public class OrderService {
     try {
       ProductService pService  = new ProductService();
       dao.read(id).getProducts().forEach(p -> {
-        Product<Integer> product = pService.get(p.getId());
+        Product<K> product = pService.get(p.getId());
         product.setQuantity(product.getQuantity() + p.getQuantity());
         pService.update(product);
       });
@@ -87,26 +87,26 @@ public class OrderService {
     return rows;
   }
 
-  public boolean update(Order order) {
+  public boolean update(Order<K> order) {
     try {
-        Order oldOrder = dao.read(order.getId());
+        Order<K> oldOrder = dao.read(order.getId());
         Product<Integer>  productFromStock;
         int difference;
-        List<Product<Integer>> oldProducts = oldOrder.getProducts();
-        List<Product<Integer>> newOrderProducts = order.getProducts();
-        List<Product<Integer>> commonProducts = newOrderProducts.stream().filter(p -> oldProducts.contains(p)).collect(Collectors.toList());
-        List<Product<Integer>> onlyOldOrder = oldProducts.stream().filter(p -> !newOrderProducts.contains(p)).collect(Collectors.toList());
-        List<Product<Integer>> onlyNewOrder = newOrderProducts.stream().filter(p -> !oldProducts.contains(p)).collect(Collectors.toList());
+        List<Product<K>> oldProducts = oldOrder.getProducts();
+        List<Product<K>> newOrderProducts = order.getProducts();
+        List<Product<K>> commonProducts = newOrderProducts.stream().filter(p -> oldProducts.contains(p)).collect(Collectors.toList());
+        List<Product<K>> onlyOldOrder = oldProducts.stream().filter(p -> !newOrderProducts.contains(p)).collect(Collectors.toList());
+        List<Product<K>> onlyNewOrder = newOrderProducts.stream().filter(p -> !oldProducts.contains(p)).collect(Collectors.toList());
         // update existing product or add new product 
         commonProducts.addAll(onlyNewOrder);
-        for (Product<Integer> product : commonProducts) {
+        for (Product<K> product : commonProducts) {
           difference = product.getQuantity() - getProductQuantityById(oldProducts, product.getId());
           productFromStock = daoP.read(product.getId());
           productFromStock.setQuantity(productFromStock.getQuantity() - difference);
           daoP.update(productFromStock);
         }
         // delete product from order, increase the stock
-        for (Product<Integer> product : onlyOldOrder) {
+        for (Product<K> product : onlyOldOrder) {
           productFromStock = daoP.read(product.getId());
           productFromStock.setQuantity(productFromStock.getQuantity() + product.getQuantity());
           daoP.update(productFromStock);
@@ -121,8 +121,8 @@ public class OrderService {
   }
 
   // get the product quantity by its id in the oder 
-  private int getProductQuantityById(List<Product<Integer>> products, Integer id){
-    for (Product<Integer> p : products) 
+  private int getProductQuantityById(List<Product<K>> products, Integer id){
+    for (Product<K> p : products) 
       if (p.getId() == id)
         return p.getQuantity();
 

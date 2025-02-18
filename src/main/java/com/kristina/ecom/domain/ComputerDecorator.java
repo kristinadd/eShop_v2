@@ -2,10 +2,10 @@ package com.kristina.ecom.domain;
 
 import java.util.List;
 
-public class ComputerDecorator implements Computer{
-  private Computer computer;
+public class ComputerDecorator<K> implements Computer<K>{
+  private Computer<K> computer;
 
-  public ComputerDecorator(Computer computer) {
+  public ComputerDecorator(Computer<K> computer) {
     this.computer = computer;
   }
 
@@ -25,7 +25,7 @@ public class ComputerDecorator implements Computer{
   }
 
   @Override
-  public List<Product<Integer>> getComponents() {
+  public List<Product<K>> getComponents() {
     return this.computer.getComponents();
   }
 
@@ -35,7 +35,7 @@ public class ComputerDecorator implements Computer{
         + getPrice() + ", getOrderID()=" + getOrderID() + ", getComponents()=" + getComponents() + "]";
   }
 
-  public Computer getComputer() {
+  public Computer<K> getComputer() {
     return computer;
   }
 }

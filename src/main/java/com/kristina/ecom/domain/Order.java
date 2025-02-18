@@ -2,14 +2,14 @@ package com.kristina.ecom.domain;
 
 import java.time.LocalDateTime;
 import java.util.List;
-public class Order {
+public class Order<K> {
   private String id;
   private String description;
   private float total;
   private LocalDateTime date;
-  private List<Product<Integer>> products;
+  private List<Product<K>> products;
 
-  public Order(Computer computer) {
+  public Order(Computer<K> computer) {
       this(
       computer.getOrderID(), 
       computer.getDescription(), 
@@ -19,20 +19,20 @@ public class Order {
       );
   }
   
-  public Order(String id, String description, float total, LocalDateTime date, List<Product<Integer>> products) {
+  public Order(String id, String description, float total, LocalDateTime date, List<Product<K>> products) {
     this.id = id;
     this.description = description;
     this.total = total;
     this.date = date;
-    this.products = products;
+    this.products= products;
   }
-  // Interesting issue
-  public Order(String description, float total, LocalDateTime date, List<Product<Integer>> products) {
+
+  public Order(String description, float total, LocalDateTime date, List<Product<K>> products) {
     this.id = "";
     this.description = description;
     this.total = total;
     this.date = date;
-    this.products = products; //this.products is Integer ::: products is String
+    this.products = products;
   }
 
   public String getId() {
@@ -52,11 +52,11 @@ public class Order {
   }
 
   public void update() {
-    ComputerBase base = new ComputerBase();
+    ComputerBase<K> base = new ComputerBase<>();
     description = base.getDescription();
     total = (float)base.getPrice();
     
-    for (Product<Integer> product : products) {
+    for (Product<K> product : products) {
       description += (" + " + product.getName()).repeat(product.getQuantity());
       total += product.getPrice() * product.getQuantity();
     }
@@ -79,11 +79,11 @@ public class Order {
     this.date = date;
   }
 
-  public List<Product<Integer>> getProducts() {
+  public List<Product<K>> getProducts() {
     return products;
   }
 
-  public void setProducts(List<Product<Integer>> products) {
+  public void setProducts(List<Product<K>> products) {
     this.products = products;
   }
 

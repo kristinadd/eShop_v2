@@ -1,18 +1,18 @@
 package com.kristina.ecom.domain;
-public class Component extends ComputerDecorator {
+public class Component<K> extends ComputerDecorator<K> {
   private String description;
   private double price;
 
-  public Component(Computer computer) {
+  public Component(Computer<K> computer) {
     super(computer);
   }
 
-  public Component(Computer computer, Product<Integer> product) {
+  public Component(Computer<K> computer, Product<K> product) {
     super(computer);
     this.description = product.getName();
     this.price = product.getPrice();
     if (super.getComponents().contains(product)) {
-      Product<Integer> p = super.getComponents().get(super.getComponents().indexOf(product));
+      Product<K> p = super.getComponents().get(super.getComponents().indexOf(product));
        p.setQuantity(p.getQuantity() + product.getQuantity());
     } else
       super.getComponents().add(product);

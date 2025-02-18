@@ -4,15 +4,15 @@ import java.util.List;
 import java.util.Comparator;
 import java.util.Collections;
 
-public class SortByOrderID implements SortStrategy {
+public class SortByOrderID<K> implements SortStrategy<K> {
 
   @Override 
-  public void sort(List<Computer> cart) {
+  public void sort(List<Computer<K>> cart) {
 
-    Comparator<Computer> comparator = new Comparator<>() {
+    Comparator<Computer<K>> comparator = new Comparator<>() {
       
       @Override 
-      public int compare(Computer c1, Computer c2) {
+      public int compare(Computer<K> c1, Computer<K> c2) {
         return c2.getOrderID().compareTo(c1.getOrderID());
       }
     };
