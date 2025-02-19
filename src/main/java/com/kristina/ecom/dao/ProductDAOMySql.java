@@ -21,7 +21,9 @@ public class ProductDAOMySql implements DAO<Integer, Product<Integer>> {
   }
 
   @Override
-  public int create(Product<Integer> product) throws SQLException {
+  public Product<Integer> create(Product<Integer> product) throws DAOException {
+    
+    try {
     Connection conn = datasource.getConnection();
     String query = "INSERT INTO product (type, name, price, quantity, image) VALUES(? ,?, ?, ?, ?)";
 
@@ -31,17 +33,21 @@ public class ProductDAOMySql implements DAO<Integer, Product<Integer>> {
     stat.setDouble(3, product.getPrice());
     stat.setInt(4, product.getQuantity());
     stat.setString(5, product.getImg());
-    int rows =  stat.executeUpdate();
+    stat.executeUpdate();
 
     conn.close();
-    return rows;
+  } catch (SQLException ex) {
+    throw new DAOException("Error in DAO", ex);
+  }
+    return product;
   }
 
   @Override
-  public List<Product<Integer>> readAll() throws SQLException{
+  public List<Product<Integer>> readAll() throws DAOException {
     List<Product<Integer>> products = new ArrayList<>();
-    Connection conn = datasource.getConnection();
 
+    try {
+    Connection conn = datasource.getConnection();
     String query = "SELECT * FROM product";
     Statement stat = conn.createStatement();
     ResultSet rs = stat.executeQuery(query);
@@ -57,13 +63,16 @@ public class ProductDAOMySql implements DAO<Integer, Product<Integer>> {
       }
 
       conn.close();
+    } catch (SQLException ex) {
+      throw new DAOException("Error in DAO", ex);
+    }
       return products;
   }
 
   @Override
-  public Product<Integer> read(Integer id) throws SQLException{
+  public Product<Integer> read(Integer id) throws DAOException {
     Product<Integer> product = null;
-
+    try {
     String query = "SELECT * FROM product WHERE id=" + id;
     Connection conn = datasource.getConnection();
     Statement stat = conn.createStatement();
@@ -77,13 +86,16 @@ public class ProductDAOMySql implements DAO<Integer, Product<Integer>> {
                             rs.getString(6)
                             );
     return product;
+    } catch (SQLException ex) {
+      throw new DAOException("Error in DAO", ex);
+    }
   }
 
   @Override
-  public int update(Product<Integer> product) throws SQLException {
+  public int update(Product<Integer> product) throws DAOException {
     String query = "UPDATE product SET type=?, name=?, price=?, quantity=?, image=? WHERE id=?";
     int rows = 0;
-
+    try {
     Connection conn = datasource.getConnection();
     PreparedStatement stat = conn.prepareStatement(query);
     stat.setString(1,product.getType());
@@ -96,19 +108,25 @@ public class ProductDAOMySql implements DAO<Integer, Product<Integer>> {
     rows = stat.executeUpdate();
 
     conn.close();
+    } catch (SQLException ex) {
+      throw new DAOException("Error in DAO", ex);
+    }
     return rows;
   }
 
   @Override
-  public int delete(Integer id) throws SQLException {
+  public int delete(Integer id) throws DAOException {
     String query = "DELETE FROM product WHERE id=" + id;
     int rows = 0;
-
+    try {
     Connection conn = datasource.getConnection();
     Statement stat = conn.createStatement();
     rows = stat.executeUpdate(query);
 
     conn.close();
+    } catch (SQLException ex) {
+      throw new DAOException("Error in DAO", ex);
+    }
     return rows;
   }
 }

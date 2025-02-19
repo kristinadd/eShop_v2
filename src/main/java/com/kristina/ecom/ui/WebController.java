@@ -1,28 +1,28 @@
-package com.kristina.ecom.ui;
+// package com.kristina.ecom.ui;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
+// import org.springframework.stereotype.Controller;
+// import org.springframework.web.bind.annotation.GetMapping;
 
-import com.kristina.ecom.domain.Product;
+// import com.kristina.ecom.domain.Product;
 
-import org.springframework.ui.Model;
+// import org.springframework.ui.Model;
 
-@Controller
-public class WebController {
-    @GetMapping("/hello")
-    public String hello() {
-        return "hello";
-    }
+// @Controller
+// public class WebController {
+//     @GetMapping("/hello")
+//     public String hello() {
+//         return "hello";
+//     }
 
-    @GetMapping("/hello2")
-    public String hello2() {
-        return "hello2";
-    }
+//     @GetMapping("/hello2")
+//     public String hello2() {
+//         return "hello2";
+//     }
 
-    @GetMapping("/product")
-    public String getProduct(Model model) {
-        Product product = new Product("computer", "Base computer", 999.99, "img/computer.jpg");
-        model.addAttribute("product", product);
-        return "product";
-    }
-}
+//     @GetMapping("/product")
+//     public String getProduct(Model model) {
+//         Product product = new Product("computer", "Base computer", 999.99, "img/computer.jpg");
+//         model.addAttribute("product", product);
+//         return "product";
+//     }
+// }

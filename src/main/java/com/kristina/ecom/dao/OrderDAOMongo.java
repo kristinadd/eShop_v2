@@ -20,7 +20,7 @@ import com.mongodb.client.result.UpdateResult;
 import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.Product;
 
-public class OrderDAOMongo  implements MongoDAO<String, Order<String>> {
+public class OrderDAOMongo  implements DAO<String, Order<String>> {
   private MongoDataSourceFactory dataSourceFactory;
   private MongoCollection<Document> collection;
 

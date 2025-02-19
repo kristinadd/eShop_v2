@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.kristina.ecom.dao.DAO;
+import com.kristina.ecom.dao.DAOException;
 import com.kristina.ecom.dao.ProductDAOMySql;
 import com.kristina.ecom.domain.Product;
 
@@ -27,7 +28,7 @@ public class ProductService {
       .collect(Collectors.toList());
 
 
-    } catch (SQLException ex) {
+    } catch (DAOException ex) {
       ex.printStackTrace();
     }
 
@@ -41,7 +42,7 @@ public class ProductService {
             .filter(p -> p.getType()
             .equals("Compute"))
             .findFirst().orElse(null);
-    } catch (SQLException ex) {
+    } catch (DAOException ex) {
         ex.printStackTrace();
     }
 
@@ -52,7 +53,7 @@ public class ProductService {
     Product<Integer> product = null;
     try {
       product = dao.read(id);
-    } catch (SQLException ex) {
+    } catch (DAOException ex) {
       ex.printStackTrace();
     }
 
@@ -63,27 +64,26 @@ public class ProductService {
     int rows = 0;
     try {
       rows = dao.delete(id);
-    } catch (SQLException ex) {
+    } catch (DAOException ex) {
       ex.printStackTrace();
     }
     return rows;
   }
 
   public int create(Product<Integer> product) {
-    int rows  = 0;
     try {
-      rows = dao.create(product);
-    } catch (SQLException ex) {
+      dao.create(product);
+    } catch (DAOException ex) {
       ex.printStackTrace();
     }
-    return rows;
+    return 1;
   }
 
   public int update (Product<Integer> product) {
     int rows = 0;
     try {
       rows = dao.update(product);
-    } catch (SQLException ex) {
+    } catch (DAOException ex) {
       ex.printStackTrace();
     }
 

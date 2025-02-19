@@ -18,7 +18,7 @@ import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
 
-public class ProductDAOMongo implements MongoDAO<String, Product<String>> {
+public class ProductDAOMongo implements DAO<String, Product<String>> {
   private MongoDataSourceFactory dataSourceFactory;
   private MongoCollection<Document> collection;
 

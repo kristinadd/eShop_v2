@@ -23,8 +23,9 @@ public class OrderDAOMySql implements DAO<String, Order<Integer>> {
   }
 
   // add a new product to existing order
-  public int updateProductsInOrder(Order<String> order, Product<Integer> product) throws SQLException {
+  public int updateProductsInOrder(Order<String> order, Product<Integer> product) throws DAOException {
     int rows =0;
+    try {
     Connection conn = datasource.getConnection();
     String query = "INSERT INTO orderDetails VALUES(?, ?, ?)";
     
@@ -34,24 +35,29 @@ public class OrderDAOMySql implements DAO<String, Order<Integer>> {
       stat.setInt(2, product.getId());
       stat.setInt(3, product.getQuantity());
       rows = stat.executeUpdate();
+    } catch (SQLException ex) {
+      throw new DAOException("Error in DAO", ex);
+    }
 
     return rows;
   }
 
   @Override 
-  public int create(Order<Integer> order) throws SQLException {
-      Connection conn = datasource.getConnection();
+  public Order<Integer> create(Order<Integer> order) throws DAOException {
+  
       String query = "INSERT INTO porder VALUES(? ,?, ?, ?)";
       String query2 = "INSERT INTO orderDetails VALUES(?, ?, ?)";
-  
-      conn.setAutoCommit(false);
 
+      try {
+      Connection conn = datasource.getConnection();
+      conn.setAutoCommit(false);
       PreparedStatement stat = conn.prepareStatement(query);
+
       stat.setString(1, order.getId());
       stat.setString(2, order.getDescription());
       stat.setFloat(3, order.getTotal());
       stat.setTimestamp(4,  Timestamp.valueOf(order.getDate()));
-      int rows =  stat.executeUpdate();
+      stat.executeUpdate();
 
       stat = conn.prepareStatement(query2);
       for (Product<Integer> product : order.getProducts()) {
@@ -63,12 +69,15 @@ public class OrderDAOMySql implements DAO<String, Order<Integer>> {
 
       conn.commit();
       conn.close();
-  
-      return rows;
+      } catch (SQLException ex) {
+        throw new DAOException("Error in DAO", ex);
+      }
+      return order;
     }
 
-    @Override public List<Order<Integer>> readAll() throws SQLException {
+    @Override public List<Order<Integer>> readAll() throws DAOException {
       List<Order<Integer>> orders = new ArrayList<>();
+      try {
       Connection connection = datasource.getConnection();
       String query = "SELECT * FROM porder";
       Statement stat = connection.createStatement();
@@ -84,67 +93,74 @@ public class OrderDAOMySql implements DAO<String, Order<Integer>> {
       }
 
       connection.close();
+      } catch (SQLException ex) {
+        throw new DAOException("Error in DAO", ex);
+      }
       return orders;
     }
 
     @Override
-    public Order<Integer> read(String id) throws SQLException {
+    public Order<Integer> read(String id) throws DAOException {
         Order<Integer> order = null;
         String orderQuery = "SELECT * FROM porder WHERE id = ?";
         String productsQuery = "SELECT product.id, product.name, product.price, orderDetails.quantity " +
                                "FROM orderDetails " +
                                "JOIN product ON orderDetails.pid = product.id " +
                                "WHERE orderDetails.oid = ?";
-        
-        Connection conn = datasource.getConnection();
         try {
-            conn.setAutoCommit(false);
-            PreparedStatement orderStmt = conn.prepareStatement(orderQuery);
-            orderStmt.setString(1, id);
-            ResultSet orderRs = orderStmt.executeQuery();
-            
-            if (orderRs.next()) {
-                order = new Order<Integer>(
-                    orderRs.getString("id"), 
-                    orderRs.getString("description"), 
-                    orderRs.getFloat("total"), 
-                    orderRs.getTimestamp("date_time").toLocalDateTime(), 
-                    new ArrayList<>()
-                );
-            }
-            
-            if (order != null) {
-                PreparedStatement productsStmt = conn.prepareStatement(productsQuery);
-                productsStmt.setString(1, id);
-                ResultSet productsRs = productsStmt.executeQuery();
-                
-                List<Product<Integer>> products = new ArrayList<>();
-                while (productsRs.next()) {
-                    Product<Integer> product = new Product<Integer>(
-                        productsRs.getInt("id"), 
-                        productsRs.getString("name"), 
-                        productsRs.getFloat("price"), 
-                        productsRs.getInt("quantity")
-                    );
-                    products.add(product);
-                }
-                order.setProducts(products);
-            }
-    
-            conn.commit();
-        } catch (SQLException e) {
-            conn.rollback();
-            throw e;
-        } finally {
-            conn.close();
+        Connection conn = datasource.getConnection();
+          try {
+              conn.setAutoCommit(false);
+              PreparedStatement orderStmt = conn.prepareStatement(orderQuery);
+              orderStmt.setString(1, id);
+              ResultSet orderRs = orderStmt.executeQuery();
+              
+              if (orderRs.next()) {
+                  order = new Order<Integer>(
+                      orderRs.getString("id"), 
+                      orderRs.getString("description"), 
+                      orderRs.getFloat("total"), 
+                      orderRs.getTimestamp("date_time").toLocalDateTime(), 
+                      new ArrayList<>()
+                  );
+              }
+              
+              if (order != null) {
+                  PreparedStatement productsStmt = conn.prepareStatement(productsQuery);
+                  productsStmt.setString(1, id);
+                  ResultSet productsRs = productsStmt.executeQuery();
+                  
+                  List<Product<Integer>> products = new ArrayList<>();
+                  while (productsRs.next()) {
+                      Product<Integer> product = new Product<Integer>(
+                          productsRs.getInt("id"), 
+                          productsRs.getString("name"), 
+                          productsRs.getFloat("price"), 
+                          productsRs.getInt("quantity")
+                      );
+                      products.add(product);
+                  }
+                  order.setProducts(products);
+              }
+      
+              conn.commit();
+          } catch (SQLException e) {
+              conn.rollback();
+              throw e;
+          } finally {
+              conn.close();
+          }
+        } catch (SQLException ex) {
+          throw new DAOException("Error in DAO", ex);
         }
         
         return order;
     }
     
     @Override 
-    public int delete(String id) throws SQLException{
+    public int delete(String id) throws DAOException {
       int rows = 0;
+      try {
       Connection conn = datasource.getConnection();
       conn.setAutoCommit(false);
       String query1 = "DELETE FROM orderDetails WHERE oid=" + id;
@@ -159,12 +175,16 @@ public class OrderDAOMySql implements DAO<String, Order<Integer>> {
 
       conn.commit();
       conn.close();
+      } catch (SQLException ex) {
+        throw new DAOException("Error in DAO", ex);
+      }
       return rows;
     }
 
     // this delete is for specific item in the orderDetails table
-    public int delete(String oid, int pid) throws SQLException {
+    public int delete(String oid, int pid) throws DAOException {
       int rows = 0;
+      try {
       Connection conn = datasource.getConnection();
       String query = "DELETE FROM orderDetails WHERE oid=? AND pid=?";
       
@@ -175,14 +195,18 @@ public class OrderDAOMySql implements DAO<String, Order<Integer>> {
       rows = stat.executeUpdate();
 
       conn.close();
+    } catch (SQLException ex) {
+      throw new DAOException("Error in DAO", ex);
+    }
       return rows;
     }
 
-  public int update(Order<Integer> order) throws SQLException {
+  public int update(Order<Integer> order) throws DAOException {
     String orderQuery = "UPDATE porder SET description=?, total=?, date_time=? WHERE id=?";
     String deleteProductsQuery = "DELETE FROM orderDetails WHERE oid=?";
     String insertProductsQuery = "INSERT INTO orderDetails VALUES(?, ?, ?)";
 
+    try {
     Connection conn = datasource.getConnection();
     conn.setAutoCommit(false); // using multiple queries
 
@@ -210,6 +234,9 @@ public class OrderDAOMySql implements DAO<String, Order<Integer>> {
 
     conn.commit();
     conn.close();
+    } catch (SQLException ex) {
+      throw new DAOException("Error in DAO", ex);
+    }
     return 1;
   }
 }

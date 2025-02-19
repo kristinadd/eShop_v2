@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import java.util.List;
 
 import com.kristina.ecom.dao.DAO;
+import com.kristina.ecom.dao.DAOException;
 import com.kristina.ecom.dao.OrderDAOMySql;
 import com.kristina.ecom.dao.ProductDAOMySql;
 import com.kristina.ecom.domain.Order;
@@ -22,27 +23,26 @@ public class OrderService {
   }
 
   public int create(Order<Integer> order) {
-    int rows  = 0;
     try {
-      rows = dao.create(order);
+      dao.create(order);
       Product<Integer> stock;
       for (Product<Integer> p : order.getProducts()) {
         stock = daoP.read(p.getId());
         stock.setQuantity(stock.getQuantity() - p.getQuantity());
         daoP.update(stock);
       }
-    } catch (SQLException ex) {
+    } catch (DAOException ex) {
       ex.printStackTrace();
     }
 
-    return rows;
+    return 1;
   }
 
   public List<Order<Integer>> getAll() {
     List<Order<Integer>> orders = new ArrayList<>();
     try {
       orders = dao.readAll();
-    } catch (SQLException ex) {
+    } catch (DAOException ex) {
       ex.printStackTrace();
     }
 
@@ -53,7 +53,7 @@ public class OrderService {
     Order<Integer> order = null;
     try {
       order = dao.read(id);
-    } catch (SQLException ex) {
+    } catch (DAOException ex) {
       ex.printStackTrace();
     }
 
@@ -64,7 +64,7 @@ public class OrderService {
     int rows = 0;
     try {
       rows = dao.delete(id);
-    } catch (SQLException ex) {
+    } catch (DAOException ex) {
       ex.printStackTrace();
     }
     return rows;
@@ -81,7 +81,7 @@ public class OrderService {
       });
 
       rows = dao.delete(id);
-    } catch ( SQLException ex) {
+    } catch ( DAOException ex) {
       System.out.println("Error cancelling the order");
     }
     return rows;
@@ -114,7 +114,7 @@ public class OrderService {
 
       dao.update(order);
       return true;
-    } catch (SQLException ex) {
+    } catch (DAOException ex) {
       ex.printStackTrace();
       return false;
     }

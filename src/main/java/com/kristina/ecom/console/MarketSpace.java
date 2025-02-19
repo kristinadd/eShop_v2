@@ -76,6 +76,25 @@ public class MarketSpace {
 
     if (!cancel) {
       cart.add(computer);
+      // TBC: persists cart to MongoDB
+
+      /*
+      shoppingCart
+
+      {
+      "_id": ObjectId(""),
+      "modifies": datetime,
+      "status": active, fulfilled, canceled,
+      "computers": [
+        "_id":  (this is for Computer, and the id is String. the string is manually created)
+        "_id": string, "description": string, "price": double
+        "products": [
+          "_id": (this is now the product id) integer, --> 
+          "quantity": integer
+         ]
+      ]
+      }
+      */ 
       } else {
         System.out.println("Order is canceled!");
     }

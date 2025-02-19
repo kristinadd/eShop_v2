@@ -95,6 +95,3 @@ public class ShoppingCart {
     }
   }
 }
-
-// change the db to noSQL / Casandra
-// start React 
