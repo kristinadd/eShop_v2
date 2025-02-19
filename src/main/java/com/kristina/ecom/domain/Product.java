@@ -96,12 +96,13 @@ public class Product<K> implements Cloneable {
     return super.clone();
   }
 
+  @SuppressWarnings("unchecked")
   @Override 
   public boolean equals(Object obj) {
     if (!(obj instanceof Product))
       return false;
 
-    return ((Product<?>) obj).getId() ==  this.getId();
+    return ((Product<K>) obj).getId() ==  this.getId();
     // When dealing with generic (parameterized) classes in Java, 
     // the generic type parameters are erased at runtime (a process 
     // called type erasure). This means that you cannot directly 

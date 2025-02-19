@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
 
-public class OrderDAOMySql<K> implements DAO<String, Order<K>> {
+public class OrderDAOMySql implements DAO<String, Order<Integer>> {
 
   private DataSource datasource;
 
@@ -23,7 +23,7 @@ public class OrderDAOMySql<K> implements DAO<String, Order<K>> {
   }
 
   // add a new product to existing order
-  public int updateProductsInOrder(Order<K> order, Product<Integer> product) throws SQLException {
+  public int updateProductsInOrder(Order<String> order, Product<Integer> product) throws SQLException {
     int rows =0;
     Connection conn = datasource.getConnection();
     String query = "INSERT INTO orderDetails VALUES(?, ?, ?)";
@@ -38,7 +38,8 @@ public class OrderDAOMySql<K> implements DAO<String, Order<K>> {
     return rows;
   }
 
-  @Override public int create(Order<K> order) throws SQLException {
+  @Override 
+  public int create(Order<Integer> order) throws SQLException {
       Connection conn = datasource.getConnection();
       String query = "INSERT INTO porder VALUES(? ,?, ?, ?)";
       String query2 = "INSERT INTO orderDetails VALUES(?, ?, ?)";
@@ -53,7 +54,7 @@ public class OrderDAOMySql<K> implements DAO<String, Order<K>> {
       int rows =  stat.executeUpdate();
 
       stat = conn.prepareStatement(query2);
-      for (Product<K> product : order.getProducts()) {
+      for (Product<Integer> product : order.getProducts()) {
         stat.setString(1, order.getId());
         stat.setInt(2, product.getId());
         stat.setInt(3, product.getQuantity());
@@ -66,14 +67,14 @@ public class OrderDAOMySql<K> implements DAO<String, Order<K>> {
       return rows;
     }
 
-    @Override public List<Order<K>> readAll() throws SQLException {
-      List<Order<K>> orders = new ArrayList<>();
+    @Override public List<Order<Integer>> readAll() throws SQLException {
+      List<Order<Integer>> orders = new ArrayList<>();
       Connection connection = datasource.getConnection();
       String query = "SELECT * FROM porder";
       Statement stat = connection.createStatement();
       ResultSet rs = stat.executeQuery(query);
       while (rs.next()) {
-        Order<K> order = new Order(rs.getString(1), 
+        Order<Integer> order = new Order<Integer>(rs.getString(1), 
                                 rs.getString(2), 
                                 rs.getFloat(3), 
                                 rs.getTimestamp(4).toLocalDateTime(),
@@ -87,8 +88,8 @@ public class OrderDAOMySql<K> implements DAO<String, Order<K>> {
     }
 
     @Override
-    public Order<K> read(String id) throws SQLException {
-        Order<K> order = null;
+    public Order<Integer> read(String id) throws SQLException {
+        Order<Integer> order = null;
         String orderQuery = "SELECT * FROM porder WHERE id = ?";
         String productsQuery = "SELECT product.id, product.name, product.price, orderDetails.quantity " +
                                "FROM orderDetails " +
@@ -103,7 +104,7 @@ public class OrderDAOMySql<K> implements DAO<String, Order<K>> {
             ResultSet orderRs = orderStmt.executeQuery();
             
             if (orderRs.next()) {
-                order = new Order<K>(
+                order = new Order<Integer>(
                     orderRs.getString("id"), 
                     orderRs.getString("description"), 
                     orderRs.getFloat("total"), 
@@ -117,7 +118,7 @@ public class OrderDAOMySql<K> implements DAO<String, Order<K>> {
                 productsStmt.setString(1, id);
                 ResultSet productsRs = productsStmt.executeQuery();
                 
-                List<Product<K>> products = new ArrayList<>();
+                List<Product<Integer>> products = new ArrayList<>();
                 while (productsRs.next()) {
                     Product<Integer> product = new Product<Integer>(
                         productsRs.getInt("id"), 
@@ -177,7 +178,7 @@ public class OrderDAOMySql<K> implements DAO<String, Order<K>> {
       return rows;
     }
 
-  public int update(Order<K> order) throws SQLException {
+  public int update(Order<Integer> order) throws SQLException {
     String orderQuery = "UPDATE porder SET description=?, total=?, date_time=? WHERE id=?";
     String deleteProductsQuery = "DELETE FROM orderDetails WHERE oid=?";
     String insertProductsQuery = "INSERT INTO orderDetails VALUES(?, ?, ?)";
@@ -200,7 +201,7 @@ public class OrderDAOMySql<K> implements DAO<String, Order<K>> {
 
     // re-insert the latest products  belonging to this order into orderDetails table 
     stat = conn.prepareStatement(insertProductsQuery);
-    for (Product<K> product : order.getProducts()) {
+    for (Product<Integer> product : order.getProducts()) {
       stat.setString(1, order.getId());
       stat.setInt(2, product.getId());
       stat.setInt(3, product.getQuantity());

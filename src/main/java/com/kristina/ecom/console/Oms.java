@@ -66,7 +66,7 @@ public class Oms {
     Arrays.stream(omsMenu).forEach(System.out::println);
   }
 
-  private void productUpdateMenu(Order order) {
+  private void productUpdateMenu(Order<Integer> order) {
     String[] orderUpdateMenu = {
       "1: Delete a product from the order",
       "2: Add a product to the order",
@@ -100,13 +100,13 @@ public class Oms {
       System.out.println("Delete failed");
   }
 
-  public void deleteProductFromOrder(Order order) {
+  public void deleteProductFromOrder(Order<Integer> order) {
     int productIndex = selectProduct(order.getProducts());
     // remove the product from the order
     order.getProducts().remove(productIndex);
   }
 
-  public void addProductToOrder(Order order) {
+  public void addProductToOrder(Order<Integer> order) {
     ProductService pService = new ProductService();
     List<Product<Integer>> productsInStock = pService.getAll();
     int productIndex = selectProduct(productsInStock);
@@ -159,7 +159,7 @@ public class Oms {
   public void update() {
     System.out.println("*** Select an order to update ***");
     all();
-    Order order = service.get(String.valueOf(sc.nextInt())); // 33
+    Order<Integer> order = service.get(String.valueOf(sc.nextInt())); // 33
     order.setDate(LocalDateTime.now());
     boolean isDirty = false;
     boolean updating = true;
@@ -202,7 +202,7 @@ public class Oms {
   }
 
 
-  private void updateProducts(Order order) {
+  private void updateProducts(Order<Integer> order) {
     // Get user input
     int productIndex = selectProduct(order.getProducts());
 

@@ -13,12 +13,12 @@ public class Main {
     ProductDAOMongo productDao = new ProductDAOMongo();
 
 
-    try {
-      int result7 = productDao.delete("67adc74748bdac22c0bfba99");
-      System.out.println("🍋 " + result7);
-    } catch (DAOException ex) {
-      ex.printStackTrace();
-    }
+    // try {
+    //   int result7 = productDao.delete("67adc74748bdac22c0bfba99");
+    //   System.out.println("🍋 " + result7);
+    // } catch (DAOException ex) {
+    //   ex.printStackTrace();
+    // }
 
 
     Product<String> product3 = new Product<String>("", "Component", "Monitor", 30.50, 10, "monitor.img");
@@ -40,9 +40,9 @@ public class Main {
     // OrderDAOMongo orderDao = new OrderDAOMongo();
 
                                                 // CREATE AN ORDER
-    List<Product<Integer>> products = new ArrayList<>();
+    List<Product<String>> products = new ArrayList<>();
 
-    Order order = new Order(
+    Order<String> order = new Order<String>(
       "Order with generated id",
       70.99f,
       LocalDateTime.now(),
@@ -50,15 +50,15 @@ public class Main {
     );
 
     try {
-      Order order2 = orderDao.create(order);
+      Order<String> order2 = orderDao.create(order);
       System.out.println("🆕 " + order2);
     } catch (DAOException ex) {
       ex.printStackTrace();
     }
                                                   // READ ALL ORDERS
     try {
-      List<Order> orders = orderDao.readAll();
-      for (Order order3 : orders) {
+      List<Order<String> > orders = orderDao.readAll();
+      for (Order<String>  order3 : orders) {
         System.out.println("⭐️ Real all orders: " +  order3);
       }
     } catch (DAOException ex) {
@@ -66,14 +66,14 @@ public class Main {
     }
                                                     // READ ONE ORDER
     try {
-      Order order4 = orderDao.read("67acbba2c6e95a55d2762bb3");
+      Order<String>  order4 = orderDao.read("67acbba2c6e95a55d2762bb3");
       System.out.println("🍊 Order details " + order4);
     } catch (DAOException ex) {
       ex.printStackTrace();
     }
                                                       // UPDATE AN ORDER 
       try {
-        Order order5 = orderDao.read("67ae11fdbda9e3474bfa5603");
+        Order<String>  order5 = orderDao.read("67ae11fdbda9e3474bfa5603");
         order5.setDescription("NEW UPDATED order");
         int result = orderDao.update(order5);
         System.out.println("👻 Made " + result + " updates.");

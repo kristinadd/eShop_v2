@@ -12,7 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.sql.PreparedStatement;
 
-public class ProductDAOMySql<K> implements DAO<Integer, Product<Integer>> {
+public class ProductDAOMySql implements DAO<Integer, Product<Integer>> {
 
   private DataSource datasource;
 

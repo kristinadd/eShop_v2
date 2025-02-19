@@ -20,7 +20,7 @@ import com.mongodb.client.result.UpdateResult;
 import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.Product;
 
-public class OrderDAOMongo  implements MongoDAO<String, Order> {
+public class OrderDAOMongo  implements MongoDAO<String, Order<String>> {
   private MongoDataSourceFactory dataSourceFactory;
   private MongoCollection<Document> collection;
 
@@ -30,7 +30,7 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
   }
 
   @Override
-  public Order create(Order order) throws DAOException {
+  public Order<String> create(Order<String> order) throws DAOException {
     if (order == null)
       return null;
 
@@ -45,12 +45,12 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
   }
 
   @Override
-  public List<Order> readAll() throws DAOException {
+  public List<Order<String>> readAll() throws DAOException {
     FindIterable<Document> documents = collection.find();
-    List<Order> orders = new ArrayList<>();
+    List<Order<String>> orders = new ArrayList<>();
 
     for (Document document : documents) {
-      Order order = toOrder(document);
+      Order<String> order = toOrder(document);
       orders.add(order);
     }
 
@@ -58,7 +58,7 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
   }
 
   @Override
-  public Order read(String id) throws DAOException {
+  public Order<String> read(String id) throws DAOException {
     if (id == null) {
       return null;
     }
@@ -66,7 +66,7 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
     Document document = collection.find(query).first();
 
     if (document != null) {
-      Order order = toOrder(document);
+      Order<String> order = toOrder(document);
 
       return order;
     }
@@ -75,7 +75,7 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
   }
 
   @Override
-  public int update(Order order) throws DAOException {
+  public int update(Order<String> order) throws DAOException {
     if (order == null)
       return 0;
 
@@ -94,16 +94,16 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
     return (int) result.getDeletedCount();
   }
 
-  private Order toOrder(Document document) {
+  private Order<String> toOrder(Document document) {
     if (document == null)
       return null;
 
-    Order order = new Order(
+    Order<String> order = new Order<String>(
       document.getObjectId("_id").toString(),
       document.getString("description"),
       document.getDouble("total").floatValue(),
       document.getDate("date").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
-      new ArrayList<Product<Integer>>()
+      new ArrayList<Product<String>>()
       // document.getList("products", Product.class)
       // need to loop
     );
@@ -111,7 +111,7 @@ public class OrderDAOMongo  implements MongoDAO<String, Order> {
     return order;
   }
 
-  private Document toDocument(Order order) {
+  private Document toDocument(Order<String> order) {
     if (order == null)
       return null;
     
