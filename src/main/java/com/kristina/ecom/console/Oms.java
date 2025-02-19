@@ -106,6 +106,7 @@ public class Oms {
     order.getProducts().remove(productIndex);
   }
 
+  @SuppressWarnings("unchecked")
   public void addProductToOrder(Order<Integer> order) {
     ProductService pService = new ProductService();
     List<Product<Integer>> productsInStock = pService.getAll();

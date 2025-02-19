@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class MarketSpace {
   private static  MarketSpace instance = new MarketSpace();
   private Map<Integer, Product<Integer>> products;
-  private List<Computer> cart;
+  private List<Computer<Integer>> cart;
 
 
   private MarketSpace() {
@@ -28,9 +28,10 @@ public class MarketSpace {
     return instance;
   }
 
+  @SuppressWarnings({ "rawtypes", "unchecked" })
   public void buy() {
     new ProductService().getAll().forEach((product) -> this.products.put(product.getId(), product)); // load products from db
-    Computer computer = new ComputerBase();
+    Computer<Integer> computer = new ComputerBase<Integer>();
     Boolean cancel = false;
     Scanner sc = new Scanner(System.in);
     int c = 0;
@@ -63,7 +64,7 @@ public class MarketSpace {
           } catch (CloneNotSupportedException ex) {
             ex.printStackTrace();
           } 
-          computer = new Component(computer, p);
+          computer = new Component<Integer>(computer, p);
           product.setQuantity(product.getQuantity() - 1);
         }
       } else {
@@ -95,7 +96,7 @@ public class MarketSpace {
       System.out.println(0 + ": " + "Done");
   }
 
-  public List<Computer> getCart() {
+  public List<Computer<Integer>> getCart() {
     return cart;
   }
 }
