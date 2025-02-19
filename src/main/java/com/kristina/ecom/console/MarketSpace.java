@@ -2,6 +2,7 @@ package com.kristina.ecom.console;
 
 import java.util.Scanner;
 
+import com.kristina.ecom.dao.ShoppingCartDAOMongo;
 import com.kristina.ecom.domain.Component;
 import com.kristina.ecom.domain.Computer;
 import com.kristina.ecom.domain.ComputerBase;
@@ -77,24 +78,8 @@ public class MarketSpace {
     if (!cancel) {
       cart.add(computer);
       // TBC: persists cart to MongoDB
-
-      /*
-      shoppingCart
-
-      {
-      "_id": ObjectId(""),
-      "modifies": datetime,
-      "status": active, fulfilled, canceled,
-      "computers": [
-        "_id":  (this is for Computer, and the id is String. the string is manually created)
-        "_id": string, "description": string, "price": double
-        "products": [
-          "_id": (this is now the product id) integer, --> 
-          "quantity": integer
-         ]
-      ]
-      }
-      */ 
+      // ShoppingCartDAOMongo.create(computer);
+      // persist to the database
       } else {
         System.out.println("Order is canceled!");
     }
