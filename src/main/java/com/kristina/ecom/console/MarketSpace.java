@@ -2,7 +2,6 @@ package com.kristina.ecom.console;
 
 import java.util.Scanner;
 
-import com.kristina.ecom.dao.ShoppingCartDAOMongo;
 import com.kristina.ecom.domain.Component;
 import com.kristina.ecom.domain.Computer;
 import com.kristina.ecom.domain.ComputerBase;
@@ -31,7 +30,7 @@ public class MarketSpace {
 
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public void buy() {
-    new ProductService().getAll().forEach((product) -> this.products.put(product.getId(), product)); // load products from db
+    new ProductService().getAll().forEach((product) -> this.products.put(product.getId(), product));
     Computer<Integer> computer = new ComputerBase<Integer>();
     Boolean cancel = false;
     Scanner sc = new Scanner(System.in);
@@ -88,16 +87,9 @@ public class MarketSpace {
   private void menu() {
     System.out.println("I'm in the MarketSpace class!");
 
-    // for (int i=0; i<products.size(); i++)
-    //   System.out.println((i+1) + ": " + products.get(i));
-
-    // for (Map.Entry<Integer, Product> entry: products.entrySet())
-    //     System.out.println(entry.getKey() + ": " + entry.getValue());
-
-        products.forEach((k,v) -> System.out.println(k + ":" + v ));
-        // ^ the same as the for loop above it but more concise
-      System.out.println(-1 + ": " + "Cancel");
-      System.out.println(0 + ": " + "Done");
+    products.forEach((k,v) -> System.out.println(k + ":" + v ));
+    System.out.println(-1 + ": " + "Cancel");
+    System.out.println(0 + ": " + "Done");
   }
 
   public List<Computer<Integer>> getCart() {

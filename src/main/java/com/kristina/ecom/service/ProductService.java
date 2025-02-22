@@ -9,8 +9,6 @@ import com.kristina.ecom.dao.DAOException;
 import com.kristina.ecom.dao.ProductDAOMySql;
 import com.kristina.ecom.domain.Product;
 
-import java.sql.SQLException;
-
 public class ProductService {
   private DAO<Integer, Product<Integer>> dao;
 

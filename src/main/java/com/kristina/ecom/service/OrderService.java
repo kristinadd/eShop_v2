@@ -11,8 +11,6 @@ import com.kristina.ecom.dao.ProductDAOMySql;
 import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.Product;
 
-import java.sql.SQLException;
-
 public class OrderService {
   private DAO<String, Order<Integer>> dao; // interface
   private DAO<Integer, Product<Integer>> daoP;
