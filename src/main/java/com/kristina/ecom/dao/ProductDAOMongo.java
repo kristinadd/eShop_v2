@@ -109,7 +109,7 @@ public class ProductDAOMongo implements DAO<String, Product<String>> {
 
   }
 
-  private Document toDocument(Product<String> product) {
+  public Document toDocument(Product<String> product) {
     if (product != null) {
     Document document = new Document();
     // isEmpty throws NullPointerException if product.getId() is null

@@ -12,7 +12,7 @@ public class ComputerBase<K> implements Computer<K> {
   private static final int SIZE = 100;
   private static List<Integer> ids = new Random().ints(1, SIZE+1).distinct().limit(SIZE).boxed().collect((Collectors.toList()));
 
-  private String orderID;
+  private String orderID; // I think the computer needs to have its own generated ID
   private String description;
   private double price;
   private List<Product<K>> components;

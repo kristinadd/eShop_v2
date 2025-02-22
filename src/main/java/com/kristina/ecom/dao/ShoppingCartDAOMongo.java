@@ -2,9 +2,11 @@ package com.kristina.ecom.dao;
 
 import static com.mongodb.client.model.Filters.eq;
 
+import java.util.Date;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -21,8 +23,6 @@ import com.kristina.ecom.domain.Computer;
 import com.kristina.ecom.domain.Product;
 
       /*
-      shoppingCart
-
       {
       "_id": ObjectId(""),
       "user_id": string, --> prep for the User
@@ -50,6 +50,14 @@ public class ShoppingCartDAOMongo  implements DAO<String, Computer<String>> {
 
    @Override
   public Computer<String> create(Computer<String> computer) throws DAOException {
+    try {
+      Document document = toDocument(computer);
+      InsertOneResult result = collection.insertOne(document);
+      System.out.println(result.getInsertedId());
+    } catch (MongoException ex) {
+      throw new DAOException("❌ Coudn't create the shopping cart", ex);
+    }
+
     return null;
   }
 
@@ -73,101 +81,30 @@ public class ShoppingCartDAOMongo  implements DAO<String, Computer<String>> {
     return 0;
   }
 
+  private Document toDocument(Computer<String> computer) throws DAOException {
+    Document document = new Document();
 
-  // @Override
-  // public Order<String> create(Order<String> order) throws DAOException {
-  //   if (order == null)
-  //     return null;
+    document.append("_id", new ObjectId());
+    document.append("user_id", "");
+    document.append("updated_at", new Date());
+    document.append("status", "ffgg");
 
-  //   try {
-  //     Document document = toDocument(order);
-  //     InsertOneResult result = collection.insertOne(document);
-  //     order.setId(result.getInsertedId().toString());
-  //     return order;
-  //   } catch (MongoException ex) {
-  //     throw new DAOException("Order creation error", ex);
-  //   }
-  // }
+    Document computerDoc = new Document();
+    computerDoc.append("_id", computer.getOrderID());
+    computerDoc.append("description", computer.getDescription());
+    computerDoc.append("price", computer.getPrice());
 
-  // @Override
-  // public List<Order<String>> readAll() throws DAOException {
-  //   FindIterable<Document> documents = collection.find();
-  //   List<Order<String>> orders = new ArrayList<>();
-
-  //   for (Document document : documents) {
-  //     Order<String> order = toOrder(document);
-  //     orders.add(order);
-  //   }
-
-  //   return orders;
-  // }
-
-  // @Override
-  // public Order<String> read(String id) throws DAOException {
-  //   if (id == null) {
-  //     return null;
-  //   }
-  //   Bson query =  eq("_id", new ObjectId(id));
-  //   Document document = collection.find(query).first();
-
-  //   if (document != null) {
-  //     Order<String> order = toOrder(document);
-
-  //     return order;
-  //   }
-
-  //   return null;
-  // }
-
-  // @Override
-  // public int update(Order<String> order) throws DAOException {
-  //   if (order == null)
-  //     return 0;
-
-  //   Document document = toDocument(order);
-  //   Bson query = eq("_id", new ObjectId(order.getId()));
-  //   UpdateResult result = collection.replaceOne(query, document);
-
-  //   return (int) result.getModifiedCount();
-  // }
-
-  // @Override
-  // public int delete(String id) throws DAOException {
-  //   Bson query = Filters.eq("_id", new ObjectId(id));
-  //   DeleteResult result = collection.deleteOne(query);
-
-  //   return (int) result.getDeletedCount();
-  // }
-
-  // private Order<String> toOrder(Document document) {
-  //   if (document == null)
-  //     return null;
-
-  //   Order<String> order = new Order<String>(
-  //     document.getObjectId("_id").toString(),
-  //     document.getString("description"),
-  //     document.getDouble("total").floatValue(),
-  //     document.getDate("date").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
-  //     new ArrayList<Product<String>>()
-  //     // document.getList("products", Product.class)
-  //     // need to loop
-  //   );
-
-  //   return order;
-  // }
-
-  // private Document toDocument(Order<String> order) {
-  //   if (order == null)
-  //     return null;
+    List<Document> productDocs = new ArrayList<>();
+    List<Product<String>> products = computer.getComponents();
+    for (Product<String> product : products) {
+      ProductDAOMongo productDao = new ProductDAOMongo();
+      Document prodDoc = productDao.toDocument(product);
+      productDocs.add(prodDoc);
+    }
+    computerDoc.append("products", productDocs);
     
-  //   Document document = new Document();
-  //   if (!order.getId().isEmpty())
-  //   document.append("_id", new ObjectId(order.getId())); 
-  //   document.append("description", order.getDescription());
-  //   document.append("total", order.getTotal());
-  //   document.append("date", order.getDate());
-  //   document.append("products", order.getProducts());
+    document.append("computers", computerDoc);
 
-  //   return document;
-  // }
+    return document;
+  }
 }
