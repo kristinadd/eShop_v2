@@ -140,11 +140,17 @@ public class Main {
         ex.printStackTrace();
       }
 
-      try {
-        shopDao.delete("67baedeac6587d068b914fd1");
-      } catch (DAOException ex) {
-        ex.printStackTrace();
-      }
 
+      // DELETE SHOPPING CART
+      // try {
+      //   shopDao.delete("67baf469a707cb1b7f865119");
+      // } catch (DAOException ex) {
+      //   ex.printStackTrace();
+      // }
+
+
+      // READ ALL CARTS FROM DB
+
+      
   }
 }
