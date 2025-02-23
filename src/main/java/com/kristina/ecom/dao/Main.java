@@ -130,5 +130,21 @@ public class Main {
         ex.printStackTrace();
       }
 
+
+      // read a shopping cart
+
+      try {
+        Computer<String> computer2 = shopDao.read("67ba13c75127ab6ef6e89b72");
+        System.out.println(computer2);
+      } catch (DAOException ex) {
+        ex.printStackTrace();
+      }
+
+      try {
+        shopDao.delete("67baedeac6587d068b914fd1");
+      } catch (DAOException ex) {
+        ex.printStackTrace();
+      }
+
   }
 }

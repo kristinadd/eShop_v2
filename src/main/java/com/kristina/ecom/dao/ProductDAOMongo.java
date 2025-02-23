@@ -93,12 +93,13 @@ public class ProductDAOMongo implements DAO<String, Product<String>> {
     }
   }
 
-  private Product<String> toProduct(Document document) {
+  public Product<String> toProduct(Document document) {
     if (document == null)
       return null;
 
     Product<String> product = new Product<String>(
-      document.getObjectId("_id").toString(),
+      // document.getObjectId("_id").toString(),
+      document.getString("_id"),
       document.getString("type"),
       document.getString("name"),
       document.getDouble("price"),
