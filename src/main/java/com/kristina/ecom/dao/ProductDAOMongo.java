@@ -34,8 +34,7 @@ public class ProductDAOMongo implements DAO<String, Product<String>> {
       return null;
       
       try {
-      UtilDAOMongo utilMongo = new UtilDAOMongo();
-      Document document = utilMongo.toDocument(product);
+      Document document = UtilDAOMongo.toDocument(product);
       InsertOneResult result = collection.insertOne(document);
       product.setId(result.getInsertedId().toString());
       return product;
@@ -47,10 +46,9 @@ public class ProductDAOMongo implements DAO<String, Product<String>> {
   @Override
   public  Product<String> read(String id) throws DAOException {
     Document document = collection.find(eq("_id", new ObjectId(id))).first();
-    UtilDAOMongo utilMongo = new UtilDAOMongo();
 
     if (document != null) {
-      Product<String> product = utilMongo.toProduct(document);
+      Product<String> product = UtilDAOMongo.toProduct(document);
       return product;
     } else {
       System.out.println("Coudn't find product with id: " + id);
@@ -63,11 +61,10 @@ public class ProductDAOMongo implements DAO<String, Product<String>> {
   public List<Product<String>> readAll() throws DAOException {
     List<Product<String>> products = new ArrayList<>();
     FindIterable<Document> documents = collection.find();
-    UtilDAOMongo utilMongo = new UtilDAOMongo();
 
     for (Document document : documents) {
       if (document != null) {
-        Product<String> product = utilMongo.toProduct(document);
+        Product<String> product = UtilDAOMongo.toProduct(document);
       products.add(product);
       }
     }

@@ -6,7 +6,7 @@ import com.kristina.ecom.domain.Product;
 
 public class UtilDAOMongo {
 
-  public Product<String> toProduct(Document document) {
+  public static Product<String> toProduct(Document document) {
     if (document == null)
       return null;
 
@@ -22,7 +22,7 @@ public class UtilDAOMongo {
     return product;
   }
 
-  public Document toDocument(Product<String> product) {
+  public static Document toDocument(Product<String> product) {
   if (product != null) {
   Document document = new Document();
   // isEmpty throws NullPointerException if product.getId() is null

@@ -105,11 +105,10 @@ public class ShoppingCartDAOMongo  implements DAO<String, Computer<String>> {
   }
 
   private List<Document> toProductDocuments(List<Product<String>> products) {
-    UtilDAOMongo utilMongo = new UtilDAOMongo(); // use UtilMongo instead of calling the productDAO directly
     List<Document>  productDocuments = new ArrayList<>();
 
     for (Product<String> product : products) {
-      Document productDoc = utilMongo.toDocument(product);
+      Document productDoc = UtilDAOMongo.toDocument(product);      // use UtilMongo instead of calling the productDAO directly
       
       productDocuments.add(productDoc);
     }
@@ -133,10 +132,9 @@ public class ShoppingCartDAOMongo  implements DAO<String, Computer<String>> {
 
   private List<Product<String>> toProducts(List<Document> productDocuments) {
     List<Product<String>> products = new ArrayList<>();
-    UtilDAOMongo utilMongo = new UtilDAOMongo();
 
     for (Document productDoc : productDocuments) {
-      Product<String> product = utilMongo.toProduct(productDoc);
+      Product<String> product = UtilDAOMongo.toProduct(productDoc);
       products.add(product);
     }
     return products;
