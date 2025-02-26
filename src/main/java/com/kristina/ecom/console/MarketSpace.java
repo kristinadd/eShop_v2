@@ -2,6 +2,10 @@ package com.kristina.ecom.console;
 
 import java.util.Scanner;
 
+import com.kristina.ecom.domain.ShoppingCart;
+import com.kristina.ecom.domain.Status;
+import com.kristina.ecom.dao.DAOException;
+import com.kristina.ecom.dao.ShoppingCartDAOMongo;
 import com.kristina.ecom.domain.Component;
 import com.kristina.ecom.domain.Computer;
 import com.kristina.ecom.domain.ComputerBase;
@@ -12,11 +16,12 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class MarketSpace {
   private static  MarketSpace instance = new MarketSpace();
   private Map<Integer, Product<Integer>> products;
-  private List<Computer<Integer>> cart;
+  private List<Computer<String>> cart;
 
 
   private MarketSpace() {
@@ -30,8 +35,8 @@ public class MarketSpace {
 
   @SuppressWarnings({ "rawtypes", "unchecked" })
   public void buy() {
-    new ProductService().getAll().forEach((product) -> this.products.put(product.getId(), product));
-    Computer<Integer> computer = new ComputerBase<Integer>();
+
+    Computer<String> computer = new ComputerBase<String>();
     Boolean cancel = false;
     Scanner sc = new Scanner(System.in);
     int c = 0;
@@ -64,7 +69,16 @@ public class MarketSpace {
           } catch (CloneNotSupportedException ex) {
             ex.printStackTrace();
           } 
-          computer = new Component<Integer>(computer, p);
+          Product<String> productMongo = new Product<>();
+          productMongo.setId(p.getId().toString());
+          productMongo.setType(p.getType());
+          productMongo.setName(p.getName());
+          productMongo.setPrice(p.getPrice());
+          productMongo.setImg(p.getImg());
+          productMongo.setQuantity(p.getQuantity());
+
+
+          computer = new Component<String>(computer, productMongo);
           product.setQuantity(product.getQuantity() - 1);
         }
       } else {
@@ -79,6 +93,14 @@ public class MarketSpace {
       // TBC: persists cart to MongoDB
       // ShoppingCartDAOMongo.create(computer);
       // persist to the database
+      ShoppingCartDAOMongo shopDao = new ShoppingCartDAOMongo();
+      ShoppingCart shoppingCart = new ShoppingCart(computer.getOrderID(), "98765", new Date(), Status.ACTIVE, cart);
+      try {
+        
+      shopDAO.create(shoppingCart);
+      } catch (DAOException ex) {
+
+      }
       } else {
         System.out.println("Order is canceled!");
     }
@@ -92,7 +114,7 @@ public class MarketSpace {
     System.out.println(0 + ": " + "Done");
   }
 
-  public List<Computer<Integer>> getCart() {
+  public List<Computer<String>> getCart() {
     return cart;
-  }
+  } // check the main
 }

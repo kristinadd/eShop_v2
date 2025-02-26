@@ -1,13 +1,16 @@
 package com.kristina.ecom.dao;
 
+import java.util.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.kristina.ecom.domain.ShoppingCart;
 import com.kristina.ecom.domain.Computer;
 import com.kristina.ecom.domain.ComputerBase;
 import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.Product;
+import com.kristina.ecom.domain.Status;
 public class Main {
   public static void main(String[] args) {
     // PRODUCT DAO
@@ -112,9 +115,9 @@ public class Main {
 
       ShoppingCartDAOMongo shopDao = new ShoppingCartDAOMongo();
 
-      Product<String> product3 = new Product<String>("", "Component", "Monitor", 30.50, 10, "monitor.img");
-      Product<String> product4 = new Product<String>("", "Component", "Mouse", 30.50, 10, "mouse.img");
-      Product<String> product5 = new Product<String>("", "Component", "Keyboard", 30.50, 10, "keyboard.img");
+      Product<String> product3 = new Product<String>("123", "Component", "Monitor", 30.50, 10, "monitor.img");
+      Product<String> product4 = new Product<String>("321", "Component", "Mouse", 30.50, 10, "mouse.img");
+      Product<String> product5 = new Product<String>("345", "Component", "Keyboard", 30.50, 10, "keyboard.img");
 
       List<Product<String>> products = new ArrayList<>();
 
@@ -123,9 +126,16 @@ public class Main {
       products.add(product5);
 
       Computer<String> computer = new ComputerBase<String>("11111111111", products);
+      Computer<String> computer_2 = new ComputerBase<String>("2222222", products);
+      List<Computer<String>> computers = new ArrayList<>();
+      computers.add(computer);
+      computers.add(computer_2);
+
+
+      ShoppingCart shoppingCart = new ShoppingCart("12345", "98765", new Date(), Status.ACTIVE, computers);
       
       try {
-        shopDao.create(computer);
+        shopDao.create(shoppingCart);
       } catch (DAOException ex) {
         ex.printStackTrace();
       }
@@ -133,12 +143,12 @@ public class Main {
 
       // read a shopping cart
 
-      try {
-        Computer<String> computer2 = shopDao.read("67ba13c75127ab6ef6e89b72");
-        System.out.println(computer2);
-      } catch (DAOException ex) {
-        ex.printStackTrace();
-      }
+      // try {
+      //   Computer<String> computer2 = shopDao.read("67beb520dc65d303dd3e6bbb");
+      //   System.out.println(computer2);
+      // } catch (DAOException ex) {
+      //   ex.printStackTrace();
+      // }
 
 
       // DELETE SHOPPING CART

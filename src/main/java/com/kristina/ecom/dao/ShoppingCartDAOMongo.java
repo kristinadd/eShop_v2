@@ -14,10 +14,11 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
+import com.kristina.ecom.domain.ShoppingCart;
 import com.kristina.ecom.domain.Computer;
 import com.kristina.ecom.domain.ComputerBase;
 import com.kristina.ecom.domain.Product;
-public class ShoppingCartDAOMongo  implements DAO<String, Computer<String>> {
+public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
   private MongoDataSourceFactory dataSourceFactory;
   private MongoCollection<Document> collection;
 
@@ -27,9 +28,9 @@ public class ShoppingCartDAOMongo  implements DAO<String, Computer<String>> {
   }
 
   @Override // this creates a shoppig cart but returns computer
-  public Computer<String> create(Computer<String> computer) throws DAOException {
+  public ShoppingCart create(ShoppingCart shoppingCart) throws DAOException {
     try {
-      Document document = toShoppingDocument(computer);
+      Document document = toShoppingDocument(shoppingCart);
       InsertOneResult result = collection.insertOne(document);
       System.out.println(result.getInsertedId());
     } catch (MongoException ex) {
@@ -40,7 +41,7 @@ public class ShoppingCartDAOMongo  implements DAO<String, Computer<String>> {
   }
 
   @Override // is this real all shopping carts or read all computers in  a specific shopping cart
-  public List<Computer<String>> readAll() throws DAOException {
+  public List<ShoppingCart> readAll() throws DAOException {
     FindIterable<Document> shopDocuments = collection.find();
     // List<Computer<String>> 
 
@@ -48,21 +49,21 @@ public class ShoppingCartDAOMongo  implements DAO<String, Computer<String>> {
   }
 
   @Override  // read shopping cart id 
-  public Computer<String> read(String id) throws DAOException {
-    Document shoppingDocument = collection.find(eq("_id", new ObjectId(id))).first();
+  public ShoppingCart read(String id) throws DAOException {
+    // Document shoppingDocument = collection.find(eq("_id", new ObjectId(id))).first();
 
-    if (shoppingDocument != null) {
-      Computer<String> computer = toComputer(shoppingDocument);
-      return computer;
-    } else {
-      System.out.println("❌ Coudn't find the shopping cart with id: " + id);
-    }
+    // if (shoppingDocument != null) {
+    //   Computer<String> computer = toComputer(shoppingDocument);
+    //   return computer;
+    // } else {
+    //   System.out.println("❌ Coudn't find the shopping cart with id: " + id);
+    // }
 
     return null;
   }
 
   @Override
-  public int update(Computer<String> computer) throws DAOException {
+  public int update(ShoppingCart shoppingCart) throws DAOException {
     return 1;
   }
 
@@ -82,15 +83,22 @@ public class ShoppingCartDAOMongo  implements DAO<String, Computer<String>> {
   }
 
   // from object to document
-    private Document toShoppingDocument(Computer<String> computer) throws DAOException {
+    private Document toShoppingDocument(ShoppingCart shoppingCart) throws DAOException {
     Document document = new Document();
 
     document.append("_id", new ObjectId());
     document.append("user_id", "");
     document.append("updated_at", new Date());
     document.append("status", "ffgg");
-    document.append("computers", toComputerDocument(computer));  // one computer
 
+    List<Document> computerDocuments = new ArrayList<>();
+    List<Computer<String>> computers = shoppingCart.getComputers();
+      for (Computer<String> computer : computers) {
+        Document computerDoc = toComputerDocument(computer);
+        computerDocuments.add(computerDoc);
+      }
+
+    document.append("computers", computerDocuments);
     return document;
   }
 

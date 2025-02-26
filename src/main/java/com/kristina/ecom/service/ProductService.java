@@ -8,7 +8,6 @@ import com.kristina.ecom.dao.DAO;
 import com.kristina.ecom.dao.DAOException;
 import com.kristina.ecom.dao.DAOFactory;
 import com.kristina.ecom.dao.DAOType;
-import com.kristina.ecom.dao.ProductDAOMySql;
 import com.kristina.ecom.domain.Product;
 
 public class ProductService {

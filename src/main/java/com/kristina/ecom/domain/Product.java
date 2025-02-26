@@ -81,6 +81,10 @@ public class Product<K> implements Cloneable {
     return this.img;
   }
 
+  public String setImg(String image) {
+    return this.img;
+  }
+
   @Override
   public String toString() {
     return String.format("%s, %.2f, %d", this.name, this.price, this.quantity);

@@ -1,6 +1,7 @@
 package com.kristina.ecom.dao;
 
 public class DAOFactory {
+  
   public static DAO getDAO(DAOType daoType) {
     if (daoType == null) {
       return null;
