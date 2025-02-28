@@ -20,7 +20,7 @@ import java.util.Date;
 
 public class MarketSpace {
   private static  MarketSpace instance = new MarketSpace();
-  private Map<Integer, Product<Integer>> products;
+  private Map<String, Product<String>> products;
   private List<Computer<String>> cart;
 
 
@@ -56,13 +56,13 @@ public class MarketSpace {
         break;
 
       if  (products.keySet().contains(c)) {
-        Product<Integer> product = products.get(c);
+        Product<String> product = products.get(c);
 
         if (product.getQuantity() == 0) {
           System.out.println("Out of stock. Select another product.");
 
         } else {
-          Product<Integer> p = new Product<Integer>();
+          Product<String> p = new Product<String>();
           try {
             p = (Product) product.clone();
             p.setQuantity(1);
@@ -97,9 +97,9 @@ public class MarketSpace {
       ShoppingCart shoppingCart = new ShoppingCart(computer.getOrderID(), "98765", new Date(), Status.ACTIVE, cart);
       try {
         
-      shopDAO.create(shoppingCart);
+      shopDao.create(shoppingCart);
       } catch (DAOException ex) {
-
+        ex.printStackTrace();
       }
       } else {
         System.out.println("Order is canceled!");

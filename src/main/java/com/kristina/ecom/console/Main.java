@@ -9,7 +9,7 @@ public class Main {
   private Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
-      CartManager shoppingCart = new CartManager(marketSpace.getCart());
+        CartManager shoppingCart = new CartManager(marketSpace.getCart());
         admin = Admin.instance();
         oms = Oms.instance();
         Main m = new Main();

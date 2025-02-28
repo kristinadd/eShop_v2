@@ -16,14 +16,14 @@ import com.kristina.ecom.service.OrderService;
 public class CartManager {
   private Scanner sc;
   private List<Computer<Integer>> cart;
-  private SortStrategy<Integer> strategy, sortByOrderIDStrategy, sortByPriceStrategy;
+  private SortStrategy<String> strategy, sortByOrderIDStrategy, sortByPriceStrategy;
 
 
   public CartManager(List<Computer<Integer>> cart) {
     sc = new Scanner(System.in);
     this.cart = cart;
-    sortByOrderIDStrategy = new SortByOrderID<Integer>();
-    sortByPriceStrategy = new SortByPrice<Integer>();
+    sortByOrderIDStrategy = new SortByOrderID<String>();
+    sortByPriceStrategy = new SortByPrice<String>();
   }
 
   public CartManager(String string, String string2, Date date, Status active, List<Computer<String>> computers) {

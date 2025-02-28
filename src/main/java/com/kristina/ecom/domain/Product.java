@@ -12,10 +12,6 @@ public class Product<K> implements Cloneable {
     // default constructor
   }
 
-  public Product(String type, String name, double price, int quantity) {
-    this(null, type, name, price, quantity, "img");
-  }
-
   public Product(String type, String name, double price, String img) {
     this(null, type, name, price, 0, img);
   }

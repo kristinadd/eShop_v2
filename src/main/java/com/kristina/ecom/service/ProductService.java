@@ -11,14 +11,14 @@ import com.kristina.ecom.dao.DAOType;
 import com.kristina.ecom.domain.Product;
 
 public class ProductService {
-  private DAO<Integer, Product<Integer>> dao;
+  private DAO<String, Product<String>> dao;
 
   public ProductService() {
     dao = DAOFactory.getDAO(DAOType.PRODUCT_SQL);
   }
 
-  public List<Product<Integer>> getAll() {
-    List<Product<Integer>> products = new ArrayList<>();
+  public List<Product<String>> getAll() {
+    List<Product<String>> products = new ArrayList<>();
     try {
       products = dao.readAll()
       .stream()
@@ -34,8 +34,8 @@ public class ProductService {
     return products;
   }
 
-  public Product<Integer> getComputer() {
-    Product<Integer> product = null;
+  public Product<String> getComputer() {
+    Product<String> product = null;
     try {
       product = dao.readAll().stream()
             .filter(p -> p.getType()
@@ -48,10 +48,10 @@ public class ProductService {
     return product;
   }
 
-  public Product<Integer> get(Integer id) {
-    Product<Integer> product = null;
+  public Product<String> get(String id) {
+    Product<String> product = null;
     try {
-      product = dao.read(id);
+      product = dao.read(String.valueOf(id));
     } catch (DAOException ex) {
       ex.printStackTrace();
     }
@@ -59,17 +59,17 @@ public class ProductService {
     return product;
   }
 
-  public int delete(Integer id) {
+  public int delete(String id) {
     int rows = 0;
     try {
-      rows = dao.delete(id);
+      rows = dao.delete(String.valueOf(id));
     } catch (DAOException ex) {
       ex.printStackTrace();
     }
     return rows;
   }
 
-  public int create(Product<Integer> product) {
+  public int create(Product<String> product) {
     try {
       dao.create(product);
     } catch (DAOException ex) {
@@ -78,7 +78,7 @@ public class ProductService {
     return 1;
   }
 
-  public int update (Product<Integer> product) {
+  public int update (Product<String> product) {
     int rows = 0;
     try {
       rows = dao.update(product);
