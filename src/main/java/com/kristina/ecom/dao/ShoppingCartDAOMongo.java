@@ -87,9 +87,9 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     Document document = new Document();
 
     document.append("_id", new ObjectId());
-    document.append("user_id", "");
+    document.append("user_id", shoppingCart.getUserId());
     document.append("updated_at", new Date());
-    document.append("status", "ffgg");
+    document.append("status", shoppingCart.getStatus());
 
     List<Document> computerDocuments = new ArrayList<>();
     List<Computer<String>> computers = shoppingCart.getComputers();

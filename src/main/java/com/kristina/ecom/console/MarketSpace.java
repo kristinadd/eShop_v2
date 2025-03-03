@@ -34,25 +34,27 @@ public class MarketSpace {
   }
 
   public void buy() {
-    new ProductService().getAll().forEach((product) -> this.products.put(String.valueOf(product.getId()), product)); // cast int to String
+    new ProductService().getAll().forEach((product) -> this.products.put(String.valueOf(product.getId()), product));
 
     Computer<String> computer = new ComputerBase<String>();
     Boolean cancel = false;
     Scanner sc = new Scanner(System.in);
-    int c = 0;
+    // int c = 0;
+    String c = "";
 
     while (true) {
       System.out.printf("Current Build: %s, and total price is %.2f\n", computer.getDescription(), computer.getPrice());
       System.out.println("What component would you like to add?");
       menu();
 
-      c = sc.nextInt();
-      if (c == -1) {
+      // c = sc.nextInt();
+      c = sc.nextLine();
+      if (c == "-1") {
         cancel = true;
         break;
       } 
       
-      if (c == 0)
+      if (c == "")
         break;
 
       if  (products.keySet().contains(c)) {
@@ -70,7 +72,7 @@ public class MarketSpace {
             ex.printStackTrace();
           } 
           Product<String> productMongo = new Product<>();
-          productMongo.setId(p.getId().toString());
+          productMongo.setId(String.valueOf(p.getId()));
           productMongo.setType(p.getType());
           productMongo.setName(p.getName());
           productMongo.setPrice(p.getPrice());
@@ -91,14 +93,15 @@ public class MarketSpace {
       cart.add(computer);
       ShoppingCartDAOMongo shopDao = new ShoppingCartDAOMongo();
       ShoppingCart shoppingCart = new ShoppingCart(computer.getOrderID(), "98765", new Date(), Status.ACTIVE, cart);
+
       try {
-        
-      shopDao.create(shoppingCart);
+        shopDao.create(shoppingCart);
       } catch (DAOException ex) {
         ex.printStackTrace();
       }
-      } else {
-        System.out.println("Order is canceled!");
+
+    } else {
+      System.out.println("Order is canceled!");
     }
   }
 
