@@ -4,13 +4,13 @@ import java.util.Scanner;
 
 import com.kristina.ecom.domain.ShoppingCart;
 import com.kristina.ecom.domain.Status;
+import com.kristina.ecom.service.ProductService;
 import com.kristina.ecom.dao.DAOException;
 import com.kristina.ecom.dao.ShoppingCartDAOMongo;
 import com.kristina.ecom.domain.Component;
 import com.kristina.ecom.domain.Computer;
 import com.kristina.ecom.domain.ComputerBase;
 import com.kristina.ecom.domain.Product;
-import com.kristina.ecom.service.ProductService;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -33,8 +33,8 @@ public class MarketSpace {
     return instance;
   }
 
-  @SuppressWarnings({ "rawtypes", "unchecked" })
   public void buy() {
+    new ProductService().getAll().forEach((product) -> this.products.put(String.valueOf(product.getId()), product)); // cast int to String
 
     Computer<String> computer = new ComputerBase<String>();
     Boolean cancel = false;
@@ -86,13 +86,9 @@ public class MarketSpace {
         continue;
       }
     }
-    // sc.close();
 
     if (!cancel) {
       cart.add(computer);
-      // TBC: persists cart to MongoDB
-      // ShoppingCartDAOMongo.create(computer);
-      // persist to the database
       ShoppingCartDAOMongo shopDao = new ShoppingCartDAOMongo();
       ShoppingCart shoppingCart = new ShoppingCart(computer.getOrderID(), "98765", new Date(), Status.ACTIVE, cart);
       try {
@@ -108,7 +104,6 @@ public class MarketSpace {
 
   private void menu() {
     System.out.println("I'm in the MarketSpace class!");
-
     products.forEach((k,v) -> System.out.println(k + ":" + v ));
     System.out.println(-1 + ": " + "Cancel");
     System.out.println(0 + ": " + "Done");
@@ -116,5 +111,5 @@ public class MarketSpace {
 
   public List<Computer<String>> getCart() {
     return cart;
-  } // check the main
+  }
 }

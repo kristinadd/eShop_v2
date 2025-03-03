@@ -61,7 +61,6 @@ public class CartManager {
     System.out.println("Shopping Cart details: ");
 
     for (int i = 0; i< items.length; i++) {
-      // System.out.println(i+1 + " " + items[i]);
       System.out.printf("%d: %s\n", i+1, items[i]);
     }
   }

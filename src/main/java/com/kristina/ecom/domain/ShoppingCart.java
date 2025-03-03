@@ -37,5 +37,4 @@ public class ShoppingCart {
   public List<Computer<String>> getComputers() {
     return computers;
   }
-
 }
