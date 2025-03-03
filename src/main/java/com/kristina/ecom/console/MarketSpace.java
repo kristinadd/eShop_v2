@@ -49,7 +49,7 @@ public class MarketSpace {
 
       // c = sc.nextInt();
       c = sc.nextLine();
-      if (c == "-1") {
+      if (c == "K") {
         cancel = true;
         break;
       } 
@@ -91,9 +91,9 @@ public class MarketSpace {
 
     if (!cancel) {
       cart.add(computer);
+      
       ShoppingCartDAOMongo shopDao = new ShoppingCartDAOMongo();
       ShoppingCart shoppingCart = new ShoppingCart(computer.getOrderID(), "98765", new Date(), Status.ACTIVE, cart);
-
       try {
         shopDao.create(shoppingCart);
       } catch (DAOException ex) {

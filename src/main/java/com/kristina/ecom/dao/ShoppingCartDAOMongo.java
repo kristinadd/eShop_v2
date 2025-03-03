@@ -86,9 +86,9 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     private Document toShoppingDocument(ShoppingCart shoppingCart) throws DAOException {
     Document document = new Document();
 
-    document.append("_id", new ObjectId());
+    document.append("_id", shoppingCart.getId()); // not ObjectId , ObjectId is 24 hex characters
     document.append("user_id", shoppingCart.getUserId());
-    document.append("updated_at", new Date());
+    document.append("updated_at", shoppingCart.getUpdatedAt());
     document.append("status", shoppingCart.getStatus());
 
     List<Document> computerDocuments = new ArrayList<>();
