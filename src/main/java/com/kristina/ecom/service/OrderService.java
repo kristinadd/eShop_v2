@@ -13,7 +13,7 @@ import com.kristina.ecom.domain.Product;
 
 public class OrderService {
   private DAO<String, Order<String>> dao; // interface
-  private DAO<Integer, Product<String>> daoP;
+  private DAO<String, Product<String>> daoP;
 
   public OrderService() {
     dao = DAOFactory.getDAO(DAOType.ORDER_SQL);

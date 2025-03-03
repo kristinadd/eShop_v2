@@ -1,7 +1,6 @@
 package com.kristina.ecom.console;
 
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
@@ -10,24 +9,19 @@ import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.SortByOrderID;
 import com.kristina.ecom.domain.SortByPrice;
 import com.kristina.ecom.domain.SortStrategy;
-import com.kristina.ecom.domain.Status;
 import com.kristina.ecom.service.OrderService;
 
 public class CartManager {
   private Scanner sc;
-  private List<Computer<Integer>> cart;
+  private List<Computer<String>> cart;
   private SortStrategy<String> strategy, sortByOrderIDStrategy, sortByPriceStrategy;
 
 
-  public CartManager(List<Computer<Integer>> cart) {
+  public CartManager(List<Computer<String>> cart) {
     sc = new Scanner(System.in);
     this.cart = cart;
     sortByOrderIDStrategy = new SortByOrderID<String>();
     sortByPriceStrategy = new SortByPrice<String>();
-  }
-
-  public CartManager(String string, String string2, Date date, Status active, List<Computer<String>> computers) {
-    //TODO Auto-generated constructor stub
   }
 
   public void admin() {
@@ -95,14 +89,9 @@ public class CartManager {
   public void checkOut() {
     OrderService service = new OrderService();
 
-    for (Computer<Integer> computer : cart) {
-      Order<Integer> order = new Order<Integer>(computer);
+    for (Computer<String> computer : cart) {
+      Order<String> order = new Order<String>(computer);
       service.create(order);
     }
-  }
-
-  public List<Computer<String>> getComputers() {
-    // TODO Auto-generated method stub
-    throw new UnsupportedOperationException("Unimplemented method 'getComputers'");
   }
 }

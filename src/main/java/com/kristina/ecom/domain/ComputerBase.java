@@ -22,7 +22,7 @@ public class ComputerBase<K> implements Computer<K> {
   }
 
   public ComputerBase(String orderID, List<Product<K>> components) {
-    Product<Integer> computer = new ProductService().getComputer();
+    Product<String> computer = new ProductService().getComputer();
     this.orderID = orderID;
     this.description = computer.getName();
     this.price = computer.getPrice();
