@@ -8,9 +8,9 @@ public class ShoppingCart {
   private String user_id;
   private Date updated_at;
   private Status status; 
-  private List<Computer<String>> computers;
+  private List<Computer> computers;
 
-  public ShoppingCart(String id, String user_id, Date updated_at, Status status, List<Computer<String>> computers) {
+  public ShoppingCart(String id, String user_id, Date updated_at, Status status, List<Computer> computers) {
     this.id = id;
     this.user_id = user_id;
     this.updated_at = updated_at;
@@ -34,7 +34,7 @@ public class ShoppingCart {
     return status;
   }
 
-  public List<Computer<String>> getComputers() {
+  public List<Computer> getComputers() {
     return computers;
   }
 }

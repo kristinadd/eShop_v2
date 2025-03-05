@@ -13,15 +13,15 @@ import com.kristina.ecom.service.OrderService;
 
 public class CartManager {
   private Scanner sc;
-  private List<Computer<String>> cart;
-  private SortStrategy<String> strategy, sortByOrderIDStrategy, sortByPriceStrategy;
+  private List<Computer> cart;
+  private SortStrategy strategy, sortByOrderIDStrategy, sortByPriceStrategy;
 
 
-  public CartManager(List<Computer<String>> cart) {
+  public CartManager(List<Computer> cart) {
     sc = new Scanner(System.in);
     this.cart = cart;
-    sortByOrderIDStrategy = new SortByOrderID<String>();
-    sortByPriceStrategy = new SortByPrice<String>();
+    sortByOrderIDStrategy = new SortByOrderID();
+    sortByPriceStrategy = new SortByPrice();
   }
 
   public void admin() {
@@ -88,8 +88,8 @@ public class CartManager {
   public void checkOut() {
     OrderService service = new OrderService();
 
-    for (Computer<String> computer : cart) {
-      Order<String> order = new Order<String>(computer);
+    for (Computer computer : cart) {
+      Order order = new Order(computer);
       service.create(order);
     }
   }

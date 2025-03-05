@@ -2,14 +2,14 @@ package com.kristina.ecom.domain;
 
 import java.time.LocalDateTime;
 import java.util.List;
-public class Order<K> {
+public class Order {
   private String id;
   private String description;
   private float total;
   private LocalDateTime date;
-  private List<Product<K>> products;
+  private List<Product> products;
 
-  public Order(Computer<K> computer) {
+  public Order(Computer computer) {
       this(
       computer.getOrderID(), 
       computer.getDescription(), 
@@ -19,7 +19,7 @@ public class Order<K> {
       );
   }
   
-  public Order(String id, String description, float total, LocalDateTime date, List<Product<K>> products) {
+  public Order(String id, String description, float total, LocalDateTime date, List<Product> products) {
     this.id = id;
     this.description = description;
     this.total = total;
@@ -27,7 +27,7 @@ public class Order<K> {
     this.products= products;
   }
 
-  public Order(String description, float total, LocalDateTime date, List<Product<K>> products) {
+  public Order(String description, float total, LocalDateTime date, List<Product> products) {
     this.id = "";
     this.description = description;
     this.total = total;
@@ -52,11 +52,11 @@ public class Order<K> {
   }
 
   public void update() {
-    ComputerBase<K> base = new ComputerBase<>();
+    ComputerBase base = new ComputerBase();
     description = base.getDescription();
     total = (float)base.getPrice();
     
-    for (Product<K> product : products) {
+    for (Product product : products) {
       description += (" + " + product.getName()).repeat(product.getQuantity());
       total += product.getPrice() * product.getQuantity();
     }
@@ -79,11 +79,11 @@ public class Order<K> {
     this.date = date;
   }
 
-  public List<Product<K>> getProducts() {
+  public List<Product> getProducts() {
     return products;
   }
 
-  public void setProducts(List<Product<K>> products) {
+  public void setProducts(List<Product> products) {
     this.products = products;
   }
 

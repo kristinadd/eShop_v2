@@ -12,7 +12,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.sql.PreparedStatement;
 
-public class ProductDAOMySql implements DAO<Integer, Product<Integer>> {
+public class ProductDAOMySql implements DAO<Integer, Product> {
 
   private DataSource datasource;
 
@@ -21,7 +21,7 @@ public class ProductDAOMySql implements DAO<Integer, Product<Integer>> {
   }
 
   @Override
-  public Product<Integer> create(Product<Integer> product) throws DAOException {
+  public Product create(Product product) throws DAOException {
     
     try {
     Connection conn = datasource.getConnection();
@@ -43,8 +43,8 @@ public class ProductDAOMySql implements DAO<Integer, Product<Integer>> {
   }
 
   @Override
-  public List<Product<Integer>> readAll() throws DAOException {
-    List<Product<Integer>> products = new ArrayList<>();
+  public List<Product> readAll() throws DAOException {
+    List<Product> products = new ArrayList<>();
 
     try {
     Connection conn = datasource.getConnection();
@@ -52,7 +52,7 @@ public class ProductDAOMySql implements DAO<Integer, Product<Integer>> {
     Statement stat = conn.createStatement();
     ResultSet rs = stat.executeQuery(query);
       while (rs.next()) {
-        Product<Integer> product = new Product<Integer>(rs.getInt(1), 
+        Product product = new Product(rs.getInt(1), 
                                       rs.getString(2), 
                                       rs.getString(3), 
                                       rs.getDouble(4), 
@@ -70,15 +70,15 @@ public class ProductDAOMySql implements DAO<Integer, Product<Integer>> {
   }
 
   @Override
-  public Product<Integer> read(Integer id) throws DAOException {
-    Product<Integer> product = null;
+  public Product read(Integer id) throws DAOException {
+    Product product = null;
     try {
     String query = "SELECT * FROM product WHERE id=" + id;
     Connection conn = datasource.getConnection();
     Statement stat = conn.createStatement();
     ResultSet rs = stat.executeQuery(query);
     if (rs.next())
-      product = new Product<Integer>(rs.getInt(1), 
+      product = new Product(rs.getInt(1), 
                             rs.getString(2), 
                             rs.getString(3), 
                             rs.getDouble(4), 
@@ -92,7 +92,7 @@ public class ProductDAOMySql implements DAO<Integer, Product<Integer>> {
   }
 
   @Override
-  public int update(Product<Integer> product) throws DAOException {
+  public int update(Product product) throws DAOException {
     String query = "UPDATE product SET type=?, name=?, price=?, quantity=?, image=? WHERE id=?";
     int rows = 0;
     try {

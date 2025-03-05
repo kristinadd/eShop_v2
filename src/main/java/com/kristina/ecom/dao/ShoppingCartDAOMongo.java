@@ -2,7 +2,6 @@ package com.kristina.ecom.dao;
 
 import static com.mongodb.client.model.Filters.eq;
 
-import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +42,7 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
   @Override // is this real all shopping carts or read all computers in  a specific shopping cart
   public List<ShoppingCart> readAll() throws DAOException {
     FindIterable<Document> shopDocuments = collection.find();
-    // List<Computer<String>> 
+    // List<Computer> 
 
     return null;
   }
@@ -53,7 +52,7 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     // Document shoppingDocument = collection.find(eq("_id", new ObjectId(id))).first();
 
     // if (shoppingDocument != null) {
-    //   Computer<String> computer = toComputer(shoppingDocument);
+    //   Computer computer = toComputer(shoppingDocument);
     //   return computer;
     // } else {
     //   System.out.println("❌ Coudn't find the shopping cart with id: " + id);
@@ -92,8 +91,8 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     document.append("status", shoppingCart.getStatus());
 
     List<Document> computerDocuments = new ArrayList<>();
-    List<Computer<String>> computers = shoppingCart.getComputers();
-      for (Computer<String> computer : computers) {
+    List<Computer> computers = shoppingCart.getComputers();
+      for (Computer computer : computers) {
         Document computerDoc = toComputerDocument(computer);
         computerDocuments.add(computerDoc);
       }
@@ -102,7 +101,7 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     return document;
   }
 
-  private Document toComputerDocument(Computer<String> computer) {
+  private Document toComputerDocument(Computer computer) {
     Document computerDoc = new Document();
     computerDoc.append("_id", computer.getOrderID());
     computerDoc.append("description", computer.getDescription());
@@ -112,10 +111,10 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     return computerDoc;
   }
 
-  private List<Document> toProductDocuments(List<Product<String>> products) {
+  private List<Document> toProductDocuments(List<Product> products) {
     List<Document>  productDocuments = new ArrayList<>();
 
-    for (Product<String> product : products) {
+    for (Product product : products) {
       Document productDoc = UtilDAOMongo.toDocument(product);      // use UtilMongo instead of calling the productDAO directly
       
       productDocuments.add(productDoc);
@@ -124,13 +123,13 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
   }
 
   // from document to object
-  private Computer<String> toComputer(Document shoppingDocument) {
+  private Computer toComputer(Document shoppingDocument) {
     Document computers = shoppingDocument.get("computers", Document.class); // get the nested object first
 
     List<Document> productDocuments = computers.getList("products", Document.class);
-    List<Product<String>> products = toProducts(productDocuments);
+    List<Product> products = toProducts(productDocuments);
 
-    Computer<String> computer = new ComputerBase<>(
+    Computer computer = new ComputerBase(
       computers.getString("_id"),
       products
     );
@@ -138,11 +137,11 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     return computer;
   }
 
-  private List<Product<String>> toProducts(List<Document> productDocuments) {
-    List<Product<String>> products = new ArrayList<>();
+  private List<Product> toProducts(List<Document> productDocuments) {
+    List<Product> products = new ArrayList<>();
 
     for (Document productDoc : productDocuments) {
-      Product<String> product = UtilDAOMongo.toProduct(productDoc);
+      Product product = UtilDAOMongo.toProduct(productDoc);
       products.add(product);
     }
     return products;

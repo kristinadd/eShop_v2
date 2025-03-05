@@ -8,21 +8,21 @@ import com.kristina.ecom.service.ProductService;
 import java.util.List;
 import java.util.ArrayList;
 
-public class ComputerBase<K> implements Computer<K> {
+public class ComputerBase implements Computer {
   private static final int SIZE = 100;
   private static List<Integer> ids = new Random().ints(1, SIZE+1).distinct().limit(SIZE).boxed().collect((Collectors.toList()));
 
   private String orderID; // I think the computer needs to have its own generated ID
   private String description;
   private double price;
-  private List<Product<K>> components;
+  private List<Product> components;
 
   public ComputerBase() {
-      this(getID(), new ArrayList<Product<K>>());
+      this(getID(), new ArrayList<Product>());
   }
 
-  public ComputerBase(String orderID, List<Product<K>> components) {
-    Product<String> computer = new ProductService().getComputer();
+  public ComputerBase(String orderID, List<Product> components) {
+    Product computer = new ProductService().getComputer();
     this.orderID = orderID;
     this.description = computer.getName();
     this.price = computer.getPrice();
@@ -45,7 +45,7 @@ public class ComputerBase<K> implements Computer<K> {
   }
 
   @Override
-  public List<Product<K>> getComponents() {
+  public List<Product> getComponents() {
     return components;
   }
 

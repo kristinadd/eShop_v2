@@ -6,13 +6,13 @@ import com.kristina.ecom.domain.Product;
 
 public class UtilDAOMongo {
 
-  public static Product<String> toProduct(Document document) {
+  public static Product toProduct(Document document) {
     if (document == null)
       return null;
 
-    Product<String> product = new Product<String>(
+    Product product = new Product(
       // document.getObjectId("_id").toString(),
-      document.getString("_id"),
+      document.getInteger("_id"),
       document.getString("type"),
       document.getString("name"),
       document.getDouble("price"),
@@ -22,11 +22,10 @@ public class UtilDAOMongo {
     return product;
   }
 
-  public static Document toDocument(Product<String> product) {
+  public static Document toDocument(Product product) {
   if (product != null) {
   Document document = new Document();
-  // isEmpty throws NullPointerException if product.getId() is null
-    if (!product.getId().isEmpty())
+    if (product.getId() != 0)
       document.append("_id", product.getId());
       document.append("type", product.getType());
       document.append("name", product.getName());

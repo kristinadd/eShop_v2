@@ -66,7 +66,7 @@ public class Oms {
     Arrays.stream(omsMenu).forEach(System.out::println);
   }
 
-  private void productUpdateMenu(Order<String> order) {
+  private void productUpdateMenu(Order order) {
     String[] orderUpdateMenu = {
       "1: Delete a product from the order",
       "2: Add a product to the order",
@@ -100,23 +100,22 @@ public class Oms {
       System.out.println("Delete failed");
   }
 
-  public void deleteProductFromOrder(Order<String> order) {
+  public void deleteProductFromOrder(Order order) {
     int productIndex = selectProduct(order.getProducts());
     // remove the product from the order
     order.getProducts().remove(productIndex);
   }
 
-  @SuppressWarnings("unchecked")
-  public void addProductToOrder(Order<String> order) {
+  public void addProductToOrder(Order order) {
     ProductService pService = new ProductService();
-    List<Product<String>> productsInStock = pService.getAll();
+    List<Product> productsInStock = pService.getAll();
     int productIndex = selectProduct(productsInStock);
 
 
-    Product<String> selectedProduct = productsInStock.get(productIndex);
-    Product<String> productInOrder = null;
+    Product selectedProduct = productsInStock.get(productIndex);
+    Product productInOrder = null;
     try { 
-      productInOrder = (Product<String>) selectedProduct.clone(); 
+      productInOrder = (Product) selectedProduct.clone(); 
     } catch (CloneNotSupportedException ex) {
       ex.printStackTrace();
     }
@@ -125,11 +124,11 @@ public class Oms {
     int quantity = sc.nextInt();
     productInOrder.setQuantity(quantity);
     
-    List<Product<String>> orderProducts = order.getProducts();
+    List<Product> orderProducts = order.getProducts();
     orderProducts.add(productInOrder);
   }
 
-  private int selectProduct(List <Product<String>> products) {
+  private int selectProduct(List <Product> products) {
     int productIndex;
     boolean invalid;
     // needs to check if the order has products
@@ -160,7 +159,7 @@ public class Oms {
   public void update() {
     System.out.println("*** Select an order to update ***");
     all();
-    Order<String> order = service.get(String.valueOf(sc.nextInt())); // 33
+    Order order = service.get(String.valueOf(sc.nextInt())); // 33
     order.setDate(LocalDateTime.now());
     boolean isDirty = false;
     boolean updating = true;
@@ -203,7 +202,7 @@ public class Oms {
   }
 
 
-  private void updateProducts(Order<String> order) {
+  private void updateProducts(Order order) {
     // Get user input
     int productIndex = selectProduct(order.getProducts());
 

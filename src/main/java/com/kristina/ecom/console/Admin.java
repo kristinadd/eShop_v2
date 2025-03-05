@@ -63,7 +63,7 @@ public class Admin {
 
   public void all() {
       Arrays.stream(service.getAll().toArray()).forEach(
-        product -> System.out.println(((Product<?>)product).getId() + ":" + product));
+        product -> System.out.println(((Product)product).getId() + ":" + product));
     // When dealing with generic (parameterized) classes in Java, 
     // the generic type parameters are erased at runtime (a process 
     // called type erasure). This means that you cannot directly 
@@ -75,13 +75,13 @@ public class Admin {
   public void read() {
     System.out.print("Which product would you like to  to read: ");
     Integer id = sc.nextInt();
-    System.out.println(service.get(String.valueOf(id)));
+    System.out.println(service.get(id));
   }
 
   public void delete() {
     System.out.print("Which product would you like to  to delete: ");
     Integer id = sc.nextInt();
-    if (service.delete(String.valueOf(id)) == 1)
+    if (service.delete(id) == 1)
       System.out.println("Product deleted");
     else
     System.out.println("Delete failed");
@@ -97,7 +97,7 @@ public class Admin {
     Double price = sc.nextDouble();
     System.out.print("Product quantity:");
     int quantity = sc.nextInt();
-    Product<String> product = new Product<String>(type, name, price, quantity);
+    Product product = new Product(type, name, price, quantity);
     
     if (service.create(product) == 1)
       System.out.println("Product created");
@@ -109,7 +109,7 @@ public class Admin {
     System.out.println("Select product: ");
     all();
     Integer id = sc.nextInt();
-    Product<String> product = service.get(String.valueOf(id));
+    Product product = service.get(id);
     sc.nextLine();
 
     System.out.print("Product name:");

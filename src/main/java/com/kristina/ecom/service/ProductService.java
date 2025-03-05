@@ -11,14 +11,14 @@ import com.kristina.ecom.dao.DAOType;
 import com.kristina.ecom.domain.Product;
 
 public class ProductService {
-  private DAO<String, Product<String>> dao;
+  private DAO<Integer, Product> dao;
 
   public ProductService() {
     dao = DAOFactory.getDAO(DAOType.PRODUCT_SQL);
   }
 
-  public List<Product<String>> getAll() {
-    List<Product<String>> products = new ArrayList<>();
+  public List<Product> getAll() {
+    List<Product> products = new ArrayList<>();
     try {
       products = dao.readAll()
       .stream()
@@ -34,8 +34,8 @@ public class ProductService {
     return products;
   }
 
-  public Product<String> getComputer() {
-    Product<String> product = null;
+  public Product getComputer() {
+    Product product = null;
     try {
       product = dao.readAll().stream()
             .filter(p -> p.getType()
@@ -48,10 +48,10 @@ public class ProductService {
     return product;
   }
 
-  public Product<String> get(String id) {
-    Product<String> product = null;
+  public Product get(int id) {
+    Product product = null;
     try {
-      product = dao.read(String.valueOf(id));
+      product = dao.read(id);
     } catch (DAOException ex) {
       ex.printStackTrace();
     }
@@ -59,17 +59,17 @@ public class ProductService {
     return product;
   }
 
-  public int delete(String id) {
+  public int delete(int id) {
     int rows = 0;
     try {
-      rows = dao.delete(String.valueOf(id));
+      rows = dao.delete(id);
     } catch (DAOException ex) {
       ex.printStackTrace();
     }
     return rows;
   }
 
-  public int create(Product<String> product) {
+  public int create(Product product) {
     try {
       dao.create(product);
     } catch (DAOException ex) {
@@ -78,7 +78,7 @@ public class ProductService {
     return 1;
   }
 
-  public int update (Product<String> product) {
+  public int update (Product product) {
     int rows = 0;
     try {
       rows = dao.update(product);

@@ -1,7 +1,7 @@
 package com.kristina.ecom.domain;
 
-public class Product<K> implements Cloneable {
-  private K id;
+public class Product implements Cloneable {
+  private int id;
   private String type;
   private String name;
   private double price;
@@ -13,18 +13,23 @@ public class Product<K> implements Cloneable {
   }
 
   public Product(String type, String name, double price, String img) {
-    this(null, type, name, price, 0, img);
+    this(0, type, name, price, 0, img);
   }
+
+  public Product(String type, String name, double price, int quantity) {
+    this(0, type, name, price, quantity,"");
+  }
+
 
   public Product(String type, String name, double price, int quantity, String img) {
-    this(null, type, name, price, quantity, img);
+    this(0, type, name, price, quantity, img);
   }
 
-  public Product( K id, String name, double price, int quantity) {
+  public Product( int id, String name, double price, int quantity) {
     this(id,  "Component", name, price, quantity, " ");
   }
 
-  public Product(K id, String type, String name, double price, int quantity, String img) {
+  public Product(int id, String type, String name, double price, int quantity, String img) {
     this.id = id;
     this.type = type;
     this.name = name;
@@ -33,11 +38,11 @@ public class Product<K> implements Cloneable {
     this.img = img;
   }
 
-  public K getId() {
+  public int getId() {
     return this.id;
   }
 
-  public void setId(K id) {
+  public void setId(int id) {
     this.id = id;
   }
 
@@ -96,13 +101,12 @@ public class Product<K> implements Cloneable {
     return super.clone();
   }
 
-  @SuppressWarnings("unchecked")
   @Override 
   public boolean equals(Object obj) {
     if (!(obj instanceof Product))
       return false;
 
-    return ((Product<K>) obj).getId() ==  this.getId();
+    return ((Product) obj).getId() ==  this.getId();
     // When dealing with generic (parameterized) classes in Java, 
     // the generic type parameters are erased at runtime (a process 
     // called type erasure). This means that you cannot directly 

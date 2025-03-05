@@ -15,11 +15,9 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.result.DeleteResult;
-import com.mongodb.client.result.InsertOneResult;
 import com.mongodb.client.result.UpdateResult;
-import com.mongodb.internal.client.model.Util;
 
-public class ProductDAOMongo implements DAO<String, Product<String>> {
+public class ProductDAOMongo implements DAO<String, Product> {
   private MongoDataSourceFactory dataSourceFactory;
   private MongoCollection<Document> collection;
 
@@ -29,14 +27,13 @@ public class ProductDAOMongo implements DAO<String, Product<String>> {
   }
 
   @Override
-  public Product<String> create(Product<String> product) throws DAOException {
+  public Product create(Product product) throws DAOException {
     if (product == null)
       return null;
       
       try {
       Document document = UtilDAOMongo.toDocument(product);
-      InsertOneResult result = collection.insertOne(document);
-      product.setId(result.getInsertedId().toString());
+      collection.insertOne(document);
       return product;
       } catch (MongoException ex) {
         throw new DAOException("Product creation error", ex);
@@ -44,11 +41,11 @@ public class ProductDAOMongo implements DAO<String, Product<String>> {
    }
   
   @Override
-  public  Product<String> read(String id) throws DAOException {
+  public  Product read(String id) throws DAOException {
     Document document = collection.find(eq("_id", new ObjectId(id))).first();
 
     if (document != null) {
-      Product<String> product = UtilDAOMongo.toProduct(document);
+      Product product = UtilDAOMongo.toProduct(document);
       return product;
     } else {
       System.out.println("Coudn't find product with id: " + id);
@@ -58,13 +55,13 @@ public class ProductDAOMongo implements DAO<String, Product<String>> {
   }
 
   @Override
-  public List<Product<String>> readAll() throws DAOException {
-    List<Product<String>> products = new ArrayList<>();
+  public List<Product> readAll() throws DAOException {
+    List<Product> products = new ArrayList<>();
     FindIterable<Document> documents = collection.find();
 
     for (Document document : documents) {
       if (document != null) {
-        Product<String> product = UtilDAOMongo.toProduct(document);
+        Product product = UtilDAOMongo.toProduct(document);
       products.add(product);
       }
     }
@@ -72,14 +69,13 @@ public class ProductDAOMongo implements DAO<String, Product<String>> {
   }
 
   @Override
-  public int update(Product<String> product) throws DAOException {
+  public int update(Product product) throws DAOException {
     if (product == null)
       return 0;
 
     try {
-    UtilDAOMongo utilMongo = new UtilDAOMongo();
-    Bson query = eq("_id", new ObjectId(product.getId()));
-    UpdateResult result = collection.replaceOne(query, utilMongo.toDocument(product));
+    Bson query = eq("_id", product.getId());
+    UpdateResult result = collection.replaceOne(query, UtilDAOMongo.toDocument(product));
     return (int) result.getModifiedCount();
     } catch (MongoException ex) {
       throw new DAOException("Product update error.", ex);
@@ -96,11 +92,11 @@ public class ProductDAOMongo implements DAO<String, Product<String>> {
     }
   }
 
-  // public Product<String> toProduct(Document document) {
+  // public Product toProduct(Document document) {
   //   if (document == null)
   //     return null;
 
-  //   Product<String> product = new Product<String>(
+  //   Product product = new Product(
   //     // document.getObjectId("_id").toString(),
   //     document.getString("_id"),
   //     document.getString("type"),
@@ -113,7 +109,7 @@ public class ProductDAOMongo implements DAO<String, Product<String>> {
 
   // }
 
-  // public Document toDocument(Product<String> product) {
+  // public Document toDocument(Product product) {
   //   if (product != null) {
   //   Document document = new Document();
   //   // isEmpty throws NullPointerException if product.getId() is null

@@ -1,14 +1,12 @@
 package com.kristina.ecom.dao;
 
 import java.util.Date;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.kristina.ecom.domain.ShoppingCart;
 import com.kristina.ecom.domain.Computer;
 import com.kristina.ecom.domain.ComputerBase;
-import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.Product;
 import com.kristina.ecom.domain.Status;
 public class Main {
@@ -26,9 +24,9 @@ public class Main {
     // }
 
 
-    // Product<String> product3 = new Product<String>("", "Component", "Monitor", 30.50, 10, "monitor.img");
+    // Product product3 = new Product("", "Component", "Monitor", 30.50, 10, "monitor.img");
     // try {
-    //   Product<String> product = productDao.create(product3);
+    //   Product product = productDao.create(product3);
     //   System.out.println("✅ " + product);
     // } catch (DAOException ex) {
     //   ex.printStackTrace();
@@ -36,7 +34,7 @@ public class Main {
     // }
     //                                                               // READ A PRODUCT 
     // try {
-    //   Product<String> product = productDao.read("67ac63ac2a325047a6d12097");
+    //   Product product = productDao.read("67ac63ac2a325047a6d12097");
     //   System.out.println("🦁 " + product);
     // } catch (DAOException ex) {
     //   ex.printStackTrace();
@@ -45,9 +43,9 @@ public class Main {
     // // OrderDAOMongo orderDao = new OrderDAOMongo();
 
     //                                             // CREATE AN ORDER
-    // List<Product<String>> products = new ArrayList<>();
+    // List<Product> products = new ArrayList<>();
 
-    // Order<String> order = new Order<String>(
+    // Order order = new Order(
     //   "Order with generated id",
     //   70.99f,
     //   LocalDateTime.now(),
@@ -55,15 +53,15 @@ public class Main {
     // );
 
     // try {
-    //   Order<String> order2 = orderDao.create(order);
+    //   Order order2 = orderDao.create(order);
     //   System.out.println("🆕 " + order2);
     // } catch (DAOException ex) {
     //   ex.printStackTrace();
     // }
     //                                               // READ ALL ORDERS
     // try {
-    //   List<Order<String> > orders = orderDao.readAll();
-    //   for (Order<String>  order3 : orders) {
+    //   List<Order > orders = orderDao.readAll();
+    //   for (Order  order3 : orders) {
     //     System.out.println("⭐️ Real all orders: " +  order3);
     //   }
     // } catch (DAOException ex) {
@@ -71,14 +69,14 @@ public class Main {
     // }
     //                                                 // READ ONE ORDER
     // try {
-    //   Order<String>  order4 = orderDao.read("67acbba2c6e95a55d2762bb3");
+    //   Order  order4 = orderDao.read("67acbba2c6e95a55d2762bb3");
     //   System.out.println("🍊 Order details " + order4);
     // } catch (DAOException ex) {
     //   ex.printStackTrace();
     // }
     //                                                   // UPDATE AN ORDER 
     //   try {
-    //     Order<String>  order5 = orderDao.read("67ae11fdbda9e3474bfa5603");
+    //     Order  order5 = orderDao.read("67ae11fdbda9e3474bfa5603");
     //     order5.setDescription("NEW UPDATED order");
     //     int result = orderDao.update(order5);
     //     System.out.println("👻 Made " + result + " updates.");
@@ -96,9 +94,9 @@ public class Main {
 
       // DELETE MANY ORDERS ONE BY ONE
       //  try {
-      //   List<Order<String> > orders = orderDao.readAll();
+      //   List<Order > orders = orderDao.readAll();
 
-      //   for (Order<String>  order3 : orders) {
+      //   for (Order  order3 : orders) {
       //     try {
       //       int result = orderDao.delete(order3.getId());
       //       System.out.println("❌ Deleted: " + result);  
@@ -115,19 +113,19 @@ public class Main {
 
       ShoppingCartDAOMongo shopDao = new ShoppingCartDAOMongo();
 
-      Product<String> product3 = new Product<String>("123", "Component", "Monitor", 30.50, 10, "monitor.img");
-      Product<String> product4 = new Product<String>("321", "Component", "Mouse", 30.50, 10, "mouse.img");
-      Product<String> product5 = new Product<String>("345", "Component", "Keyboard", 30.50, 10, "keyboard.img");
+      Product product3 = new Product(123, "Component", "Monitor", 30.50, 10, "monitor.img");
+      Product product4 = new Product(345, "Component", "Mouse", 30.50, 10, "mouse.img");
+      Product product5 = new Product(567, "Component", "Keyboard", 30.50, 10, "keyboard.img");
 
-      List<Product<String>> products = new ArrayList<>();
+      List<Product> products = new ArrayList<>();
 
       products.add(product3);
       products.add(product4);
       products.add(product5);
 
-      Computer<String> computer = new ComputerBase<String>("11111111111", products);
-      Computer<String> computer_2 = new ComputerBase<String>("2222222", products);
-      List<Computer<String>> computers = new ArrayList<>();
+      Computer computer = new ComputerBase("11111111111", products);
+      Computer computer_2 = new ComputerBase("2222222", products);
+      List<Computer> computers = new ArrayList<>();
       computers.add(computer);
       computers.add(computer_2);
 
@@ -144,7 +142,7 @@ public class Main {
       // read a shopping cart
 
       // try {
-      //   Computer<String> computer2 = shopDao.read("67beb520dc65d303dd3e6bbb");
+      //   Computer computer2 = shopDao.read("67beb520dc65d303dd3e6bbb");
       //   System.out.println(computer2);
       // } catch (DAOException ex) {
       //   ex.printStackTrace();

@@ -20,8 +20,8 @@ import java.util.Date;
 
 public class MarketSpace {
   private static  MarketSpace instance = new MarketSpace();
-  private Map<String, Product<String>> products;
-  private List<Computer<String>> cart;
+  private Map<String, Product> products;
+  private List<Computer> cart;
 
 
   private MarketSpace() {
@@ -36,7 +36,7 @@ public class MarketSpace {
   public void buy() {
     new ProductService().getAll().forEach((product) -> this.products.put(String.valueOf(product.getId()), product));
 
-    Computer<String> computer = new ComputerBase<String>();
+    Computer computer = new ComputerBase();
     Boolean cancel = false;
     Scanner sc = new Scanner(System.in);
     // int c = 0;
@@ -58,29 +58,21 @@ public class MarketSpace {
         break;
 
       if  (products.keySet().contains(c)) {
-        Product<String> product = products.get(c);
+        Product product = products.get(c);
 
         if (product.getQuantity() == 0) {
           System.out.println("Out of stock. Select another product.");
 
         } else {
-          Product<String> p = new Product<String>();
+          Product p = new Product();
           try {
             p = (Product) product.clone();
             p.setQuantity(1);
           } catch (CloneNotSupportedException ex) {
             ex.printStackTrace();
           } 
-          Product<String> productMongo = new Product<>();
-          productMongo.setId(String.valueOf(p.getId()));
-          productMongo.setType(p.getType());
-          productMongo.setName(p.getName());
-          productMongo.setPrice(p.getPrice());
-          productMongo.setImg(p.getImg());
-          productMongo.setQuantity(p.getQuantity());
-
-
-          computer = new Component<String>(computer, productMongo);
+          
+          computer = new Component(computer, product);
           product.setQuantity(product.getQuantity() - 1);
         }
       } else {
@@ -112,7 +104,7 @@ public class MarketSpace {
     System.out.println(0 + ": " + "Done");
   }
 
-  public List<Computer<String>> getCart() {
+  public List<Computer> getCart() {
     return cart;
   }
 }
