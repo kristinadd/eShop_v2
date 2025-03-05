@@ -7,3 +7,5 @@ public interface Computer {
   String getOrderID();
   List<Product> getComponents();
 }
+
+// write a method to get the getComputer, get the base computer out, be part of the products list

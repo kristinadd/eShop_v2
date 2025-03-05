@@ -20,7 +20,7 @@ import java.util.Date;
 
 public class MarketSpace {
   private static  MarketSpace instance = new MarketSpace();
-  private Map<String, Product> products;
+  private Map<Integer, Product> products;
   private List<Computer> cart;
 
 
@@ -34,27 +34,26 @@ public class MarketSpace {
   }
 
   public void buy() {
-    new ProductService().getAll().forEach((product) -> this.products.put(String.valueOf(product.getId()), product));
+    new ProductService().getAll().forEach((product) -> this.products.put(product.getId(), product));
 
     Computer computer = new ComputerBase();
     Boolean cancel = false;
     Scanner sc = new Scanner(System.in);
-    // int c = 0;
-    String c = "";
+    int c = 0;
+
 
     while (true) {
       System.out.printf("Current Build: %s, and total price is %.2f\n", computer.getDescription(), computer.getPrice());
       System.out.println("What component would you like to add?");
       menu();
 
-      // c = sc.nextInt();
-      c = sc.nextLine();
-      if (c == "K") {
+      c = sc.nextInt();
+      if (c == -1) {
         cancel = true;
         break;
       } 
       
-      if (c == "")
+      if (c == 0)
         break;
 
       if  (products.keySet().contains(c)) {
