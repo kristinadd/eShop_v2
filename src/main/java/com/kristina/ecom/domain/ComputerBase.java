@@ -12,7 +12,7 @@ public class ComputerBase implements Computer {
   private static final int SIZE = 100;
   private static List<Integer> ids = new Random().ints(1, SIZE+1).distinct().limit(SIZE).boxed().collect((Collectors.toList()));
 
-  private String orderID; // I think the computer needs to have its own generated ID
+  private String orderID;
   private String description;
   private double price;
   private List<Product> components;
