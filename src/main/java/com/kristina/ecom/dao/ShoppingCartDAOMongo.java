@@ -1,19 +1,17 @@
 package com.kristina.ecom.dao;
 
 import static com.mongodb.client.model.Filters.eq;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import org.bson.Document;
 import org.bson.types.ObjectId;
-
 import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.kristina.ecom.domain.ShoppingCart;
+import com.kristina.ecom.domain.Status;
 import com.kristina.ecom.domain.Computer;
 import com.kristina.ecom.domain.ComputerBase;
 import com.kristina.ecom.domain.Product;
@@ -26,7 +24,7 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     this.collection = dataSourceFactory.getDatabase().getCollection("shoppingcart");
   }
 
-  @Override // this creates a shoppig cart but returns computer
+  @Override
   public ShoppingCart create(ShoppingCart shoppingCart) throws DAOException {
     try {
       Document document = toShoppingDocument(shoppingCart);
@@ -39,12 +37,15 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     return null;
   }
 
-  @Override // is this real all shopping carts or read all computers in  a specific shopping cart
+  @Override 
   public List<ShoppingCart> readAll() throws DAOException {
-    FindIterable<Document> shopDocuments = collection.find();
-    // List<Computer> 
-
-    return null;
+    FindIterable<Document> cartDocuments = collection.find();
+    List<ShoppingCart> carts = new ArrayList<>();
+    for (Document document : cartDocuments) {
+      ShoppingCart cart = toShoppingCart(document);
+      carts.add(cart);
+    }
+    return carts;
   }
 
   @Override  // read shopping cart id 
@@ -85,7 +86,7 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     private Document toShoppingDocument(ShoppingCart shoppingCart) throws DAOException {
     Document document = new Document();
 
-    document.append("_id", shoppingCart.getId()); // not ObjectId , ObjectId is 24 hex characters
+    document.append("_id", shoppingCart.getId());
     document.append("user_id", shoppingCart.getUserId());
     document.append("updated_at", shoppingCart.getUpdatedAt());
     document.append("status", shoppingCart.getStatus());
@@ -123,8 +124,8 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
   }
 
   // from document to object
-  private Computer toComputer(Document shoppingDocument) {
-    Document computers = shoppingDocument.get("computers", Document.class); // get the nested object first
+  private Computer toComputer(Document document) {
+    Document computers = document.get("computers", Document.class); // get the nested object first
 
     List<Document> productDocuments = computers.getList("products", Document.class);
     List<Product> products = toProducts(productDocuments);
@@ -145,5 +146,25 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
       products.add(product);
     }
     return products;
+  }
+
+  private ShoppingCart toShoppingCart(Document document) {
+    List<Computer> computers = new ArrayList<>();
+
+    List<Document> computerDocuments = new ArrayList<>();
+    computerDocuments = document.getList("computers", Document.class);
+    for (Document doc : computerDocuments) {
+      Computer computer = toComputer(doc);
+      computers.add(computer);
+    }
+    ShoppingCart cart = new ShoppingCart(
+    document.getString("_id"),
+    document.getString("user_id"),
+    document.getDate("updated_at"),
+    Status.valueOf(document.getString("status")),
+    computers
+    );
+
+    return cart;
   }
 }

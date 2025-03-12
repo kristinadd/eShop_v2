@@ -1,20 +1,24 @@
 package com.kristina.ecom.console;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 import com.kristina.ecom.domain.Computer;
 import com.kristina.ecom.domain.Order;
+import com.kristina.ecom.domain.ShoppingCart;
 import com.kristina.ecom.domain.SortByOrderID;
 import com.kristina.ecom.domain.SortByPrice;
 import com.kristina.ecom.domain.SortStrategy;
 import com.kristina.ecom.service.OrderService;
+import com.kristina.ecom.service.ShoppingCartService;
 
 public class CartManager {
   private Scanner sc;
   private List<Computer> cart;
   private SortStrategy strategy, sortByOrderIDStrategy, sortByPriceStrategy;
+  private ShoppingCartService shopService = new ShoppingCartService();
 
 
   public CartManager(List<Computer> cart) {
@@ -79,9 +83,16 @@ public class CartManager {
   }
 
   public void getCart() {
+    List<ShoppingCart> carts = new ArrayList<>();
+    carts = shopService.readAll();
+    
     if (cart.isEmpty())
-      System.out.println("No items");
+      System.out.println("No available shopping cart");
     else
+      for (ShoppingCart cart : carts) {
+        System.out.println("Cart ID is: " + cart.getId());
+      }
+
       System.out.print(Arrays.toString(cart.toArray()));
   }
 

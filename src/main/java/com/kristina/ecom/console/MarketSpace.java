@@ -5,8 +5,7 @@ import java.util.Scanner;
 import com.kristina.ecom.domain.ShoppingCart;
 import com.kristina.ecom.domain.Status;
 import com.kristina.ecom.service.ProductService;
-import com.kristina.ecom.dao.DAOException;
-import com.kristina.ecom.dao.ShoppingCartDAOMongo;
+import com.kristina.ecom.service.ShoppingCartService;
 import com.kristina.ecom.domain.Component;
 import com.kristina.ecom.domain.Computer;
 import com.kristina.ecom.domain.ComputerBase;
@@ -83,14 +82,9 @@ public class MarketSpace {
     if (!cancel) {
       cart.add(computer);
       
-      ShoppingCartDAOMongo shopDao = new ShoppingCartDAOMongo();
+      ShoppingCartService shopService = new ShoppingCartService();
       ShoppingCart shoppingCart = new ShoppingCart(computer.getOrderID(), "98765", new Date(), Status.ACTIVE, cart);
-      try {
-        shopDao.create(shoppingCart);
-      } catch (DAOException ex) {
-        ex.printStackTrace();
-      }
-
+      shopService.create(shoppingCart);
     } else {
       System.out.println("Order is canceled!");
     }
