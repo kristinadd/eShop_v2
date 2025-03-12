@@ -1,26 +1,26 @@
 package com.kristina.ecom.dao;
 
 public class SQLFactory implements AbstractFactory {
-  private static SQLFactory instance= new SQLFactory();
+  private static SQLFactory instance = new SQLFactory();
 
   private SQLFactory() {}
 
-  public SQLFactory getInstance() {
+  public static SQLFactory getInstance() {
     return instance;
   }
   
-  public AbstractFactory create(DAOType dao) {
-    if (dao == null) {
+  public DAO create(DAO.Type type) {
+    if (type == null) {
       return null;
     }
 
-    switch (dao) {
-      case DAOType.ORDER_SQL:
+    switch (type) {
+      case DAO.Type.ORDER_DAO:
         return new OrderDAOMySql();
-      case DAOType.PRODUCT_SQL:
+      case DAO.Type.PRODUCT_DAO:
         return new ProductDAOMySql();
       default:
-      return null;
+      throw new IllegalArgumentException("no such type: " + type);
     }
   }
 }

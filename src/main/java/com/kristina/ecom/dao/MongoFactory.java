@@ -1,19 +1,17 @@
 package com.kristina.ecom.dao;
 
-public class MongoFactory implements AbstractFactory {
-  private static MongoFactory instance = new MongoFactory();
+import com.kristina.ecom.domain.ShoppingCart;
+
+public class MongoFactory<K, V> implements AbstractFactory<K, V> {
+  private static MongoFactory<String, ShoppingCart> instance = new MongoFactory();
 
   private MongoFactory() {}
 
-  public AbstractFactory create(DAOType dao) {
-    if (dao == null) {
-      return null;
-    }
+  public static MongoFactory<String, ShoppingCart> getInstance() {
+    return instance;
+  }
 
-    if (dao ==  DAOType.SHOPPING_CART_MONGO) {
-      return new ShoppingCartDAOMongo;
-    } else {
-      return null;
-    }
+  public DAO create(DAO.Type type) {
+    return new ShoppingCartDAOMongo();
   }
 }

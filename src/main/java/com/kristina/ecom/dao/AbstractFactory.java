@@ -1,9 +1,6 @@
 package com.kristina.ecom.dao;
 
-public interface AbstractFactory {
-  public AbstractFactory create(DAOType dao);
+public interface AbstractFactory<K,V > {
 
-  public static AbstractFactory get(DAOType dao) {
-    
-  }
+  public DAO<K, V> create(DAO.Type dao);
 }

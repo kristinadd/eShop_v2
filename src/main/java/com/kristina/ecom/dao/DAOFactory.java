@@ -1,21 +1,40 @@
 package com.kristina.ecom.dao;
+import java.io.IOException;
+import java.util.Properties;
 
-public class DAOFactory {
-  
-  public static DAO getDAO(DAOType daoType) {
-    if (daoType == null) {
+public class DAOFactory implements AbstractFactory {
+  private static DAOFactory instance = new DAOFactory();
+  private Properties properties;
+
+  private DAOFactory() {
+    load("db.properties");
+  }
+
+  public static DAOFactory getInstance() {
+    return instance;
+  }
+
+  public DAO create(DAO.Type type) {
+    if (type == null) {
       return null;
     }
 
-    switch (daoType) {
-      case DAOType.ORDER_SQL:
-        return new OrderDAOMySql();
-      case DAOType.PRODUCT_SQL:
-        return new ProductDAOMySql();
-      case DAOType.SHOPPING_CART_MONGO:
-        return new ShoppingCartDAOMongo();
-      default:
-        throw new IllegalArgumentException("Unknown dao type: " + daoType);
+    // read the prop file
+    if (properties.get(type.name()).equals(DAO.Type.SQL.name())) 
+          return SQLFactory.getInstance().create(type);
+    else if (properties.get(type.name()).equals(DAO.Type.MONGO.name())) 
+          return MongoFactory.getInstance().create(type);
+
+    return null;
+  }
+
+  private void load(String fname) {
+    properties = new Properties();
+
+    try {
+      properties.load(getClass().getClassLoader().getResourceAsStream(fname));
+    } catch (IOException ex) {
+      ex.printStackTrace();
     }
   }
 }

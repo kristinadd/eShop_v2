@@ -7,7 +7,6 @@ import java.util.List;
 import com.kristina.ecom.dao.DAO;
 import com.kristina.ecom.dao.DAOException;
 import com.kristina.ecom.dao.DAOFactory;
-import com.kristina.ecom.dao.DAOType;
 import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.Product;
 
@@ -16,8 +15,8 @@ public class OrderService {
   private DAO<Integer, Product> daoP;
 
   public OrderService() {
-    dao = DAOFactory.getDAO(DAOType.ORDER_SQL);
-    daoP = DAOFactory.getDAO(DAOType.PRODUCT_SQL);
+    dao = DAOFactory.getInstance().create(DAO.Type.ORDER_DAO);
+    daoP = DAOFactory.getInstance().create(DAO.Type.PRODUCT_DAO);
   }
 
   public int create(Order order) {

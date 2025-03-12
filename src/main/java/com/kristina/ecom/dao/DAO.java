@@ -7,4 +7,8 @@ public interface DAO<K, V> {
   V read(K k) throws DAOException;
   int update(V v) throws DAOException;
   int delete(K k) throws DAOException;
+
+  public enum Type {
+    SQL, PRODUCT_DAO, ORDER_DAO, MONGO, SHOPPING_CART_DAO
+  }
 }

@@ -7,14 +7,13 @@ import java.util.stream.Collectors;
 import com.kristina.ecom.dao.DAO;
 import com.kristina.ecom.dao.DAOException;
 import com.kristina.ecom.dao.DAOFactory;
-import com.kristina.ecom.dao.DAOType;
 import com.kristina.ecom.domain.Product;
 
 public class ProductService {
   private DAO<Integer, Product> dao;
 
   public ProductService() {
-    dao = DAOFactory.getDAO(DAOType.PRODUCT_SQL);
+    dao = DAOFactory.getInstance().create(DAO.Type.PRODUCT_DAO);
   }
 
   public List<Product> getAll() {
