@@ -26,8 +26,8 @@ public class ShoppingCartService {
   public List<ShoppingCart> readAll() {
 
     try {
-    List<ShoppingCart> carts = dao.readAll();
-    return carts;
+      List<ShoppingCart> carts = dao.readAll();
+      return carts;
     } catch (DAOException ex) {
       ex.printStackTrace();
     }

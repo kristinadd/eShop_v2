@@ -1,7 +1,6 @@
 package com.kristina.ecom.console;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -50,11 +49,11 @@ public class CartManager {
           return;
         case 6:
           System.out.println("Provide a shopping cart id: ");
-          String input = sc.nextLine();  // Now it waits for actual user input
+          String input = sc.nextLine();
           getCart(input);
           break;
         default:
-          System.out.println("Invalid choice. Please try again.");
+          System.out.println("❌ Invalid choice. Please try again.");
       }
     }
   }
@@ -94,13 +93,11 @@ public class CartManager {
     carts = shopService.readAll();
 
     if (carts.isEmpty())
-      System.out.println("No available shopping cart");
+      System.out.println("❌ No available shopping carts");
     else
-      for (ShoppingCart cart : carts) {
-        System.out.println("Cart ID is: " + cart.getId());
-      }
-
-      System.out.print(Arrays.toString(cart.toArray()));
+    for (ShoppingCart cart : carts) {
+      System.out.println(cart);
+    }
   }
 
   public ShoppingCart getCart(String id) {
@@ -108,13 +105,13 @@ public class CartManager {
     cart = shopService.read(id);
 
     if (cart == null) {
-      System.out.println("Coudn't find the shopping cart");
+      System.out.println("❌ Coudn't find the shopping cart with id: " + id);
       return null;
     } else {
+      System.out.println(cart);
       return cart;
     }
   }
-
 
   public void checkOut() {
     OrderService service = new OrderService();

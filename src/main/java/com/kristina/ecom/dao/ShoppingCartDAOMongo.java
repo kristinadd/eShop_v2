@@ -33,7 +33,6 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     } catch (MongoException ex) {
       throw new DAOException("❌ Coudn't create the shopping cart", ex);
     }
-
     return null;
   }
 
@@ -70,7 +69,7 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
         System.out.println("❌ Deleted: " + result.getDeletedCount());
         return (int) result.getDeletedCount();
       } catch (MatchException ex) {
-        throw new DAOException("Coudn't delete the shopping cart", ex);
+        throw new DAOException("❌ Coudn't delete the shopping cart", ex);
       }
     }
     return 0;
@@ -151,7 +150,6 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     computerDocuments = document.getList("computers", Document.class);
     if (computerDocuments != null) {
       for (Document doc : computerDocuments) {
-        System.out.println(doc);
 
         List<Document> productDocs = doc.getList("products", Document.class);
         for (Document proDoc : productDocs) {

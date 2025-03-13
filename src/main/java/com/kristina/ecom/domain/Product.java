@@ -88,8 +88,18 @@ public class Product implements Cloneable {
 
   @Override
   public String toString() {
-    return String.format("%s, %.2f, %d", this.name, this.price, this.quantity);
-  }
+      return String.format(
+          "📍Product:\n" +
+          "  id: %d\n" +
+          "  type: %s\n" +
+          "  name: %s\n" +
+          "  price: %.2f\n" +
+          "  quantity: %d\n" +
+          "  img: %s",
+          id, type, name, price, quantity, img
+      );
+  }  
+  
 
   // @Override
   // public Product clone() {

@@ -30,6 +30,9 @@ public class Component extends ComputerDecorator {
 
   @Override
   public String toString() {
-    return String.format("order_id --> %s, description --> %s, price --> s%.2f", this.getOrderID(), this.getDescription(), this.getPrice());
-  }
+    return String.format(
+      "🧩 Component\n order_id: %s\n description: %s\n price: %s\n",
+      this.getOrderID(), this.getDescription(), this.getPrice()
+    );
+  } 
 }

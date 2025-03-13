@@ -37,4 +37,12 @@ public class ShoppingCart {
   public List<Computer> getComputers() {
     return computers;
   }
+
+  @Override
+  public String toString() {
+    return String.format(
+      "🛍️ ShoppingCart\n id: %s\n user_id: %s\n updated_at: %s\n status: %s\n computers: %s\n",
+      id, user_id, updated_at, status, computers
+    );
+  }  
 }

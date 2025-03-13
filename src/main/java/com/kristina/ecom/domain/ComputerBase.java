@@ -49,11 +49,28 @@ public class ComputerBase implements Computer {
     return components;
   }
 
+  // @Override
+  // public String toString() {
+  //   return String.format(
+  //     "\n🖥️ ComputerBase:\n order_id: %s\n description: %s\n price: %s\n components: %s\n",
+  //     orderID, description, price, components
+  //   );
+  // }
+
   @Override
   public String toString() {
-    return "ComputerBase [orderID=" + orderID + ", description=" + description + ", price=" + price + ", components="
-        + components + "]";
+      // Convert the list of components (Product objects) into a single string.
+      // This will call each Product's toString() method.
+      String componentsString = components.stream()
+                                      .map(Product::toString)
+                                      .collect(Collectors.joining(", "));
+      
+      return String.format(
+          "\n🖥️ ComputerBase:\n order_id: %s\n description: %s\n price: %.2f\n components: [%s]\n",
+          orderID, description, price, componentsString
+      );
   }
+
 
   private static String getID() {
     return Integer.toString(ids.remove(0));
