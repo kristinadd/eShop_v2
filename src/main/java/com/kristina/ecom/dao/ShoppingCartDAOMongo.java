@@ -51,9 +51,9 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
   @Override 
   public ShoppingCart read(String id) throws DAOException {
     Document shoppingDocument = collection.find(eq("_id", id)).first();
-    System.out.println(shoppingDocument);
-    
-    return null;
+    ShoppingCart cart = toShoppingCart(shoppingDocument);
+
+    return cart;
   }
 
   @Override

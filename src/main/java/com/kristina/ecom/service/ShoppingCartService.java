@@ -34,6 +34,17 @@ public class ShoppingCartService {
     return null;
   }
 
+  public ShoppingCart read(String id) {
+    ShoppingCart cart;
+    try {
+      cart = dao.read(id);
+      return cart;
+    } catch (DAOException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
   public ShoppingCart readOne(String id) {
 
     return null;

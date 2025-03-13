@@ -32,6 +32,7 @@ public class CartManager {
     while (true) {
       menu();
       int c = sc.nextInt();
+      sc.nextLine();  // Consume the leftover newline
       switch (c) {
         case 1:
           getCarts();
@@ -47,6 +48,11 @@ public class CartManager {
           break;
         case 5:
           return;
+        case 6:
+          System.out.println("Provide a shopping cart id: ");
+          String input = sc.nextLine();  // Now it waits for actual user input
+          getCart(input);
+          break;
         default:
           System.out.println("Invalid choice. Please try again.");
       }
@@ -55,11 +61,12 @@ public class CartManager {
 
   private void menu() {
     String[] items = {
-      "See my shopping cart",
+      "See all shopping carts",
       "Sort by order ID (Descending order)",
       "Sort by order price (Descending order)",
       "Check out",
-      "Return to main menu"
+      "Return to main menu",
+      "See specific shopping cart"
     };
 
     System.out.println("Shopping Cart details: ");
@@ -95,6 +102,19 @@ public class CartManager {
 
       System.out.print(Arrays.toString(cart.toArray()));
   }
+
+  public ShoppingCart getCart(String id) {
+    ShoppingCart cart;
+    cart = shopService.read(id);
+
+    if (cart == null) {
+      System.out.println("Coudn't find the shopping cart");
+      return null;
+    } else {
+      return cart;
+    }
+  }
+
 
   public void checkOut() {
     OrderService service = new OrderService();
