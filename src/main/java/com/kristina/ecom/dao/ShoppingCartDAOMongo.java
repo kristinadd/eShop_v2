@@ -150,13 +150,38 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
 
   private ShoppingCart toShoppingCart(Document document) {
     List<Computer> computers = new ArrayList<>();
+    List<Product> products = new ArrayList<>();
 
     List<Document> computerDocuments = new ArrayList<>();
+    
     computerDocuments = document.getList("computers", Document.class);
-    for (Document doc : computerDocuments) {
-      Computer computer = toComputer(doc);
-      computers.add(computer);
+    if (computerDocuments != null) {
+      for (Document doc : computerDocuments) {
+        System.out.println(doc);
+
+        List<Document> productDocs = doc.getList("products", Document.class);
+        for (Document proDoc : productDocs) {
+          Product product = new Product(
+            proDoc.getInteger("_id"),
+            proDoc.getString("type"),
+            proDoc.getString("name"),
+            proDoc.getDouble("price"),
+            proDoc.getInteger("quantity"),
+            proDoc.getString("image")
+          );
+          products.add(product);
+        }
+        
+        Computer computer = new ComputerBase(
+          doc.getString("_id"),
+          products
+        );
+        computers.add(computer);
+      }
+    } else {
+      System.out.println("❌ computerDocuments is null");
     }
+
     ShoppingCart cart = new ShoppingCart(
     document.getString("_id"),
     document.getString("user_id"),
