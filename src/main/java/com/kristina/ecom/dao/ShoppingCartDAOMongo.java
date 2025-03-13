@@ -48,17 +48,11 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     return carts;
   }
 
-  @Override  // read shopping cart id 
+  @Override 
   public ShoppingCart read(String id) throws DAOException {
-    // Document shoppingDocument = collection.find(eq("_id", new ObjectId(id))).first();
-
-    // if (shoppingDocument != null) {
-    //   Computer computer = toComputer(shoppingDocument);
-    //   return computer;
-    // } else {
-    //   System.out.println("❌ Coudn't find the shopping cart with id: " + id);
-    // }
-
+    Document shoppingDocument = collection.find(eq("_id", id)).first();
+    System.out.println(shoppingDocument);
+    
     return null;
   }
 
@@ -171,7 +165,7 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
           );
           products.add(product);
         }
-        
+
         Computer computer = new ComputerBase(
           doc.getString("_id"),
           products

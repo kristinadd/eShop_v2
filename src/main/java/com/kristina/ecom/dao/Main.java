@@ -11,9 +11,9 @@ import com.kristina.ecom.domain.Product;
 import com.kristina.ecom.domain.Status;
 public class Main {
   public static void main(String[] args) {
-    // PRODUCT DAO
     OrderDAOMongo orderDao = new OrderDAOMongo();
     ProductDAOMongo productDao = new ProductDAOMongo();
+    ShoppingCartDAOMongo shopDao = new ShoppingCartDAOMongo();
 
 
     // try {
@@ -111,42 +111,40 @@ public class Main {
 
       // CREATE A SHOPPING CART
 
-      ShoppingCartDAOMongo shopDao = new ShoppingCartDAOMongo();
+      // Product product3 = new Product(123, "Component", "Monitor", 30.50, 10, "monitor.img");
+      // Product product4 = new Product(345, "Component", "Mouse", 30.50, 10, "mouse.img");
+      // Product product5 = new Product(567, "Component", "Keyboard", 30.50, 10, "keyboard.img");
 
-      Product product3 = new Product(123, "Component", "Monitor", 30.50, 10, "monitor.img");
-      Product product4 = new Product(345, "Component", "Mouse", 30.50, 10, "mouse.img");
-      Product product5 = new Product(567, "Component", "Keyboard", 30.50, 10, "keyboard.img");
+      // List<Product> products = new ArrayList<>();
 
-      List<Product> products = new ArrayList<>();
+      // products.add(product3);
+      // products.add(product4);
+      // products.add(product5);
 
-      products.add(product3);
-      products.add(product4);
-      products.add(product5);
-
-      Computer computer = new ComputerBase("11111111111", products);
-      Computer computer_2 = new ComputerBase("2222222", products);
-      List<Computer> computers = new ArrayList<>();
-      computers.add(computer);
-      computers.add(computer_2);
+      // Computer computer = new ComputerBase("11111111111", products);
+      // Computer computer_2 = new ComputerBase("2222222", products);
+      // List<Computer> computers = new ArrayList<>();
+      // computers.add(computer);
+      // computers.add(computer_2);
 
 
-      ShoppingCart shoppingCart = new ShoppingCart("12345", "98765", new Date(), Status.ACTIVE, computers);
+      // ShoppingCart shoppingCart = new ShoppingCart("12345", "98765", new Date(), Status.ACTIVE, computers);
       
-      try {
-        shopDao.create(shoppingCart);
-      } catch (DAOException ex) {
-        ex.printStackTrace();
-      }
+      // try {
+      //   shopDao.create(shoppingCart);
+      // } catch (DAOException ex) {
+      //   ex.printStackTrace();
+      // }
 
 
       // read a shopping cart
 
-      // try {
-      //   Computer computer2 = shopDao.read("67beb520dc65d303dd3e6bbb");
-      //   System.out.println(computer2);
-      // } catch (DAOException ex) {
-      //   ex.printStackTrace();
-      // }
+      try {
+        ShoppingCart shoppingCart = shopDao.read("80");
+        System.out.println(shoppingCart);
+      } catch (DAOException ex) {
+        ex.printStackTrace();
+      }
 
 
       // DELETE SHOPPING CART

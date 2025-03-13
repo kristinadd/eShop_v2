@@ -34,7 +34,7 @@ public class CartManager {
       int c = sc.nextInt();
       switch (c) {
         case 1:
-          getCart();
+          getCarts();
           break;
         case 2:
           sort("ID");
@@ -82,11 +82,11 @@ public class CartManager {
     this.strategy.sort(cart);
   }
 
-  public void getCart() {
+  public void getCarts() {
     List<ShoppingCart> carts = new ArrayList<>();
     carts = shopService.readAll();
-    
-    if (cart.isEmpty())
+
+    if (carts.isEmpty())
       System.out.println("No available shopping cart");
     else
       for (ShoppingCart cart : carts) {

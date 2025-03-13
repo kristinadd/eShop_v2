@@ -24,13 +24,18 @@ public class ShoppingCartService {
   }
 
   public List<ShoppingCart> readAll() {
-    
+
     try {
     List<ShoppingCart> carts = dao.readAll();
     return carts;
     } catch (DAOException ex) {
       ex.printStackTrace();
     }
+    return null;
+  }
+
+  public ShoppingCart readOne(String id) {
+
     return null;
   }
 }
