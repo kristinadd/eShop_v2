@@ -55,14 +55,16 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     return cart;
   }
 
+  // later
   @Override
   public int update(ShoppingCart shoppingCart) throws DAOException {
+
     return 1;
   }
 
   @Override // delete the entire shopping cart
   public int delete(String id) throws DAOException {
-    Document shopDocument = collection.find(eq("_id", new ObjectId(id))).first();
+    Document shopDocument = collection.find(eq("_id", id)).first();
     if (shopDocument != null) {
       try {
         DeleteResult result = collection.deleteOne(shopDocument);

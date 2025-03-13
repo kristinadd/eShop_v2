@@ -24,7 +24,6 @@ public class ShoppingCartService {
   }
 
   public List<ShoppingCart> readAll() {
-
     try {
       List<ShoppingCart> carts = dao.readAll();
       return carts;
@@ -46,7 +45,33 @@ public class ShoppingCartService {
   }
 
   public ShoppingCart readOne(String id) {
-
+    try {
+      ShoppingCart  cart = dao.read(id);
+      return cart;
+    } catch (DAOException ex) {
+      ex.printStackTrace();
+    }
     return null;
+  }
+
+  // later
+  public void update(String id) {
+    try {
+      ShoppingCart cart = dao.read(id);
+      dao.update(cart);
+    } catch (DAOException ex) {
+      ex.printStackTrace();
+    }
+  }
+
+  public int delete(String id) {
+    try {
+      int result = dao.delete(id);
+      return result;
+    } catch (DAOException ex) {
+      System.out.println("❌ Delete failed");
+      ex.printStackTrace();
+    }
+    return 0;
   }
 }

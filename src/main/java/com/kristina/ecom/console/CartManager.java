@@ -52,6 +52,16 @@ public class CartManager {
           String input = sc.nextLine();
           getCart(input);
           break;
+        case 7:
+          System.out.println("Provide a shopping cart id: ");
+          input = sc.nextLine();
+          editShoppingCart(input);
+          break;
+        case 8:
+          System.out.println("Provide a shopping cart id: ");
+          input = sc.nextLine();
+          delete(input);
+          break;
         default:
           System.out.println("❌ Invalid choice. Please try again.");
       }
@@ -65,7 +75,9 @@ public class CartManager {
       "Sort by order price (Descending order)",
       "Check out",
       "Return to main menu",
-      "See specific shopping cart"
+      "See specific shopping cart",
+      "Edit shopping cart",
+      "Delete shopping cart"
     };
 
     System.out.println("Shopping Cart details: ");
@@ -120,5 +132,14 @@ public class CartManager {
       Order order = new Order(computer);
       service.create(order);
     }
+  }
+
+  // later
+  public void editShoppingCart(String id) {
+    
+  }
+
+  public int delete(String id) {
+    return shopService.delete(id);
   }
 }
