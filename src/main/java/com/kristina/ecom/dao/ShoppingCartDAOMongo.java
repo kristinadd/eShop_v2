@@ -4,10 +4,11 @@ import static com.mongodb.client.model.Filters.eq;
 import java.util.ArrayList;
 import java.util.List;
 import org.bson.Document;
-import org.bson.types.ObjectId;
+import org.bson.conversions.Bson;
 import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.ReplaceOptions;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import com.kristina.ecom.domain.ShoppingCart;
@@ -48,18 +49,24 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
   }
 
   @Override 
-  public ShoppingCart read(String id) throws DAOException {
-    Document shoppingDocument = collection.find(eq("_id", id)).first();
-    ShoppingCart cart = toShoppingCart(shoppingDocument);
-
-    return cart;
+  public ShoppingCart read(String user_id) throws DAOException {
+    Document shoppingDocument = collection.find(eq("user_id", user_id)).first();
+    if (shoppingDocument == null) {
+      return null;
+    }
+    return toShoppingCart(shoppingDocument);
   }
 
-  // later
   @Override
   public int update(ShoppingCart shoppingCart) throws DAOException {
-
+    Bson query = eq("_id", shoppingCart.getId());
+    ReplaceOptions replaceOptions = new ReplaceOptions().upsert(true);
+    try {
+    collection.replaceOne(query, toShoppingDocument(shoppingCart), replaceOptions);
     return 1;
+    } catch (MongoException ex) {
+      throw new DAOException("Failed to update the Shopping Cart", ex);
+    }
   }
 
   @Override // delete the entire shopping cart

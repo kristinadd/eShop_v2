@@ -12,20 +12,25 @@ import com.kristina.ecom.domain.ComputerBase;
 import com.kristina.ecom.domain.Product;
 
 import java.util.Map;
+import java.util.Date;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Date;
-
 public class MarketSpace {
   private static  MarketSpace instance = new MarketSpace();
   private Map<Integer, Product> products;
-  private List<Computer> cart;
-
+  private ShoppingCart shoppingCart;
+  private Computer computer;
+  ShoppingCartService shopService;
+ 
 
   private MarketSpace() {
     products = new HashMap<>();
-    cart = new ArrayList<>();
+    computer = new ComputerBase();
+    shopService = new ShoppingCartService();
+    this.shoppingCart = shopService.read("98765");
+    if (shoppingCart == null)
+      shoppingCart = new ShoppingCart(computer.getOrderID(), "98765", new Date(), Status.NEW, new ArrayList<>());
   }
 
   public static MarketSpace instance() {
@@ -34,8 +39,6 @@ public class MarketSpace {
 
   public void buy() {
     new ProductService().getAll().forEach((product) -> this.products.put(product.getId(), product));
-
-    Computer computer = new ComputerBase();
     Boolean cancel = false;
     Scanner sc = new Scanner(System.in);
     int c = 0;
@@ -80,11 +83,13 @@ public class MarketSpace {
     }
 
     if (!cancel) {
-      cart.add(computer);
+      shoppingCart.getComputers().add(computer); // issue with duplication // same computer reference ?
+      if (shoppingCart.getStatus() == Status.NEW) {
+        shopService.create(shoppingCart);
+      } else if (shoppingCart.getStatus() == Status.ACTIVE) {
+        shopService.update(shoppingCart);
+      }
       
-      ShoppingCartService shopService = new ShoppingCartService();
-      ShoppingCart shoppingCart = new ShoppingCart(computer.getOrderID(), "98765", new Date(), Status.ACTIVE, cart);
-      shopService.create(shoppingCart);
     } else {
       System.out.println("Order is canceled!");
     }
@@ -98,6 +103,6 @@ public class MarketSpace {
   }
 
   public List<Computer> getCart() {
-    return cart;
+    return shoppingCart.getComputers();
   }
 }
