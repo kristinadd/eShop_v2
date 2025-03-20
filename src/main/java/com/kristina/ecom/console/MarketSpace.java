@@ -21,12 +21,13 @@ public class MarketSpace {
   private Map<Integer, Product> products;
   private ShoppingCart shoppingCart;
   private Computer computer;
-  ShoppingCartService shopService;
+  private Component component;
+  private ShoppingCartService shopService;
  
 
   private MarketSpace() {
     products = new HashMap<>();
-    computer = new ComputerBase();
+    computer = new ComputerBase(); 
     shopService = new ShoppingCartService();
     this.shoppingCart = shopService.read("98765");
     if (shoppingCart == null)
@@ -73,7 +74,7 @@ public class MarketSpace {
             ex.printStackTrace();
           } 
           
-          computer = new Component(computer, product);
+          component = new Component(computer, product); // ?
           product.setQuantity(product.getQuantity() - 1);
         }
       } else {
@@ -83,9 +84,9 @@ public class MarketSpace {
     }
 
     if (!cancel) {
-      shoppingCart.getComputers().add(computer); // issue with duplication // same computer reference ?
+      shoppingCart.getComputers().add(component); // ?
       if (shoppingCart.getStatus() == Status.NEW) {
-        shopService.create(shoppingCart);
+        shopService.create(shoppingCart); // 
       } else if (shoppingCart.getStatus() == Status.ACTIVE) {
         shopService.update(shoppingCart);
       }

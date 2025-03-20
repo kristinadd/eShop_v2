@@ -28,6 +28,9 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
   @Override
   public ShoppingCart create(ShoppingCart shoppingCart) throws DAOException {
     try {
+      // debug 🪲
+      System.out.println(shoppingCart);
+
       Document document = toShoppingDocument(shoppingCart);
       InsertOneResult result = collection.insertOne(document);
       System.out.println(result.getInsertedId());
@@ -106,6 +109,9 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
 
   private Document toComputerDocument(Computer computer) {
     Document computerDoc = new Document();
+    if (computer.getOrderID() == null) {
+      System.out.println("🪲");
+    }
     computerDoc.append("_id", computer.getOrderID());
     computerDoc.append("description", computer.getDescription());
     computerDoc.append("price", computer.getPrice());

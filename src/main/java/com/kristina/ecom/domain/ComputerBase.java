@@ -17,7 +17,15 @@ public class ComputerBase implements Computer {
   private double price;
   private List<Product> components;
 
+  // public ComputerBase() {
+  //   this.orderID = "111";
+  //   this.description = "dummy description";
+  //   this.price = 23.65;
+  //   this.components = new ArrayList<>();
+  // }
+
   public ComputerBase() {
+    // constructor chaining
       this(getID(), new ArrayList<Product>());
   }
 
@@ -49,14 +57,6 @@ public class ComputerBase implements Computer {
     return components;
   }
 
-  // @Override
-  // public String toString() {
-  //   return String.format(
-  //     "\n🖥️ ComputerBase:\n order_id: %s\n description: %s\n price: %s\n components: %s\n",
-  //     orderID, description, price, components
-  //   );
-  // }
-
   @Override
   public String toString() {
       // Convert the list of components (Product objects) into a single string.
@@ -70,7 +70,6 @@ public class ComputerBase implements Computer {
           orderID, description, price, componentsString
       );
   }
-
 
   private static String getID() {
     return Integer.toString(ids.remove(0));
