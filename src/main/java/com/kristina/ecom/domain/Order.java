@@ -2,7 +2,12 @@ package com.kristina.ecom.domain;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Random;
+import java.util.stream.Collectors;
 public class Order {
+  private static final int SIZE = 100;
+  private static List<Integer> ids = new Random().ints(1, SIZE+1).distinct().limit(SIZE).boxed().collect((Collectors.toList()));
+
   private String id;
   private String description;
   private float total;
@@ -11,7 +16,7 @@ public class Order {
 
   public Order(Computer computer) {
       this(
-      computer.getOrderID(), 
+      getID(),
       computer.getDescription(), 
       (float) computer.getPrice(), 
       LocalDateTime.now(),
@@ -90,5 +95,9 @@ public class Order {
   @Override
   public String toString() {
     return String.format("OrderID@%s: %s $%.2f", this.id, this.description, this.total);
+  }
+
+  private static String getID() {
+    return Integer.toString(ids.remove(0));
   }
 }

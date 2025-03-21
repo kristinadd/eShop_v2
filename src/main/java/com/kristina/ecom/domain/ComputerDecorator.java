@@ -20,8 +20,8 @@ public class ComputerDecorator implements Computer{
   }
   
   @Override
-  public String getOrderID() {
-    return this.computer.getOrderID();
+  public int getId() {
+    return this.computer.getId();
   }
 
   @Override
@@ -32,7 +32,7 @@ public class ComputerDecorator implements Computer{
   @Override
   public String toString() {
     return "ComputerDecorator [computer=" + computer + ", getDescription()=" + getDescription() + ", getPrice()="
-        + getPrice() + ", getOrderID()=" + getOrderID() + ", getComponents()=" + getComponents() + "]";
+        + getPrice() + ", getId()=" + getId() + ", getComponents()=" + getComponents() + "]";
   }
 
   public Computer getComputer() {

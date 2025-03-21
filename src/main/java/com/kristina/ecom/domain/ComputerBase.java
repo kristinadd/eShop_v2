@@ -1,40 +1,45 @@
 package com.kristina.ecom.domain;
-
-import java.util.Random;
 import java.util.stream.Collectors;
-
 import com.kristina.ecom.service.ProductService;
-
 import java.util.List;
 import java.util.ArrayList;
 
 public class ComputerBase implements Computer {
-  private static final int SIZE = 100;
-  private static List<Integer> ids = new Random().ints(1, SIZE+1).distinct().limit(SIZE).boxed().collect((Collectors.toList()));
-
-  private String orderID;
+  private int id;
   private String description;
   private double price;
   private List<Product> components;
 
-  // public ComputerBase() {
-  //   this.orderID = "111";
-  //   this.description = "dummy description";
-  //   this.price = 23.65;
-  //   this.components = new ArrayList<>();
-  // }
-
   public ComputerBase() {
     // constructor chaining
-      this(getID(), new ArrayList<Product>());
+    this(new ArrayList<Product>());
   }
 
-  public ComputerBase(String orderID, List<Product> components) {
+  public ComputerBase(List<Product> components) {
     Product computer = new ProductService().getComputer();
-    this.orderID = orderID;
-    this.description = computer.getName();
-    this.price = computer.getPrice();
+    this.id = computer.getId();
     this.components = components;
+    update();
+  }
+
+  // constructor for MongoDB
+  public ComputerBase(int id, List<Product> components) {
+    this.id = id;
+    this.components = components;
+    update();
+  }
+
+  // construct the description and price dynamically
+  public void update() {
+    Product computer = new ProductService().getComputer();
+
+    description = computer.getName();
+    price = computer.getPrice();
+
+    for (Product product : components) {
+      description += " + " + product.getName();
+      price += product.getPrice();
+    }
   }
 
   @Override
@@ -48,8 +53,8 @@ public class ComputerBase implements Computer {
   }
 
   @Override
-  public String getOrderID() {
-    return this.orderID;
+  public int getId() {
+    return this.id;
   }
 
   @Override
@@ -66,12 +71,8 @@ public class ComputerBase implements Computer {
                                       .collect(Collectors.joining(", "));
       
       return String.format(
-          "\n🖥️ ComputerBase:\n order_id: %s\n description: %s\n price: %.2f\n components: [%s]\n",
-          orderID, description, price, componentsString
+          "\n🖥️ ComputerBase:\n id: %s\n description: %s\n price: %.2f\n components: [%s]",
+          id, description, price, componentsString
       );
-  }
-
-  private static String getID() {
-    return Integer.toString(ids.remove(0));
   }
 }

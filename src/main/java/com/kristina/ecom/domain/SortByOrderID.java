@@ -13,7 +13,7 @@ public class SortByOrderID implements SortStrategy {
       
       @Override 
       public int compare(Computer c1, Computer c2) {
-        return c2.getOrderID().compareTo(c1.getOrderID());
+        return c2.getId() - c1.getId();
       }
     };
     Collections.sort(cart, comparator);

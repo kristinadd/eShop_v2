@@ -32,7 +32,7 @@ public class Component extends ComputerDecorator {
   public String toString() {
     return String.format(
       "🧩 Component\n order_id: %s\n description: %s\n price: %s\n",
-      this.getOrderID(), this.getDescription(), this.getPrice()
+      this.getId(), this.getDescription(), this.getPrice()
     );
   } 
 }

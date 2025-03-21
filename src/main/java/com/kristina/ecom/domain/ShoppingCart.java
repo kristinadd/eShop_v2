@@ -2,6 +2,7 @@ package com.kristina.ecom.domain;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ShoppingCart {
   private String id;
@@ -9,6 +10,11 @@ public class ShoppingCart {
   private Date updated_at;
   private Status status; 
   private List<Computer> computers;
+
+  // constructor chaining
+  public ShoppingCart(String user_id, Date updated_at, Status status, List<Computer> computers) {
+    this("", user_id, updated_at, status, computers);
+  }
 
   public ShoppingCart(String id, String user_id, Date updated_at, Status status, List<Computer> computers) {
     this.id = id;
@@ -42,11 +48,21 @@ public class ShoppingCart {
     this.status = status;
   }
 
+  public void setId(String id) {
+    this.id = id;
+  }
+
   @Override
   public String toString() {
+    String computersString = "";
+
+    for (Computer computer :computers) {
+      computersString += computer;
+    }
+
     return String.format(
-      "🛍️ ShoppingCart\n id: %s\n user_id: %s\n updated_at: %s\n status: %s\n computers: %s\n",
-      id, user_id, updated_at, status, computers
+      "🛍️ ShoppingCart\n id: %s\n user_id: %s\n updated_at: %s\n status: %s\n computers: [%s]\\n",
+      id, user_id, updated_at, status, computersString
     );
   }  
 }

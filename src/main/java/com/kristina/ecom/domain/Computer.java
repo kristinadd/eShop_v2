@@ -4,7 +4,7 @@ import java.util.List;
 public interface Computer {
   String getDescription();
   double getPrice();
-  String getOrderID();
+  int getId();
   List<Product> getComponents();
 }
 

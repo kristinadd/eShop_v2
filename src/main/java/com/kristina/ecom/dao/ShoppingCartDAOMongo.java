@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
+
 import com.mongodb.MongoException;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
@@ -28,16 +30,13 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
   @Override
   public ShoppingCart create(ShoppingCart shoppingCart) throws DAOException {
     try {
-      // debug 🪲
-      System.out.println(shoppingCart);
-
       Document document = toShoppingDocument(shoppingCart);
       InsertOneResult result = collection.insertOne(document);
-      System.out.println(result.getInsertedId());
+      shoppingCart.setId(result.getInsertedId().toString());
+      return shoppingCart;
     } catch (MongoException ex) {
       throw new DAOException("❌ Coudn't create the shopping cart", ex);
     }
-    return null;
   }
 
   @Override 
@@ -60,9 +59,9 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     return toShoppingCart(shoppingDocument);
   }
 
-  @Override
+  @Override // issue 
   public int update(ShoppingCart shoppingCart) throws DAOException {
-    Bson query = eq("_id", shoppingCart.getId());
+    Bson query = eq("_id", new ObjectId(shoppingCart.getId()));
     ReplaceOptions replaceOptions = new ReplaceOptions().upsert(true);
     try {
     collection.replaceOne(query, toShoppingDocument(shoppingCart), replaceOptions);
@@ -74,7 +73,7 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
 
   @Override // delete the entire shopping cart
   public int delete(String id) throws DAOException {
-    Document shopDocument = collection.find(eq("_id", id)).first();
+    Document shopDocument = collection.find(eq("_id", new ObjectId(id))).first();
     if (shopDocument != null) {
       try {
         DeleteResult result = collection.deleteOne(shopDocument);
@@ -91,7 +90,8 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     private Document toShoppingDocument(ShoppingCart shoppingCart) throws DAOException {
     Document document = new Document();
 
-    document.append("_id", shoppingCart.getId());
+    if (!shoppingCart.getId().isEmpty()) 
+      document.append("_id", shoppingCart.getId());
     document.append("user_id", shoppingCart.getUserId());
     document.append("updated_at", shoppingCart.getUpdatedAt());
     document.append("status", shoppingCart.getStatus());
@@ -109,10 +109,7 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
 
   private Document toComputerDocument(Computer computer) {
     Document computerDoc = new Document();
-    if (computer.getOrderID() == null) {
-      System.out.println("🪲");
-    }
-    computerDoc.append("_id", computer.getOrderID());
+    computerDoc.append("_id", computer.getId());
     computerDoc.append("description", computer.getDescription());
     computerDoc.append("price", computer.getPrice());
     computerDoc.append("products", toProductDocuments(computer.getComponents())); // many products
@@ -139,7 +136,7 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     List<Product> products = toProducts(productDocuments);
 
     Computer computer = new ComputerBase(
-      computers.getString("_id"),
+      computers.getInteger("_id"),
       products
     );
 
@@ -180,7 +177,7 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
         }
 
         Computer computer = new ComputerBase(
-          doc.getString("_id"),
+          doc.getInteger("_id"),
           products
         );
         computers.add(computer);
@@ -190,7 +187,7 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     }
 
     ShoppingCart cart = new ShoppingCart(
-    document.getString("_id"),
+    document.getObjectId("_id").toString(),
     document.getString("user_id"),
     document.getDate("updated_at"),
     Status.valueOf(document.getString("status")),

@@ -20,18 +20,16 @@ public class MarketSpace {
   private static  MarketSpace instance = new MarketSpace();
   private Map<Integer, Product> products;
   private ShoppingCart shoppingCart;
-  private Computer computer;
   private Component component;
   private ShoppingCartService shopService;
  
 
   private MarketSpace() {
     products = new HashMap<>();
-    computer = new ComputerBase(); 
     shopService = new ShoppingCartService();
     this.shoppingCart = shopService.read("98765");
     if (shoppingCart == null)
-      shoppingCart = new ShoppingCart(computer.getOrderID(), "98765", new Date(), Status.NEW, new ArrayList<>());
+      shoppingCart = new ShoppingCart("111", "98765", new Date(), Status.NEW, new ArrayList<>());
   }
 
   public static MarketSpace instance() {
@@ -40,6 +38,7 @@ public class MarketSpace {
 
   public void buy() {
     new ProductService().getAll().forEach((product) -> this.products.put(product.getId(), product));
+    Computer computer = new ComputerBase();
     Boolean cancel = false;
     Scanner sc = new Scanner(System.in);
     int c = 0;
@@ -60,6 +59,7 @@ public class MarketSpace {
         break;
 
       if  (products.keySet().contains(c)) {
+        // products.containsKey(c) // more optimal
         Product product = products.get(c);
 
         if (product.getQuantity() == 0) {
@@ -74,7 +74,7 @@ public class MarketSpace {
             ex.printStackTrace();
           } 
           
-          component = new Component(computer, product); // ?
+          computer = new Component(computer, product); // decorator wrapping the computer
           product.setQuantity(product.getQuantity() - 1);
         }
       } else {
