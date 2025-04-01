@@ -59,7 +59,7 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     return toShoppingCart(shoppingDocument);
   }
 
-  @Override // issue 
+  @Override
   public int update(ShoppingCart shoppingCart) throws DAOException {
     Bson query = eq("_id", new ObjectId(shoppingCart.getId()));
     ReplaceOptions replaceOptions = new ReplaceOptions().upsert(true);
@@ -90,8 +90,10 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     private Document toShoppingDocument(ShoppingCart shoppingCart) throws DAOException {
     Document document = new Document();
 
-    if (!shoppingCart.getId().isEmpty()) 
+    // Only include _id for new documents
+    if (shoppingCart.getStatus() == Status.NEW) {
       document.append("_id", shoppingCart.getId());
+    }
     document.append("user_id", shoppingCart.getUserId());
     document.append("updated_at", shoppingCart.getUpdatedAt());
     document.append("status", shoppingCart.getStatus());

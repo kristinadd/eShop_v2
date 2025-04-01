@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.bson.types.ObjectId;
+
 public class MarketSpace {
   private static  MarketSpace instance = new MarketSpace();
   private Map<Integer, Product> products;
@@ -29,7 +31,7 @@ public class MarketSpace {
     shopService = new ShoppingCartService();
     this.shoppingCart = shopService.read("98765");
     if (shoppingCart == null)
-      shoppingCart = new ShoppingCart("111", "98765", new Date(), Status.NEW, new ArrayList<>());
+      shoppingCart = new ShoppingCart(new ObjectId().toString(), "98765", new Date(), Status.NEW, new ArrayList<>());
   }
 
   public static MarketSpace instance() {
@@ -58,8 +60,7 @@ public class MarketSpace {
       if (c == 0)
         break;
 
-      if  (products.keySet().contains(c)) {
-        // products.containsKey(c) // more optimal
+      if  (products.keySet().contains(c)) { // products.containsKey(c) // more optimal
         Product product = products.get(c);
 
         if (product.getQuantity() == 0) {
@@ -84,7 +85,7 @@ public class MarketSpace {
     }
 
     if (!cancel) {
-      shoppingCart.getComputers().add(component); // ?
+      shoppingCart.getComputers().add(computer);
       if (shoppingCart.getStatus() == Status.NEW) {
         shopService.create(shoppingCart); // 
       } else if (shoppingCart.getStatus() == Status.ACTIVE) {
