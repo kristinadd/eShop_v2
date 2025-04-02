@@ -4,25 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import com.kristina.ecom.domain.Computer;
 import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.ShoppingCart;
 import com.kristina.ecom.domain.SortByOrderID;
 import com.kristina.ecom.domain.SortByPrice;
 import com.kristina.ecom.domain.SortStrategy;
+import com.kristina.ecom.domain.Status;
 import com.kristina.ecom.service.OrderService;
 import com.kristina.ecom.service.ShoppingCartService;
 
 public class CartManager {
   private Scanner sc;
-  private List<Computer> cart;
+  private ShoppingCart shoppingCart;
   private SortStrategy strategy, sortByOrderIDStrategy, sortByPriceStrategy;
   private ShoppingCartService shopService = new ShoppingCartService();
 
 
-  public CartManager(List<Computer> cart) {
+  public CartManager(ShoppingCart shoppingCart) {
     sc = new Scanner(System.in);
-    this.cart = cart;
+    this.shoppingCart = shoppingCart;
     sortByOrderIDStrategy = new SortByOrderID();
     sortByPriceStrategy = new SortByPrice();
   }
@@ -88,7 +88,7 @@ public class CartManager {
   }
 
   public void sort(String key) {
-    if (cart.isEmpty()) {
+    if (shoppingCart.getComputers().isEmpty()) {
       System.out.println("No items");
       return;
     }
@@ -97,7 +97,7 @@ public class CartManager {
     else if (key.equals("PRICE"))
       this.strategy = this.sortByPriceStrategy;
 
-    this.strategy.sort(cart);
+    this.strategy.sort(shoppingCart.getComputers());
   }
 
   public void getCarts() {
@@ -127,17 +127,18 @@ public class CartManager {
 
   public void checkOut() {
     OrderService service = new OrderService();
-
-    for (Computer computer : cart) {
-      Order order = new Order(computer);
+    
+    if (!shoppingCart.getComputers().isEmpty()) {
+      Order order = new Order(shoppingCart.getComputers().get(0));
       service.create(order);
+
+      shoppingCart.setStatus(Status.COMPLETED);
+      shopService.update(shoppingCart);
     }
   }
 
   // later
-  public void editShoppingCart(String id) {
-    
-  }
+  public void editShoppingCart(String id) {}
 
   public int delete(String id) {
     return shopService.delete(id);

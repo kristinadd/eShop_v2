@@ -15,14 +15,12 @@ import java.util.Map;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import org.bson.types.ObjectId;
 
 public class MarketSpace {
   private static  MarketSpace instance = new MarketSpace();
   private Map<Integer, Product> products;
   private ShoppingCart shoppingCart;
-  private Component component;
   private ShoppingCartService shopService;
  
 
@@ -75,7 +73,7 @@ public class MarketSpace {
             ex.printStackTrace();
           } 
           
-          computer = new Component(computer, product); // decorator wrapping the computer
+          computer = new Component(computer, p); // decorator wrapping the computer
           product.setQuantity(product.getQuantity() - 1);
         }
       } else {
@@ -87,7 +85,7 @@ public class MarketSpace {
     if (!cancel) {
       shoppingCart.getComputers().add(computer);
       if (shoppingCart.getStatus() == Status.NEW) {
-        shopService.create(shoppingCart); // 
+        shopService.create(shoppingCart);
       } else if (shoppingCart.getStatus() == Status.ACTIVE) {
         shopService.update(shoppingCart);
       }
@@ -104,7 +102,7 @@ public class MarketSpace {
     System.out.println(0 + ": " + "Done");
   }
 
-  public List<Computer> getCart() {
-    return shoppingCart.getComputers();
+  public ShoppingCart getCart() {
+    return shoppingCart;
   }
 }

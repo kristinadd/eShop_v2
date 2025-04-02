@@ -9,7 +9,7 @@ public class Main {
   private Scanner sc = new Scanner(System.in);
 
     public static void main(String[] args) {
-        CartManager shoppingCart = new CartManager(marketSpace.getCart());
+        CartManager cartManager = new CartManager(marketSpace.getCart());
         admin = Admin.instance();
         oms = Oms.instance();
         Main m = new Main();
@@ -25,7 +25,7 @@ public class Main {
               marketSpace.buy();
               break;
             case 2:
-              shoppingCart.admin();
+              cartManager.admin();
               break;
             case 3:
               admin.admin();

@@ -34,6 +34,19 @@ public class ShoppingCartService {
     }
     return null;
   }
+  
+  public ShoppingCart read(Status status) {
+    try {
+      List<ShoppingCart> carts = dao.readAll();
+      return carts.stream()
+          .filter(cart -> cart.getStatus() == status)
+          .findFirst()
+          .orElse(null);
+    } catch (DAOException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
 
   public ShoppingCart read(String id) {
     ShoppingCart cart;

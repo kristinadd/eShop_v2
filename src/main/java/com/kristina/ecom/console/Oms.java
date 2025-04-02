@@ -159,7 +159,7 @@ public class Oms {
   public void update() {
     System.out.println("*** Select an order to update ***");
     all();
-    Order order = service.get(String.valueOf(sc.nextInt())); // 33
+    Order order = service.get(String.valueOf(sc.nextInt()));
     order.setDate(LocalDateTime.now());
     boolean isDirty = false;
     boolean updating = true;
