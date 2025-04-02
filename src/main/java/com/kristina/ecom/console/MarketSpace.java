@@ -28,7 +28,7 @@ public class MarketSpace {
     products = new HashMap<>();
     shopService = new ShoppingCartService();
     this.shoppingCart = shopService.read("98765");
-    if (shoppingCart == null)
+    if (shoppingCart == null )
       shoppingCart = new ShoppingCart(new ObjectId().toString(), "98765", new Date(), Status.NEW, new ArrayList<>());
   }
 

@@ -1,5 +1,6 @@
 package com.kristina.ecom.dao;
 
+import static com.mongodb.client.model.Filters.and;
 import static com.mongodb.client.model.Filters.eq;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,9 +51,11 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     return carts;
   }
 
-  @Override 
+  @Override // read only the artive one 
   public ShoppingCart read(String user_id) throws DAOException {
-    Document shoppingDocument = collection.find(eq("user_id", user_id)).first();
+      Document shoppingDocument = collection.find(and(
+        eq("user_id", user_id), 
+        eq("status", Status.ACTIVE.toString()))).first();
     if (shoppingDocument == null) {
       return null;
     }
