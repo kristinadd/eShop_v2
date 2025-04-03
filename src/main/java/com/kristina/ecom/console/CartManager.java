@@ -129,9 +129,9 @@ public class CartManager {
     OrderService service = new OrderService();
     
     if (!shoppingCart.getComputers().isEmpty()) {
-      Order order = new Order(shoppingCart.getComputers().get(0)); // many computers not only one 
+      Order order = new Order(shoppingCart.getComputers().get(0)); 
+      // many computers not only one 
       // the order constructor need to take many computers not one
-      // fix bugs
       service.create(order);
 
       shoppingCart.setStatus(Status.COMPLETED);
@@ -139,7 +139,6 @@ public class CartManager {
     }
   }
 
-  // later
   public void editShoppingCart(String id) {}
 
   public int delete(String id) {

@@ -29,7 +29,7 @@ public class MarketSpace {
     shopService = new ShoppingCartService();
     this.shoppingCart = shopService.read("98765");
     if (shoppingCart == null )
-      shoppingCart = new ShoppingCart(new ObjectId().toString(), "98765", new Date(), Status.NEW, new ArrayList<>());
+      shoppingCart = new ShoppingCart(new ObjectId().toHexString(), "98765", new Date(), Status.NEW, new ArrayList<>());
   }
 
   public static MarketSpace instance() {
