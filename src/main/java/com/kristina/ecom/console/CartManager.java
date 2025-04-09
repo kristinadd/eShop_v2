@@ -37,27 +37,21 @@ public class CartManager {
           getCarts();
           break;
         case 2:
-          sort("ID");
-          break;
-        case 3:
-        sort("PRICE");
-          break;
-        case 4:
           checkOut();
           break;
-        case 5:
+        case 3:
           return;
-        case 6:
+        case 4:
           System.out.println("Provide a shopping cart id: ");
           String input = sc.nextLine();
           getCart(input);
           break;
-        case 7:
+        case 5:
           System.out.println("Provide a shopping cart id: ");
           input = sc.nextLine();
           editShoppingCart(input);
           break;
-        case 8:
+        case 6:
           System.out.println("Provide a shopping cart id: ");
           input = sc.nextLine();
           delete(input);
@@ -71,8 +65,6 @@ public class CartManager {
   private void menu() {
     String[] items = {
       "See all shopping carts",
-      "Sort by order ID (Descending order)",
-      "Sort by order price (Descending order)",
       "Check out",
       "Return to main menu",
       "See specific shopping cart",

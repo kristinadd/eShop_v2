@@ -5,7 +5,7 @@ public interface Computer {
   String getDescription();
   double getPrice();
   int getId();
+  Product getBase();
   List<Product> getComponents();
+  void setComponents(List<Product> components);
 }
-
-// write a method to get the getComputer, get the base computer out, be part of the products list

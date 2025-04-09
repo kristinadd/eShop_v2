@@ -97,8 +97,6 @@ public class OrderDAOMongo  implements DAO<String, Order> {
 
     Order order = new Order(
       document.getObjectId("_id").toString(),
-      document.getString("description"),
-      document.getDouble("total").floatValue(),
       document.getDate("date").toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
       new ArrayList<Product>()
       // document.getList("products", Product.class)

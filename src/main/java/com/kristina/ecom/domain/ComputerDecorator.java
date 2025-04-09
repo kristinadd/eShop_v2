@@ -2,7 +2,7 @@ package com.kristina.ecom.domain;
 
 import java.util.List;
 
-public class ComputerDecorator implements Computer{
+public class ComputerDecorator implements Computer {
   private Computer computer;
 
   public ComputerDecorator(Computer computer) {
@@ -25,8 +25,18 @@ public class ComputerDecorator implements Computer{
   }
 
   @Override
+  public Product getBase() {
+    return this.computer.getBase();
+  }
+
+  @Override
   public List<Product> getComponents() {
     return this.computer.getComponents();
+  }
+
+  @Override
+  public void setComponents(List<Product> components) {
+    this.computer.setComponents(components);
   }
 
   @Override

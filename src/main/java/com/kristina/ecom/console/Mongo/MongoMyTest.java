@@ -248,7 +248,7 @@ public class MongoMyTest {
       new Product(3, "Component", "product3", 22.99, 7, "img")
     );
 
-    Order order = new Order("First order", 39.99f, LocalDateTime.now(), productsList); // need to specify float
+    Order order = new Order("First order", LocalDateTime.now(), productsList); // need to specify float
 
     Document orderDocument = new Document();
     orderDocument = createOrderDocument(order);

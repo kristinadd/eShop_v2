@@ -2,6 +2,8 @@ package com.kristina.ecom.dao;
 
 import javax.sql.DataSource;
 
+import com.kristina.ecom.domain.Computer;
+import com.kristina.ecom.domain.ComputerBase;
 import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.Product;
 
@@ -55,17 +57,27 @@ public class OrderDAOMySql implements DAO<String, Order> {
 
       stat.setString(1, order.getId());
       stat.setString(2, order.getDescription());
-      stat.setFloat(3, order.getTotal());
+      stat.setFloat(3, (float) order.getTotal());
       stat.setTimestamp(4,  Timestamp.valueOf(order.getDate()));
       stat.executeUpdate();
 
       stat = conn.prepareStatement(query2);
-      for (Product product : order.getProducts()) {
+      List<Product> products = order.getProducts();
+      Product base = order.getComputer().getBase();
+      products.add(base);
+      for (Product product : products) {
         stat.setString(1, order.getId());
-        stat.setInt(2, product.getId()); // 
+        stat.setInt(2, product.getId());
         stat.setInt(3, product.getQuantity());
         stat.executeUpdate();
       }
+      products.remove(base);
+
+      // option 2
+      // stat.setString(1, order.getId());
+      // stat.setInt(2, base.getId());
+      // stat.setInt(3, base.getQuantity());
+      // stat.executeUpdate();
 
       conn.commit();
       conn.close();
@@ -84,8 +96,6 @@ public class OrderDAOMySql implements DAO<String, Order> {
       ResultSet rs = stat.executeQuery(query);
       while (rs.next()) {
         Order order = new Order(rs.getString(1), 
-                                rs.getString(2), 
-                                rs.getFloat(3), 
                                 rs.getTimestamp(4).toLocalDateTime(),
                                  new ArrayList<Product>()
                               );
@@ -117,9 +127,7 @@ public class OrderDAOMySql implements DAO<String, Order> {
               
               if (orderRs.next()) {
                   order = new Order(
-                      orderRs.getString("id"), 
-                      orderRs.getString("description"), 
-                      orderRs.getFloat("total"), 
+                      orderRs.getString("id"),
                       orderRs.getTimestamp("date_time").toLocalDateTime(), 
                       new ArrayList<>()
                   );
@@ -213,7 +221,7 @@ public class OrderDAOMySql implements DAO<String, Order> {
     // Update order in order table table
     PreparedStatement stat = conn.prepareStatement(orderQuery);
     stat.setString(1,order.getDescription());
-    stat.setFloat(2, order.getTotal());
+    stat.setFloat(2, (float) order.getTotal());
     stat.setTimestamp(3, Timestamp.valueOf(order.getDate()));
     stat.setString(4, order.getId());
     stat.executeUpdate();

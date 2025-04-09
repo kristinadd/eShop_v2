@@ -36,11 +36,11 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
       System.out.println(result.getInsertedId());
       // shoppingCart.setId(result.getInsertedId().toString());
       // taking a valid _id, and converting it into a string that is no longer a valid ObjectId hex, 
-      // and saving that in the Java object — which is then used in update() later:
+      // and saving that in the Java object — which is then used in update() later
 
       // solution
       ObjectId insertedId = result.getInsertedId().asObjectId().getValue();
-      shoppingCart.setId(insertedId.toHexString()); 
+      shoppingCart.setId(insertedId.toHexString());
 
       return shoppingCart;
     } catch (MongoException ex) {

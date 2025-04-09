@@ -8,6 +8,7 @@ public class ComputerBase implements Computer {
   private int id;
   private String description;
   private double price;
+  private Product computer; // 
   private List<Product> components;
 
   public ComputerBase() {
@@ -16,7 +17,7 @@ public class ComputerBase implements Computer {
   }
 
   public ComputerBase(List<Product> components) {
-    Product computer = new ProductService().getComputer();
+    computer = new ProductService().getComputer();
     this.id = computer.getId();
     this.components = components;
     update();
@@ -24,6 +25,7 @@ public class ComputerBase implements Computer {
 
   // constructor for MongoDB
   public ComputerBase(int id, List<Product> components) {
+    computer = new ProductService().getComputer();
     this.id = id;
     this.components = components;
     update();
@@ -31,14 +33,12 @@ public class ComputerBase implements Computer {
 
   // construct the description and price dynamically
   public void update() {
-    Product computer = new ProductService().getComputer();
-
     description = computer.getName();
     price = computer.getPrice();
 
     for (Product product : components) {
-      description += " + " + product.getName();
-      price += product.getPrice();
+      description += (" + " + product.getName()).repeat(product.getQuantity());
+      price += product.getPrice() * product.getQuantity();
     }
   }
 
@@ -60,6 +60,21 @@ public class ComputerBase implements Computer {
   @Override
   public List<Product> getComponents() {
     return components;
+  }
+
+  @Override
+  public Product getBase() {
+    return computer;
+  }
+
+  @Override
+  public void setComponents(List<Product> components) {
+    this.components = components;
+  }
+
+  @Override
+  public Object clone() throws CloneNotSupportedException {
+    return super.clone();
   }
 
   @Override
