@@ -40,9 +40,7 @@ public class MarketSpace {
     new ProductService().getAll().forEach((product) -> this.products.put(product.getId(), product));
     Computer computer = new ComputerBase();
     ComputerBase clonedComputer = new ComputerBase();
-    // the computer is actually a product 
-    // fix it 
-
+    
 
     Boolean cancel = false;
     Scanner sc = new Scanner(System.in);
