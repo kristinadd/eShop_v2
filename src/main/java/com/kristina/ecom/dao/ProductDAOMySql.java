@@ -104,7 +104,6 @@ public class ProductDAOMySql implements DAO<Integer, Product> {
     stat.setInt(4, product.getQuantity());
     stat.setString(5, product.getImg());
     stat.setInt(6, product.getId());
-    stat.executeUpdate();
     rows = stat.executeUpdate();
 
     conn.close();

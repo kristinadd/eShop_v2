@@ -8,7 +8,7 @@ public class ComputerBase implements Computer {
   private int id;
   private String description;
   private double price;
-  private Product computer; // 
+  private Product computer;
   private List<Product> components;
 
   public ComputerBase() {

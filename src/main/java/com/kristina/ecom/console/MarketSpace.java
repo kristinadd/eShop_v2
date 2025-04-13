@@ -22,11 +22,13 @@ public class MarketSpace {
   private Map<Integer, Product> products;
   private ShoppingCart shoppingCart;
   private ShoppingCartService shopService;
+  private ProductService productService;
  
 
   private MarketSpace() {
     products = new HashMap<>();
     shopService = new ShoppingCartService();
+    productService = new ProductService();
     this.shoppingCart = shopService.read("98765");
     if (shoppingCart == null )
       shoppingCart = new ShoppingCart(new ObjectId().toHexString(), "98765", new Date(), Status.NEW, new ArrayList<>());
@@ -37,15 +39,13 @@ public class MarketSpace {
   }
 
   public void buy() {
-    new ProductService().getAll().forEach((product) -> this.products.put(product.getId(), product));
+    new ProductService().getAll().forEach((product) -> products.put(product.getId(), product));
     Computer computer = new ComputerBase();
-    ComputerBase clonedComputer = new ComputerBase();
+  
     
-
     Boolean cancel = false;
     Scanner sc = new Scanner(System.in);
     int c = 0;
-
 
     while (true) {
       System.out.printf("Current Build: %s, and total price is %.2f\n", computer.getDescription(), computer.getPrice());
@@ -78,6 +78,16 @@ public class MarketSpace {
           
           computer = new Component(computer, p); // decorator wrapping the computer
           product.setQuantity(product.getQuantity() - 1);
+          Product base = computer.getBase();
+          
+          System.out.println("Base product ID: " + base.getId());
+          System.out.println("Base product current quantity: " + base.getQuantity());
+          
+          // update stock quantity
+          // it doesn't work if I only order computer
+          base.setQuantity(base.getQuantity() - 1);
+          System.out.println("Base product new quantity: " + base.getQuantity());
+          productService.update(base);
         }
       } else {
         System.out.println("Invalid choice. Please try again.");
