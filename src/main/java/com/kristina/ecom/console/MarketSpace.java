@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 import org.bson.types.ObjectId;
 
 public class MarketSpace {
@@ -40,9 +42,15 @@ public class MarketSpace {
 
   public void buy() {
     new ProductService().getAll().forEach((product) -> products.put(product.getId(), product));
-    Computer computer = new ComputerBase();
-  
-    
+    Computer computer = new ComputerBase(); // this reads from db 
+    System.out.println("🍀  Check computer" + computer.getBase().getQuantity());
+
+    int computerInStock = productService.getComputer().getQuantity();
+    int computerInCart = shoppingCart.getComputers().size();
+
+    System.out.println("🟡 Stock Q: " + computerInStock);
+    System.out.println("🟠 Cart Q: " + computerInCart);
+
     Boolean cancel = false;
     Scanner sc = new Scanner(System.in);
     int c = 0;
@@ -77,17 +85,10 @@ public class MarketSpace {
           } 
           
           computer = new Component(computer, p); // decorator wrapping the computer
-          product.setQuantity(product.getQuantity() - 1);
-          Product base = computer.getBase();
+          System.out.println("💖  Check computer " + computer.getBase().getQuantity()); // 100
           
-          System.out.println("Base product ID: " + base.getId());
-          System.out.println("Base product current quantity: " + base.getQuantity());
-          
-          // update stock quantity
-          // it doesn't work if I only order computer
-          base.setQuantity(base.getQuantity() - 1);
-          System.out.println("Base product new quantity: " + base.getQuantity());
-          productService.update(base);
+          product.setQuantity(product.getQuantity() -1);
+
         }
       } else {
         System.out.println("Invalid choice. Please try again.");
@@ -97,6 +98,7 @@ public class MarketSpace {
 
     if (!cancel) {
       shoppingCart.getComputers().add(computer);
+      System.out.println();
       if (shoppingCart.getStatus() == Status.NEW) {
         shopService.create(shoppingCart);
       } else if (shoppingCart.getStatus() == Status.ACTIVE) {
