@@ -33,6 +33,7 @@ public class ProductService {
     return products;
   }
 
+  // this needs a fix, it shoudn't read from db
   public Product getComputer() {
     Product product = null;
     try {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import com.kristina.ecom.domain.Computer;
 import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.ShoppingCart;
 import com.kristina.ecom.domain.SortByOrderID;
@@ -119,21 +120,32 @@ public class CartManager {
 
   public void checkOut() {
     OrderService service = new OrderService();
-    
-    if (!shoppingCart.getComputers().isEmpty()) {
-      Order order = new Order(shoppingCart.getComputers().get(0)); 
-      // many computers not only one 
-      // the order constructor need to take many computers not one
+
+    List<Computer> computers = shoppingCart.getComputers();
+    for (Computer computer : computers) {
+      Order order = new Order(computer);
       service.create(order);
-
-      shoppingCart.setStatus(Status.COMPLETED);
-      shopService.update(shoppingCart);
     }
+    shoppingCart.setStatus(Status.COMPLETED);
+    shopService.update(shoppingCart);
+    shoppingCart.getComputers().clear(); // get rid of old computers
+    shoppingCart.setStatus(Status.NEW);
   }
-
-  public void editShoppingCart(String id) {}
+  
+  public void editShoppingCart(String id) {
+    //  do it later
+  }
 
   public int delete(String id) {
+    // fix delete 
+    shoppingCart.setStatus(Status.NEW);
     return shopService.delete(id);
+
   }
+
+  // add Cancel method 
+  // shoppingCart status to Cancel
+
+
+  // show ShoppingCart didn't work 
 }

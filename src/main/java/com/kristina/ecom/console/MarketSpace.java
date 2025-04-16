@@ -15,7 +15,6 @@ import java.util.Map;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.bson.types.ObjectId;
 
@@ -31,7 +30,7 @@ public class MarketSpace {
     products = new HashMap<>();
     shopService = new ShoppingCartService();
     productService = new ProductService();
-    this.shoppingCart = shopService.read("98765");
+    this.shoppingCart = shopService.read("98765"); //gets ACTIVE
     if (shoppingCart == null )
       shoppingCart = new ShoppingCart(new ObjectId().toHexString(), "98765", new Date(), Status.NEW, new ArrayList<>());
   }
@@ -42,21 +41,21 @@ public class MarketSpace {
 
   public void buy() {
     new ProductService().getAll().forEach((product) -> products.put(product.getId(), product));
-    Computer computer = new ComputerBase(); // this reads from db 
-    System.out.println("🍀  Check computer" + computer.getBase().getQuantity());
 
-    int computerInStock = productService.getComputer().getQuantity();
-    int computerInCart = shoppingCart.getComputers().size();
+    Computer computerStock = new ComputerBase(); // this reads from db, so it has q 100
+    System.out.println("🍀  Check computerStock: " + computerStock.getBase().getQuantity());
 
-    System.out.println("🟡 Stock Q: " + computerInStock);
-    System.out.println("🟠 Cart Q: " + computerInCart);
+    Computer computerOrder= new ComputerBase();
+    computerOrder.getBase().setQuantity(1);
+    System.out.println("🍀  Check computerOrder: " + computerOrder.getBase().getQuantity());
+
 
     Boolean cancel = false;
     Scanner sc = new Scanner(System.in);
     int c = 0;
 
     while (true) {
-      System.out.printf("Current Build: %s, and total price is %.2f\n", computer.getDescription(), computer.getPrice());
+      System.out.printf("Current Build: %s, and total price is %.2f\n", computerOrder.getDescription(), computerOrder.getPrice());
       System.out.println("What component would you like to add?");
       menu();
 
@@ -84,11 +83,8 @@ public class MarketSpace {
             ex.printStackTrace();
           } 
           
-          computer = new Component(computer, p); // decorator wrapping the computer
-          System.out.println("💖  Check computer " + computer.getBase().getQuantity()); // 100
-          
+          computerOrder = new Component(computerOrder, p); // decorator wrapping the computer
           product.setQuantity(product.getQuantity() -1);
-
         }
       } else {
         System.out.println("Invalid choice. Please try again.");
@@ -97,8 +93,15 @@ public class MarketSpace {
     }
 
     if (!cancel) {
-      shoppingCart.getComputers().add(computer);
-      System.out.println();
+      // if (shoppingCart.getStatus() == Status.COMPLETED) {
+      //   shoppingCart = new ShoppingCart(new ObjectId().toHexString(), "98765", new Date(), Status.NEW, new ArrayList<>());
+      // }
+
+
+      computerStock.getBase().setQuantity(computerStock.getBase().getQuantity() - 1);
+      productService.update(computerStock.getBase()); // update the stock
+
+      shoppingCart.getComputers().add(computerOrder);
       if (shoppingCart.getStatus() == Status.NEW) {
         shopService.create(shoppingCart);
       } else if (shoppingCart.getStatus() == Status.ACTIVE) {
