@@ -78,6 +78,21 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     return toShoppingCart(shoppingDocument);
   }
 
+  public ShoppingCart readId(String id) throws DAOException {
+    if (id == null) {
+      return null;
+    }
+    Bson query = eq("_id", new ObjectId(id));
+    Document document = collection.find(query).first();
+
+    if (document != null) {
+      ShoppingCart cart = toShoppingCart(document);
+      return cart;
+    }
+
+    return null;
+  }
+
   @Override
   public int update(ShoppingCart shoppingCart) throws DAOException {
     Bson query = eq("_id", new ObjectId(shoppingCart.getId()));

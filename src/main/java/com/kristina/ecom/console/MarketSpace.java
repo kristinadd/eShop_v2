@@ -30,7 +30,7 @@ public class MarketSpace {
     products = new HashMap<>();
     shopService = new ShoppingCartService();
     productService = new ProductService();
-    this.shoppingCart = shopService.read("98765"); //gets ACTIVE
+    this.shoppingCart = shopService.read("98765"); //gets only ACTIVE
     if (shoppingCart == null )
       shoppingCart = new ShoppingCart(new ObjectId().toHexString(), "98765", new Date(), Status.NEW, new ArrayList<>());
   }
@@ -42,7 +42,7 @@ public class MarketSpace {
   public void buy() {
     new ProductService().getAll().forEach((product) -> products.put(product.getId(), product));
 
-    Computer computerStock = new ComputerBase(); // this reads from db, so it has q 100
+    Computer computerStock = new ComputerBase(); // this reads from db, so it has quantity from stock
     System.out.println("🍀  Check computerStock: " + computerStock.getBase().getQuantity());
 
     Computer computerOrder= new ComputerBase();

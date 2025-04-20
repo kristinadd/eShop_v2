@@ -7,6 +7,7 @@ import com.kristina.ecom.dao.DAOException;
 import com.kristina.ecom.dao.DAOFactory;
 import com.kristina.ecom.domain.ShoppingCart;
 import com.kristina.ecom.domain.Status;
+import com.kristina.ecom.dao.ShoppingCartDAOMongo;
 
 public class ShoppingCartService {
   private DAO<String, ShoppingCart> dao;
@@ -29,6 +30,18 @@ public class ShoppingCartService {
     try {
       List<ShoppingCart> carts = dao.readAll();
       return carts;
+    } catch (DAOException ex) {
+      ex.printStackTrace();
+    }
+    return null;
+  }
+
+  // 
+  public ShoppingCart readId(String id) {
+    try {
+      ShoppingCartDAOMongo shoppingCartDao = (ShoppingCartDAOMongo) dao;
+      ShoppingCart cart = shoppingCartDao.readId(id);
+      return cart;
     } catch (DAOException ex) {
       ex.printStackTrace();
     }

@@ -107,7 +107,7 @@ public class CartManager {
 
   public ShoppingCart getCart(String id) {
     ShoppingCart cart;
-    cart = shopService.read(id);
+    cart = shopService.readId(id);
 
     if (cart == null) {
       System.out.println("❌ Coudn't find the shopping cart with id: " + id);
@@ -128,12 +128,14 @@ public class CartManager {
     }
     shoppingCart.setStatus(Status.COMPLETED);
     shopService.update(shoppingCart);
-    shoppingCart.getComputers().clear(); // get rid of old computers
+    shoppingCart.getComputers().clear(); // get rid of the old computers
     shoppingCart.setStatus(Status.NEW);
   }
   
   public void editShoppingCart(String id) {
-    //  do it later
+    // what does it mean to edit the shoppingCart?
+    // remove products
+    // increase quantity
   }
 
   public int delete(String id) {
