@@ -113,7 +113,7 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
         DeleteResult result = collection.deleteOne(shopDocument);
         System.out.println("❌ Deleted: " + result.getDeletedCount());
         return (int) result.getDeletedCount();
-      } catch (MatchException ex) {
+      } catch (MongoException ex) {
         throw new DAOException("❌ Coudn't delete the shopping cart", ex);
       }
     }

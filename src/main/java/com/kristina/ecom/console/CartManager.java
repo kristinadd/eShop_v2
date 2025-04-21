@@ -128,7 +128,7 @@ public class CartManager {
     }
     shoppingCart.setStatus(Status.COMPLETED);
     shopService.update(shoppingCart);
-    shoppingCart.getComputers().clear(); // get rid of the old computers
+    shoppingCart.getComputers().clear();
     shoppingCart.setStatus(Status.NEW);
   }
   
@@ -139,15 +139,11 @@ public class CartManager {
   }
 
   public int delete(String id) {
-    // fix delete 
+    shoppingCart.getComputers().clear();
     shoppingCart.setStatus(Status.NEW);
     return shopService.delete(id);
-
   }
 
   // add Cancel method 
   // shoppingCart status to Cancel
-
-
-  // show ShoppingCart didn't work 
 }
