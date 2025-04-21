@@ -57,6 +57,11 @@ public class CartManager {
           input = sc.nextLine();
           delete(input);
           break;
+        case 7:
+          System.out.println("Provide a shopping cart id: ");
+          input = sc.nextLine();
+          cancel();
+          break;
         default:
           System.out.println("❌ Invalid choice. Please try again.");
       }
@@ -70,7 +75,8 @@ public class CartManager {
       "Return to main menu",
       "See specific shopping cart",
       "Edit shopping cart",
-      "Delete shopping cart"
+      "Delete shopping cart",
+      "Cancel shopping cart"
     };
 
     System.out.println("Shopping Cart details: ");
@@ -136,6 +142,10 @@ public class CartManager {
     // what does it mean to edit the shoppingCart?
     // remove products
     // increase quantity
+    // decrease quantity
+    // change the status
+    // add a product
+    // remove a product
   }
 
   public int delete(String id) {
@@ -144,6 +154,10 @@ public class CartManager {
     return shopService.delete(id);
   }
 
-  // add Cancel method 
-  // shoppingCart status to Cancel
+  public void cancel() {
+    shoppingCart.setStatus(Status.CANCELED);
+    shopService.update(shoppingCart);
+    shoppingCart.setStatus(Status.NEW);
+    shoppingCart.getComputers().clear();
+  }
 }
