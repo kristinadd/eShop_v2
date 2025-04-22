@@ -58,8 +58,6 @@ public class CartManager {
           delete(input);
           break;
         case 7:
-          System.out.println("Provide a shopping cart id: ");
-          input = sc.nextLine();
           cancel();
           break;
         default:
@@ -155,9 +153,8 @@ public class CartManager {
   }
 
   public void cancel() {
-    shoppingCart.setStatus(Status.CANCELED);
-    shopService.update(shoppingCart);
-    shoppingCart.setStatus(Status.NEW);
+    shopService.cancel(shoppingCart);
     shoppingCart.getComputers().clear();
+    shoppingCart.setStatus(Status.NEW);
   }
 }

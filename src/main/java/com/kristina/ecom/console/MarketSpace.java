@@ -97,7 +97,6 @@ public class MarketSpace {
       //   shoppingCart = new ShoppingCart(new ObjectId().toHexString(), "98765", new Date(), Status.NEW, new ArrayList<>());
       // }
 
-
       computerStock.getBase().setQuantity(computerStock.getBase().getQuantity() - 1);
       productService.update(computerStock.getBase()); // update the stock
 
