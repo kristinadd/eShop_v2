@@ -123,6 +123,11 @@ public class CartManager {
   }
 
   public void checkOut() {
+    if (shoppingCart.getStatus() == Status.CANCELED) {
+      System.out.println("Cart was cancelled. Can't check out");
+    }
+    // also if it empty
+
     OrderService service = new OrderService();
 
     List<Computer> computers = shoppingCart.getComputers();
@@ -153,8 +158,14 @@ public class CartManager {
   }
 
   public void cancel() {
+    // should the products be visible in the canceled cart
+    // or
+    // should it be just empty cart
+
+    // shoppingCart.getComputers().clear();
+    // ^ this or use the pass by reference in the service layer ?
+    // From a design perspective, it's generally better to handle the business logic in the 
+    // service layer rather than in the controller/manager layer. 
     shopService.cancel(shoppingCart);
-    shoppingCart.getComputers().clear();
-    shoppingCart.setStatus(Status.NEW);
   }
 }
