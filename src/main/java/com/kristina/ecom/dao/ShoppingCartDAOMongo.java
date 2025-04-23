@@ -195,7 +195,8 @@ public class ShoppingCartDAOMongo  implements DAO<String, ShoppingCart> {
     computerDocuments = document.getList("computers", Document.class);
     if (computerDocuments != null) {
       for (Document doc : computerDocuments) {
-
+        products = new ArrayList<>(); // needs to use a new list 
+        
         List<Document> productDocs = doc.getList("products", Document.class);
         for (Document proDoc : productDocs) {
           Product product = new Product(

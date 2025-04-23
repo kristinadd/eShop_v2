@@ -1,11 +1,13 @@
 package com.kristina.ecom.console;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 import com.kristina.ecom.domain.Computer;
 import com.kristina.ecom.domain.Order;
+import com.kristina.ecom.domain.Product;
 import com.kristina.ecom.domain.ShoppingCart;
 import com.kristina.ecom.domain.SortByOrderID;
 import com.kristina.ecom.domain.SortByPrice;
@@ -19,6 +21,7 @@ public class CartManager {
   private ShoppingCart shoppingCart;
   private SortStrategy strategy, sortByOrderIDStrategy, sortByPriceStrategy;
   private ShoppingCartService shopService = new ShoppingCartService();
+  private Computer computer;
 
 
   public CartManager(ShoppingCart shoppingCart) {
@@ -48,9 +51,7 @@ public class CartManager {
           getCart(input);
           break;
         case 5:
-          System.out.println("Provide a shopping cart id: ");
-          input = sc.nextLine();
-          editShoppingCart(input);
+          update();
           break;
         case 6:
           System.out.println("Provide a shopping cart id: ");
@@ -82,6 +83,20 @@ public class CartManager {
     for (int i = 0; i< items.length; i++) {
       System.out.printf("%d: %s\n", i+1, items[i]);
     }
+  }
+
+    private void shoppingCartUpdateMenu() {
+    String[] shoppingCartUpdateMenu = {
+      "1: Select Base Computer",
+      "2: Delete a product from the cart",
+      "3: Add a product to the cart",
+      "4: Update existing product in the cart",
+      "5: Done"
+    };
+
+    System.out.println("\n*** Shopping Cart Update Menu ***");
+    System.out.println(shoppingCart);
+    Arrays.stream(shoppingCartUpdateMenu).forEach(System.out::println);
   }
 
   public void sort(String key) {
@@ -141,14 +156,46 @@ public class CartManager {
     shoppingCart.setStatus(Status.NEW);
   }
   
-  public void editShoppingCart(String id) {
-    // what does it mean to edit the shoppingCart?
-    // remove products
-    // increase quantity
-    // decrease quantity
-    // change the status
-    // add a product
-    // remove a product
+  public void update() {
+    System.out.println("*** Update Shopping Cart ***");
+ 
+    boolean isDirty = false;
+    boolean updating = true;
+    while (updating) {
+      // celectComputer();
+      shoppingCartUpdateMenu();
+      int c = sc.nextInt();
+
+      switch (c) {
+        case 1:
+          celectComputer();
+          break;
+        case 2:
+          deleteProductFromCart();
+          isDirty = true;
+          break;
+        case 3:
+        addProductToCart();
+        isDirty = true;
+          break;
+        case 4:
+          // updateProducts(order);
+          isDirty = true;
+          break;
+        case 5:
+          updating = false;
+          break;
+          // return; it works but thats not the correct way to write it
+        default:
+          System.out.println("Invalid choice. Please try again.");
+      }
+    }
+
+    if (isDirty) {
+      shopService.update(shoppingCart);
+    } else {
+      System.out.println("No change");
+    } 
   }
 
   public int delete(String id) {
@@ -158,14 +205,29 @@ public class CartManager {
   }
 
   public void cancel() {
-    // should the products be visible in the canceled cart
-    // or
-    // should it be just empty cart
-
-    // shoppingCart.getComputers().clear();
-    // ^ this or use the pass by reference in the service layer ?
-    // From a design perspective, it's generally better to handle the business logic in the 
-    // service layer rather than in the controller/manager layer. 
     shopService.cancel(shoppingCart);
+  }
+
+
+  public void celectComputer() {
+    System.out.println(shoppingCart);
+    System.out.println("Choose a Base Computer to be updated");
+    int c = sc.nextInt();
+    computer = shoppingCart.getComputers().get(c -1);
+  }
+
+  public void deleteProductFromCart() {
+    List<Product> products = computer.getComponents();
+    for (int i=0; i<products.size(); i++) {
+      System.out.println(i+1 + " :" + products.get(i) );
+    }
+
+    System.out.println("Choose a Product to be deleted");
+    int c = sc.nextInt();
+    products.remove(c -1);
+  }
+
+  public void addProductToCart() {
+
   }
 }

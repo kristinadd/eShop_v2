@@ -102,7 +102,6 @@ public class ShoppingCartService {
   }
 
   public void cancel(ShoppingCart shoppingCart) {
-    shoppingCart.getComputers().clear();
     shoppingCart.setStatus(Status.CANCELED);
     try { 
       dao.update(shoppingCart);
@@ -111,6 +110,9 @@ public class ShoppingCartService {
       System.out.println("❌ Failed to cancel shopping cart with id: " + shoppingCart.getId());
       ex.printStackTrace();
     }
+    shoppingCart.getComputers().clear();
     shoppingCart.setStatus(Status.NEW);
   }
+
+
 }

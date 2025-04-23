@@ -1,1 +1,3 @@
 Fix negative quantity in db
+Fix the display for components when showing a shoppingCart
+it first shows components which is not correct 

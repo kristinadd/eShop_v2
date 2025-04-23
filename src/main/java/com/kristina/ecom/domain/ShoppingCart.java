@@ -55,12 +55,12 @@ public class ShoppingCart {
   public String toString() {
     String computersString = "";
 
-    for (Computer computer :computers) {
-      computersString += computer;
+    for (int i=0; i<computers.size(); i++) {
+      computersString =  computersString + "\n" + (i+1) + computers.get(i);
     }
 
     return String.format(
-      "🛍️ ShoppingCart\n id: %s\n user_id: %s\n updated_at: %s\n status: %s\n computers: [%s]\\n",
+      "🛍️ ShoppingCart\n id: %s\n user_id: %s\n updated_at: %s\n status: %s\n computers: [%s]\n",
       id, user_id, updated_at, status, computersString
     );
   }  
