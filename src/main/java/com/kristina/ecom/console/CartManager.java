@@ -138,10 +138,9 @@ public class CartManager {
   }
 
   public void checkOut() {
-    if (shoppingCart.getStatus() == Status.CANCELED) {
-      System.out.println("Cart was cancelled. Can't check out");
+    if (shoppingCart.getStatus() == Status.CANCELED || shoppingCart.getComputers() == null) {
+      System.out.println("Can't check out. Cart is either empty or canceled");
     }
-    // also if it empty
 
     OrderService service = new OrderService();
 
