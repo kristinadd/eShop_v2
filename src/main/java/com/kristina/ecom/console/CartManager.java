@@ -14,6 +14,7 @@ import com.kristina.ecom.domain.SortByPrice;
 import com.kristina.ecom.domain.SortStrategy;
 import com.kristina.ecom.domain.Status;
 import com.kristina.ecom.service.OrderService;
+import com.kristina.ecom.service.ProductService;
 import com.kristina.ecom.service.ShoppingCartService;
 
 public class CartManager {
@@ -89,8 +90,8 @@ public class CartManager {
     String[] shoppingCartUpdateMenu = {
       "1: Select Base Computer",
       "2: Delete a product from the cart",
-      "3: Add a product to the cart",
-      "4: Update existing product in the cart",
+      "3: Add product to the cart",
+      "4: Remove product from the cart",
       "5: Done"
     };
 
@@ -139,7 +140,7 @@ public class CartManager {
 
   public void checkOut() {
     if (shoppingCart.getStatus() == Status.CANCELED || shoppingCart.getComputers().isEmpty() == true) {
-      System.out.println("Can't check out. Cart is either empty or canceled");
+      System.out.println("❌ Can't check out. Cart is either empty or canceled");
     }
 
     OrderService service = new OrderService();
@@ -161,24 +162,23 @@ public class CartManager {
     boolean isDirty = false;
     boolean updating = true;
     while (updating) {
-      // celectComputer();
       shoppingCartUpdateMenu();
       int c = sc.nextInt();
 
       switch (c) {
         case 1:
-          celectComputer();
+        selectComputer();
           break;
         case 2:
           deleteProductFromCart();
           isDirty = true;
           break;
         case 3:
-        addProductToCart();
-        isDirty = true;
+          addProductToCart();
+          isDirty = true;
           break;
         case 4:
-          // updateProducts(order);
+          removeProductFromCart();
           isDirty = true;
           break;
         case 5:
@@ -208,7 +208,7 @@ public class CartManager {
   }
 
 
-  public void celectComputer() {
+  public void selectComputer() {
     System.out.println(shoppingCart);
     System.out.println("Choose a Base Computer to be updated");
     int c = sc.nextInt();
@@ -227,6 +227,25 @@ public class CartManager {
   }
 
   public void addProductToCart() {
+    System.out.println("🍀 Select product to add: ");
+    ProductService productService = new ProductService();
+    List<Product> products = productService.getAll();
 
+    for (Product p : products) {
+      System.out.println(p.getId() + " " + p);
+    }
+    
+    System.out.print("Enter product ID: ");
+    int productId = sc.nextInt();
+    Product product = productService.get(productId);
+    
+    if (product != null) {
+      computer.getComponents().add(product);
+      System.out.println("✅ Product added successfully!");
+    } else {
+      System.out.println("❌ Product not found!");
+    }
   }
+
+  public void removeProductFromCart() {}
 }
