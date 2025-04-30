@@ -92,7 +92,8 @@ public class CartManager {
       "2: Delete a product from the cart",
       "3: Add product to the cart",
       "4: Remove product from the cart",
-      "5: Done"
+      "5: Update product quantity in the cart",
+      "6: Done"
     };
 
     System.out.println("\n*** Shopping Cart Update Menu ***");
@@ -164,7 +165,6 @@ public class CartManager {
     while (updating) {
       shoppingCartUpdateMenu();
       int c = sc.nextInt();
-
       switch (c) {
         case 1:
         selectComputer();
@@ -182,8 +182,13 @@ public class CartManager {
           isDirty = true;
           break;
         case 5:
+          updateProducts();
+          updating = true;
+          break;
+        case 6:
           updating = false;
           break;
+
           // return; it works but thats not the correct way to write it
         default:
           System.out.println("Invalid choice. Please try again.");
@@ -230,22 +235,59 @@ public class CartManager {
     System.out.println("🍀 Select product to add: ");
     ProductService productService = new ProductService();
     List<Product> products = productService.getAll();
-
-    for (Product p : products) {
-      System.out.println(p.getId() + " " + p);
-    }
+    int productId = selectProduct(products);
     
-    System.out.print("Enter product ID: ");
-    int productId = sc.nextInt();
     Product product = productService.get(productId);
     
     if (product != null) {
       computer.getComponents().add(product);
       System.out.println("✅ Product added successfully!");
     } else {
-      System.out.println("❌ Product not found!");
+      System.out.println("❌ Product was not added!");
     }
   }
 
-  public void removeProductFromCart() {}
+  public void removeProductFromCart() {
+    List<Product> products = computer.getComponents();
+    int productId = selectProduct(products);
+    
+    if (products.isEmpty() == false) {
+      products.remove(productId - 1);
+      System.out.println("✅ Product removed successfully!");
+    } else {
+      System.out.println("❌ Product was not removed!");
+    }
+  }
+
+  private int selectProduct(List <Product> products) {
+    int productIndex;
+    boolean invalid;
+
+    do {
+      System.out.println("Select the product:");
+      for (int i = 0; i < products.size(); i++) {
+          System.out.println((i + 1) + ": " + products.get(i));
+      }
+    productIndex = sc.nextInt() - 1;
+    invalid = productIndex < 0 || productIndex >= products.size();
+    if (invalid)
+      System.out.println("Invalid product, please choose again");
+    } while (invalid);
+
+
+    return productIndex;
+  }
+
+  private void updateProducts() {
+    int productIndex = selectProduct(computer.getComponents());
+
+    System.out.println("Enter the new quantity ( 0 to remove ):");
+    // TbC: handle out of stock situation
+    int newQuantity =  sc.nextInt();
+
+    if (newQuantity == 0) 
+      computer.getComponents().remove(productIndex);
+    else
+      computer.getComponents().get(productIndex).setQuantity(newQuantity);
+  }
 }

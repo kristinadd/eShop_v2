@@ -173,8 +173,8 @@ public class Oms {
           isDirty = true;
           break;
         case 2:
-        addProductToOrder(order);
-        isDirty = true;
+          addProductToOrder(order);
+          isDirty = true;
           break;
         case 3:
           updateProducts(order);
