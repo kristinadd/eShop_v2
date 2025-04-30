@@ -19,35 +19,21 @@ public class OrderService {
     daoP = DAOFactory.getInstance().create(DAO.Type.PRODUCT_DAO);
   }
 
-  public int create(Order order) {
-    boolean valid = true;
-    try {
-      Product stock;
-      for (Product orderProduct : order.getProducts()) {
-        stock = daoP.read(orderProduct.getId());
-         if (stock.getQuantity() < orderProduct.getQuantity()) {
-          System.out.println("Not enough quantity for: " + orderProduct.getName());
-          valid = false;
-          break;
-        }
+  public Order create(Order order) throws DAOException {
+    for (Product product : order.getProducts()) {
+      Product stock = daoP.read(product.getId());
+      if (stock.getQuantity() < product.getQuantity()) {
+        throw new DAOException("Insufficient stock for product: " + product.getName(), new Exception());
       }
-
-      if (valid) {
-        for (Product product : order.getProducts()) {
-         Product stockProduct = daoP.read(product.getId());
-         Product orderProduct = new Product();
-         orderProduct.setQuantity(product.getQuantity());
-         stockProduct.setQuantity(stockProduct.getQuantity() - orderProduct.getQuantity());
-         daoP.update(stockProduct);
-        }
-        dao.create(order);
-      }
-
-    } catch (DAOException ex) {
-      ex.printStackTrace();
     }
 
-    return 1;
+    for (Product product : order.getProducts()) {
+      Product stock = daoP.read(product.getId());
+      stock.setQuantity(stock.getQuantity() - product.getQuantity());
+      daoP.update(stock);
+    }
+    
+    return dao.create(order);
   }
 
   public List<Order> getAll() {
