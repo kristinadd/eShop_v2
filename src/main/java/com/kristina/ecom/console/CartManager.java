@@ -167,21 +167,29 @@ public class CartManager {
       int c = sc.nextInt();
       switch (c) {
         case 1:
-        selectComputer();
+          selectComputer();
           break;
         case 2:
+          if (computer == null)
+            selectComputer();
           deleteProductFromCart();
           isDirty = true;
           break;
         case 3:
+          if (computer == null)
+            selectComputer();
           addProductToCart();
           isDirty = true;
           break;
         case 4:
+          if (computer == null)
+            selectComputer();
           removeProductFromCart();
           isDirty = true;
           break;
         case 5:
+          if (computer == null)
+            selectComputer();
           updateProducts();
           updating = true;
           break;
@@ -235,12 +243,23 @@ public class CartManager {
     System.out.println("🍀 Select product to add: ");
     ProductService productService = new ProductService();
     List<Product> products = productService.getAll();
-    int productId = selectProduct(products);
+    int productIndex = selectProduct(products);
+    int productId = products.get(productIndex).getId();
+    Product productFromStock = productService.get(productId);
+    Product productInCart = null;
+
+    System.out.println("Type Prouct Quantity: ");
+    int c = sc.nextInt();
+
+    try {
+      productInCart = (Product) productFromStock.clone();
+      productInCart.setQuantity(c);
+    } catch (CloneNotSupportedException ex) {
+        ex.printStackTrace();
+      };
     
-    Product product = productService.get(productId);
-    
-    if (product != null) {
-      computer.getComponents().add(product);
+    if (productInCart != null) {
+      computer.getComponents().add(productInCart);
       System.out.println("✅ Product added successfully!");
     } else {
       System.out.println("❌ Product was not added!");

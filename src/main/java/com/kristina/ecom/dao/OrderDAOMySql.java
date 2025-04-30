@@ -2,8 +2,6 @@ package com.kristina.ecom.dao;
 
 import javax.sql.DataSource;
 
-import com.kristina.ecom.domain.Computer;
-import com.kristina.ecom.domain.ComputerBase;
 import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.Product;
 

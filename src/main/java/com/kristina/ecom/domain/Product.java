@@ -107,7 +107,7 @@ public class Product implements Cloneable {
   // }
 
   @Override
-  public Object clone() throws CloneNotSupportedException {
+  public Object clone() throws CloneNotSupportedException { // runtime exception, no need to catch 
     return super.clone();
   }
 

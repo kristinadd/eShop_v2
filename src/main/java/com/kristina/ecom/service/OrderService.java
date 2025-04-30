@@ -20,14 +20,29 @@ public class OrderService {
   }
 
   public int create(Order order) {
+    boolean valid = true;
     try {
-      dao.create(order);
       Product stock;
-      for (Product p : order.getProducts()) {
-        stock = daoP.read(p.getId());
-        stock.setQuantity(stock.getQuantity() - p.getQuantity());
-        daoP.update(stock);
+      for (Product orderProduct : order.getProducts()) {
+        stock = daoP.read(orderProduct.getId());
+         if (stock.getQuantity() < orderProduct.getQuantity()) {
+          System.out.println("Not enough quantity for: " + orderProduct.getName());
+          valid = false;
+          break;
+        }
       }
+
+      if (valid) {
+        for (Product product : order.getProducts()) {
+         Product stockProduct = daoP.read(product.getId());
+         Product orderProduct = new Product();
+         orderProduct.setQuantity(product.getQuantity());
+         stockProduct.setQuantity(stockProduct.getQuantity() - orderProduct.getQuantity());
+         daoP.update(stockProduct);
+        }
+        dao.create(order);
+      }
+
     } catch (DAOException ex) {
       ex.printStackTrace();
     }
