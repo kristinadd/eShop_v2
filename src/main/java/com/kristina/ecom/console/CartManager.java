@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
+import com.kristina.ecom.dao.DAOException;
 import com.kristina.ecom.domain.Computer;
 import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.Product;
@@ -149,7 +150,11 @@ public class CartManager {
     List<Computer> computers = shoppingCart.getComputers();
     for (Computer computer : computers) {
       Order order = new Order(computer);
+      try {
       service.create(order);
+      } catch (DAOException ex) {
+        System.out.println("❌ Insufficient stock for product: " + ex.getMessage());
+      } 
     }
     shoppingCart.setStatus(Status.COMPLETED);
     shopService.update(shoppingCart);
