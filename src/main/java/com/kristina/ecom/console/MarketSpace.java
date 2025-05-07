@@ -42,8 +42,8 @@ public class MarketSpace {
   public void buy() {
     new ProductService().getAll().forEach((product) -> products.put(product.getId(), product));
 
-    Computer computerStock = new ComputerBase(); // this reads from db, so it has quantity from stock
-    System.out.println("🍀  Check computerStock: " + computerStock.getBase().getQuantity());
+    // Computer computerStock = new ComputerBase(); // this reads from db, so it has quantity from stock
+    // System.out.println("🍀  Check computerStock: " + computerStock.getBase().getQuantity());
 
     Computer computerOrder= new ComputerBase();
     computerOrder.getBase().setQuantity(1);
@@ -97,8 +97,8 @@ public class MarketSpace {
       //   shoppingCart = new ShoppingCart(new ObjectId().toHexString(), "98765", new Date(), Status.NEW, new ArrayList<>());
       // }
 
-      computerStock.getBase().setQuantity(computerStock.getBase().getQuantity() - 1);
-      productService.update(computerStock.getBase()); // update the stock
+      // computerStock.getBase().setQuantity(computerStock.getBase().getQuantity() - 1);
+      // productService.update(computerStock.getBase()); // update the stock
 
       shoppingCart.getComputers().add(computerOrder);
       if (shoppingCart.getStatus() == Status.NEW) {
@@ -113,7 +113,6 @@ public class MarketSpace {
   }
 
   private void menu() {
-    System.out.println("I'm in the MarketSpace class!");
     products.forEach((k,v) -> System.out.println(k + ":" + v ));
     System.out.println(-1 + ": " + "Cancel");
     System.out.println(0 + ": " + "Done");

@@ -7,6 +7,7 @@ import java.util.List;
 import com.kristina.ecom.dao.DAO;
 import com.kristina.ecom.dao.DAOException;
 import com.kristina.ecom.dao.DAOFactory;
+import com.kristina.ecom.domain.ComputerBase;
 import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.Product;
 
@@ -20,6 +21,10 @@ public class OrderService {
   }
 
   public Order create(Order order) throws DAOException {
+    if (new ComputerBase().getBase().getQuantity() <= 0 ) {
+      throw new DAOException("Insufficient stock for base computer "  , new Exception());
+    }
+    
     for (Product product : order.getProducts()) {
       Product stock = daoP.read(product.getId());
       if (stock.getQuantity() < product.getQuantity()) {

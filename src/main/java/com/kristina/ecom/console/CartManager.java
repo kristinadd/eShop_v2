@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import com.kristina.ecom.dao.DAOException;
 import com.kristina.ecom.domain.Computer;
+import com.kristina.ecom.domain.ComputerBase;
 import com.kristina.ecom.domain.Order;
 import com.kristina.ecom.domain.Product;
 import com.kristina.ecom.domain.ShoppingCart;
@@ -24,6 +25,9 @@ public class CartManager {
   private SortStrategy strategy, sortByOrderIDStrategy, sortByPriceStrategy;
   private ShoppingCartService shopService = new ShoppingCartService();
   private Computer computer;
+  private Computer computerStock;
+  private ProductService productService;
+
 
 
   public CartManager(ShoppingCart shoppingCart) {
@@ -31,6 +35,8 @@ public class CartManager {
     this.shoppingCart = shoppingCart;
     sortByOrderIDStrategy = new SortByOrderID();
     sortByPriceStrategy = new SortByPrice();
+    computerStock = new ComputerBase();
+    productService = new ProductService();
   }
 
   public void admin() {
@@ -145,6 +151,7 @@ public class CartManager {
       System.out.println("❌ Can't check out. Cart is either empty or canceled");
     }
 
+    boolean outOfStock = false;
     OrderService service = new OrderService();
 
     List<Computer> computers = shoppingCart.getComputers();
@@ -153,13 +160,21 @@ public class CartManager {
       try {
       service.create(order);
       } catch (DAOException ex) {
-        System.out.println("❌ Insufficient stock for product: " + ex.getMessage());
+        System.out.println("❌ " + ex.getMessage());
+        outOfStock = true;
       } 
     }
-    shoppingCart.setStatus(Status.COMPLETED);
-    shopService.update(shoppingCart);
-    shoppingCart.getComputers().clear();
-    shoppingCart.setStatus(Status.NEW);
+
+    if (!outOfStock) {
+
+      computerStock.getBase().setQuantity(computerStock.getBase().getQuantity() - 1);
+      productService.update(computerStock.getBase()); // update the stock
+
+      shoppingCart.setStatus(Status.COMPLETED);
+      shopService.update(shoppingCart);
+      shoppingCart.getComputers().clear();
+      shoppingCart.setStatus(Status.NEW);
+    }
   }
   
   public void update() {
@@ -196,12 +211,11 @@ public class CartManager {
           if (computer == null)
             selectComputer();
           updateProducts();
-          updating = true;
+          isDirty = true;
           break;
         case 6:
           updating = false;
           break;
-
           // return; it works but thats not the correct way to write it
         default:
           System.out.println("Invalid choice. Please try again.");
@@ -313,5 +327,6 @@ public class CartManager {
       computer.getComponents().remove(productIndex);
     else
       computer.getComponents().get(productIndex).setQuantity(newQuantity);
+
   }
 }

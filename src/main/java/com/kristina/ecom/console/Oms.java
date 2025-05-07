@@ -183,7 +183,6 @@ public class Oms {
         case 4:
           updating = false;
           break;
-          // return; it works but thats not the correct way to write it
         default:
           System.out.println("Invalid choice. Please try again.");
       }

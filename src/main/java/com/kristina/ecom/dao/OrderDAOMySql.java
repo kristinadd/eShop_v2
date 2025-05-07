@@ -71,12 +71,6 @@ public class OrderDAOMySql implements DAO<String, Order> {
       }
       products.remove(base);
 
-      // option 2
-      // stat.setString(1, order.getId());
-      // stat.setInt(2, base.getId());
-      // stat.setInt(3, base.getQuantity());
-      // stat.executeUpdate();
-
       conn.commit();
       conn.close();
       } catch (SQLException ex) {
@@ -214,7 +208,7 @@ public class OrderDAOMySql implements DAO<String, Order> {
 
     try {
     Connection conn = datasource.getConnection();
-    conn.setAutoCommit(false); // using multiple queries
+    // conn.setAutoCommit(false); // using multiple queries
 
     // Update order in order table table
     PreparedStatement stat = conn.prepareStatement(orderQuery);
@@ -238,7 +232,7 @@ public class OrderDAOMySql implements DAO<String, Order> {
       stat.executeUpdate();
     }
 
-    conn.commit();
+    // conn.commit();
     conn.close();
     } catch (SQLException ex) {
       throw new DAOException("Error in DAO", ex);
