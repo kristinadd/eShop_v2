@@ -227,7 +227,7 @@ public class OrderDAOMySql implements DAO<String, Order> {
     stat = conn.prepareStatement(insertProductsQuery);
     for (Product product : order.getProducts()) {
       stat.setString(1, order.getId());
-      stat.setInt(2, Integer.parseInt(order.getId()));
+      stat.setInt(2, product.getId());
       stat.setInt(3, product.getQuantity());
       stat.executeUpdate();
     }
